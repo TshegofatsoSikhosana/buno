@@ -18,10 +18,27 @@
 
 body {
   color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+  background-color: rgb(19, 21, 32);
+  font-size: 21px;
+}
+
+.active-section{
+  border-bottom: 2px solid rgb(65, 194, 123) ;
+}
+
+.table-row{
+  border: 2px solid white;
+}
+
+.btn-add:hover{
+  background-color: rgba(30, 148, 222, 0.671);
+  cursor: pointer;
+}
+
+.btn-add-item{
+  background-color: rgb(19, 21, 32);
+  border: 2px solid grey
+}
+.btn-add-item:hover{
+  background-color: rgb(19, 88, 51);
 }
