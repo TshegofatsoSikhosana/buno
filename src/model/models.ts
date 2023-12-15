@@ -37,7 +37,7 @@ export interface ExpenseItem{
 
 export interface InvestmentItem{
     description: string,
-    bank: string,
+    bank?: string,
     expectedAmount: number,
     actualAmount: number,
     month?: string,

@@ -5,14 +5,14 @@ import { useState } from "react";
 import GroceryItemForm from "./GroceryItemForm";
 import { GroceryService } from "@/service/GroceryService";
 
-interface ExpensesProps {
-    
+interface GroceryProps {
+    year: number
 }
  
-function Groceries(){
+function Groceries(props: GroceryProps){
 
     const [openForm,setOpenForm] = useState(false);
-    const groceries  =useLiveQuery(() => db.groceries.toArray());
+    const groceries  =useLiveQuery(() => db.groceries.where({year: props.year}).toArray());
     const gs = new GroceryService();
     function getActualTotal(){
         let amt:number = 0;
@@ -79,7 +79,7 @@ function Groceries(){
                     </div>
                 </div>
                 {groceries?.map((expense, index)=>{
-                    return <div className='w-100 grid-flow-row' style={{border: '1px solid grey'}} key={index}>
+                    return <div className='w-100 grid-flow-row row-text-block' style={{border: '1px solid grey'}} key={index}>
                             <div className='w-6/12 p-2 inline-block' style={{borderLeft: '2px solid grey'}}>{expense.description}</div>
                             <div className='w-2/12 p-2 inline-block text-start' style={{borderLeft: '2px solid grey'}}> R{expense.actualAmount}</div>
                             <div className='w-2/12 p-2 inline-block text-start' style={{borderLeft: '2px solid grey'}}> R{expense.discountAmount}</div>

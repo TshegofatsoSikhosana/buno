@@ -24,7 +24,7 @@ function GroceryItemForm(props: GroceryItemFormProps){
         console.log('debiiie')
         const item = {...selectedItem}
         item.dateCreated = Date.now().toString();
-
+        item.year = 2023 
         if(item){
             props.handleAddGroceryItem( {...item as GroceryItem})
         }

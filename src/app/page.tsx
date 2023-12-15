@@ -1,14 +1,14 @@
 'use client'
+import Calendar from '@/components/Calendar';
 import Expenses from '@/components/expense/Expenses'
 import Groceries from '@/components/groceries/Groceries';
 import Income from '@/components/income/Income';
 import Investments from '@/components/investment/Investments';
 import { db } from '@/config/database.config';
-import { ExpenseCategory } from '@/model/models';
 import { useLiveQuery } from 'dexie-react-hooks';
-import Image from 'next/image'
 import { useState } from 'react'
-
+import { DatePicker } from 'react-responsive-datepicker';
+import 'react-responsive-datepicker/dist/index.css'
 
 
 enum Tab{
@@ -19,9 +19,10 @@ enum Tab{
 }
 export default function Home() {
 
-  const expenses = useLiveQuery(() => db.expenses.toArray());
-  const investments = useLiveQuery(() => db.investments.toArray());
-  const incomes = useLiveQuery(() => db.income.toArray());
+  const [year, setYear] = useState<number>(2023)
+  const expenses = useLiveQuery(() => db.expenses.where({year: year}).toArray());
+  const investments = useLiveQuery(() => db.investments.where({year: year}).toArray());
+  const incomes = useLiveQuery(() => db.income.where({year: year}).toArray());
 
   const [active, setActive] = useState<Tab>(Tab.EXPENSES);
 
@@ -32,13 +33,13 @@ export default function Home() {
   function renderContent(){
     switch (active) {
       case Tab.INVESTMENTS:
-        return <Investments/>
+        return <Investments year={year}/>
       case Tab.INCOME:
-        return <Income/>
+        return <Income year={year}/>
       case Tab.GROCERIES:
-        return <Groceries/>
+        return <Groceries year={year}/>
       default:
-        return <Expenses/>
+        return <Expenses year={year}/>
     }
   }
 
@@ -76,29 +77,34 @@ export default function Home() {
   }
   return (
     <main className=" p-24 w-100">
-        <h2 className='font-bold text-stone-100 text-center' style={{fontSize: '36px'}}>2023 December Budget</h2>
+      <div className='w-11/12'>
+        <h1 className="inline-block w-3/12">Welcome back, Tshegofatso</h1>
+        <h2 className='font-bold text-stone-100 text-end inline-block w-9/12' style={{fontSize: '36px'}}>2023 December Budget</h2>
+        </div>
         <div className='w-100 p-5'>
-          <div className='inline-block mr-5 w-60' style={{border:'2px solid rgb(30,150,222,80)', padding:'1rem',borderRadius:'10px' }}>
+          <div className='inline-block mr-5 w-2/12' style={{border:'2px solid rgb(30,150,222,80)', padding:'1rem',borderRadius:'10px' }}>
             <h1>Total Expenses</h1>
             <div>R{getExpensesTotal()}</div>
           </div>
 
-          <div className='inline-block w-60 mr-5' style={{border:'2px solid rgb(30,150,222,80)', padding:'1rem',borderRadius:'10px' }}>
+          <div className='inline-block mr-5  w-2/12' style={{border:'2px solid rgb(30,150,222,80)', padding:'1rem',borderRadius:'10px' }}>
             <div>Total Investments</div>
             <div>R{getInvestmentsTotal()}</div>
           </div>
 
-          <div  className='inline-block mr-5 w-60' style={{border:'2px solid rgb(30,150,222,80)', padding:'1rem',borderRadius:'10px' }}>
+          <div  className='inline-block mr-5 w-2/12' style={{border:'2px solid rgb(30,150,222,80)', padding:'1rem',borderRadius:'10px' }}>
             <div>Total Income</div>
             <div>R{getIncomesTotal()}</div>
           </div>
 
 
-          <div  className='inline-block mr-5 w-60 text-center btn-add' style={{border:'2px solid rgb(30,150,222,80)', padding:'1rem',borderRadius:'10px' }}>
+          <div  className='inline-block mr-5 w-2/12 text-center btn-add' style={{border:'2px solid rgb(30,150,222,80)', padding:'1rem',borderRadius:'10px' }}>
             <div>Clone</div>
             <div>Bugdet</div>
           </div>
-         
+          <div  className='inline-block w-3/12' style={{padding:'1rem' }}>
+            {/* <Calendar/> */}
+          </div>
         </div>
         <div className='w-100'>
           <div 

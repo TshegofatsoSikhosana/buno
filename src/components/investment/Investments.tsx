@@ -3,55 +3,17 @@ import { ExpenseCategory, ExpenseItem, InvestmentItem } from "@/model/models";
 import { useLiveQuery } from "dexie-react-hooks";
 import InvestmentItemForm from "./InvestmentItemForm";
 import { useState } from "react";
+import { InvestmentService } from "@/service/InvestmentService";
 
-interface ExpensesProps {
-    
+interface InvestmentProps {
+    year: number
 }
  
-function Investments(){
+function Investments(props: InvestmentProps){
 
-    const investments = useLiveQuery(() => db.investments.toArray());
+    const investments = useLiveQuery(() => db.investments.where({year: props.year}).toArray());
     const [openForm,setOpenForm] = useState(false);
-
-    const investment: InvestmentItem[] = [
-        {
-            description: 'RA',
-            expectedAmount: 2000,
-            actualAmount: 2000,
-            bank: 'absa',
-            month: 'NOVEMBER',
-            dateCreated: Date.now().toString(),
-            year: 2023
-        },
-        {
-            description: 'ASC',
-            expectedAmount: 500,
-            actualAmount: 1900,
-            bank: 'absa',
-            month: 'NOVEMBER',
-            dateCreated: Date.now().toString(),
-            year: 2023
-        },
-        {
-            description: 'Endowment',
-            expectedAmount: 4000,
-            actualAmount: 4000,
-            bank: 'absa',
-            month: 'NOVEMBER',
-            dateCreated: Date.now().toString(),
-            year: 2023
-        },
-        {
-            description: 'Crypto',
-            expectedAmount: 1000,
-            actualAmount: 1000,
-            bank: 'tyme',
-            month: 'NOVEMBER',
-            dateCreated: Date.now().toString(),
-            year: 2023
-        },
-      
-    ]
+    const is = new InvestmentService();
 
     function getActualTotal(){
         let amt:number = 0;
@@ -61,10 +23,8 @@ function Investments(){
                 amt += Number(e.actualAmount);
             }
         }
-      
         return amt
     }
-
 
     function getExpectedTotal(){
         let amt:number = 0;
@@ -85,6 +45,7 @@ function Investments(){
 
         setOpenForm(false)
     }
+
     return <>
                 { openForm ? <InvestmentItemForm handleAddIvestmentItem={handleAddIvestmentItem} />:( 
                  <button 
@@ -113,7 +74,7 @@ function Investments(){
                     </div>
                 </div>
                 {investments?.map((expense, index)=>{
-                    return <div className='w-10/12 grid-flow-row' style={{border: '1px solid grey'}} key={index}>
+                    return <div className='w-10/12 grid-flow-row row-text-block' style={{border: '1px solid grey'}} key={index}>
                                 <div className='w-3/12 inline-block'></div>
                                 <div className='w-3/12 p-2 inline-block' style={{borderLeft: '2px solid grey'}}>{expense.description}</div>
                         <div className='w-3/12 p-2 inline-block text-start' style={{borderLeft: '2px solid grey'}}> R{expense.actualAmount}</div>

@@ -3,30 +3,19 @@ import {  IncomeItem, InvestmentItem } from "@/model/models";
 import { useLiveQuery } from "dexie-react-hooks";
 import IncomeItemForm from "./IncomeItemForm";
 import { useState } from "react";
+import { IncomeService } from "@/service/IncomeService";
 
-interface ExpensesProps {
-    
+interface IncomeProps {
+    year: number
 }
  
-function Income(){
+function Income(props: IncomeProps){
 
-  const [openForm,setOpenForm] = useState(false);
+    const [openForm,setOpenForm] = useState(false);
 
-  const incomes = useLiveQuery(() => db.income.toArray());
+    const incomes = useLiveQuery(() => db.income.where({year: props.year}).toArray());
 
-    const income: InvestmentItem[] = [
-        {
-            description: 'Psybergate',
-            expectedAmount: 26360,
-            actualAmount: 26360,
-            bank: 'absa',
-            month: 'NOVEMBER',
-            dateCreated: Date.now().toString(),
-            year: 2023
-        },
-        
-      
-    ]
+    const is = new IncomeService();
 
     function getActualTotal(){
         let amt:number = 0;
@@ -58,12 +47,21 @@ function Income(){
         }
         setOpenForm(false)
     }
+
+    function openFormFn() {
+        setOpenForm(true)
+        incomes?.forEach((g)=> {
+            g.month = '11';
+            g.year = 2023
+            is.update(g)
+        })
+    }
     return <>
                 { openForm ? <IncomeItemForm handleAddIncomeItem={handleAddIncomeItem} />:( 
                     <button
                         className="p-2 mb-2 btn-add"
                         style={{borderRadius: '8px', border:'2px solid grey'}}
-                        onClick={(e)=> setOpenForm(true)}>Add Income Item</button>
+                        onClick={(e)=> openFormFn()}>Add Income Item</button>
                 )}
                   <div className='w-10/12 grid-flow-row font-bold' style={{color:'rgb(30,150,222,255)'}}> 
                     <div className='w-6/12 p-2 inline-block' ></div>
@@ -84,7 +82,7 @@ function Income(){
                     </div>
                 </div>
                 {incomes?.map((income, index)=>{
-                    return <div className='w-10/12 grid-flow-row' style={{border: '1px solid grey'}} key={index}>
+                    return <div className='w-10/12 grid-flow-row row-text-block' style={{border: '1px solid grey'}} key={index}>
                                 <div className='w-3/12 inline-block'></div>
                                 <div className='w-3/12 p-2 inline-block' style={{borderLeft: '2px solid grey'}}>{income.description}</div>
                                 <div className='w-3/12 p-2 inline-block text-start' style={{borderLeft: '2px solid grey'}}> R{income.actualAmount}</div>
