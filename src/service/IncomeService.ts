@@ -27,12 +27,16 @@ export class IncomeService {
     }
 
 
-    addNew(expense:IncomeItem) {
-        db.income.add(expense);
+    addNew(income:IncomeItem) {
+        db.income.add(income);
     }
 
-    update(expense:IncomeItem){
-        db.income.put({...expense});
+    update(income:IncomeItem){
+        db.income.put({...income});
+    }
+
+    delete(id:number){
+        db.income.delete(id);
     }
 
     initializeWithTemplate(){

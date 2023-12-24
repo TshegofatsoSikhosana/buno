@@ -35,6 +35,10 @@ export class InvestmentService {
         db.investments.put({...investment});
     }
 
+    delete(id:number){
+        db.investments.delete(id);
+    }
+
     initializeWithTemplate(){
         const investments: InvestmentItem[] = [
             {

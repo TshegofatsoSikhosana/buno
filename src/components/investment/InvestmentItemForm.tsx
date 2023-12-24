@@ -1,14 +1,21 @@
 import {  InvestmentItem } from "@/model/models";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 interface InvestmentItemFormProps {
     handleAddIvestmentItem: (selectedItem:InvestmentItem)=> void
+    handleEditInvestmentItem: (selectedItem:InvestmentItem)=> void;
+    item?: InvestmentItem
 }
  
 function InvestmentItemForm(props: InvestmentItemFormProps){
 
     const [selectedItem, setSelectedItem] = useState<InvestmentItem | null>(null)
 
+    useEffect(()=>{
+        if(props.item){
+            setSelectedItem(props.item);
+        }
+    },[props.item])
 
     function updateItem(e:any,target: string){
         const value = e.target.value
@@ -21,12 +28,16 @@ function InvestmentItemForm(props: InvestmentItemFormProps){
     }
 
     function handleAddInvestmentItem(e:any){
-        console.log('debiiie')
-        const item = {...selectedItem}
-        item.dateCreated = Date.now().toString();
-        item.year = 2024
-        if(item){
-            props.handleAddIvestmentItem( {...item as InvestmentItem})
+        if(selectedItem && selectedItem.id){
+            props.handleEditInvestmentItem( {...selectedItem as InvestmentItem})
+        }else{
+            console.log('debiiie')
+            const item = {...selectedItem}
+            item.dateCreated = Date.now().toString();
+            item.year = 2024
+            if(item){
+                props.handleAddIvestmentItem( {...item as InvestmentItem})
+            }
         }
     }
 
@@ -58,7 +69,9 @@ function InvestmentItemForm(props: InvestmentItemFormProps){
                     <button 
                         className="inline-block bg-blue-500 p-2 w-100 btn-add-item"
                         style={{borderRadius: '8px'}}
-                        onClick={handleAddInvestmentItem}>Add Item</button>
+                        onClick={handleAddInvestmentItem}>
+                            {selectedItem && selectedItem.id ? 'Edit'  : 'Add'} Item
+                        </button>
                 </div>
             </div> 
         </>);

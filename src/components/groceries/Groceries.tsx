@@ -7,6 +7,7 @@ import { GroceryService } from "@/service/GroceryService";
 import Image from "next/image";
 import editSvg from '../../assets/edit-icon.svg'
 import deleteSvg from '../../assets/garbage-icon.svg'
+import RowActions from "../RowActions";
 
 interface GroceryProps {
     year: number
@@ -57,10 +58,10 @@ function Groceries(props: GroceryProps){
         setOpenForm(false)
     }
 
-    function deleteItem(){
+    function deleteItem(index: number){
         if(groceries &&     Number(selectedItem) >= 0 ){
-            console.log('deleting', groceries[selectedItem-1])
-            gs.delete(Number(groceries[selectedItem-1].id))
+            console.log('deleting', groceries[index])
+            gs.delete(Number(groceries[index].id))
         return <dialog open>Deleted</dialog>
         }
     }
@@ -108,14 +109,12 @@ function Groceries(props: GroceryProps){
                             key={index}
                             onClick={(e)=> setSelectedItem(index+1)}
                             onMouseLeave={(e)=> setSelectedItem(-1)}>
-                         <div className='w-1/12 inline-block text-center' > {Number(selectedItem) - 1 === index ? <div className="justify-center mt-2">
-                                            <button className="mr-3 inline-block" onClick={(e) => deleteItem()}>
-                                                <Image alt="delete" src={deleteSvg} height={25} width={25} className="btn-delete"/>
-                                            </button>
-                                            <button className="inline-block" onClick={(e) => setOpenForm(true)}>
-                                                <Image alt="edit" src={editSvg} height={25} width={25} className=" btn-edit"/>
-                                            </button>
-                                        </div> : <></>}</div>
+                            <div className='w-1/12 inline-block text-center' > 
+                                {Number(selectedItem) - 1 === index ? 
+                                    (<RowActions deleteItem={deleteItem} setOpenForm={setOpenForm} index={index}/>)
+                                    : <></>
+                                }
+                            </div>
                             <div className='w-5/12 p-2 inline-block' style={{borderLeft: '2px solid grey'}}>{expense.description}</div>
                             <div className='w-2/12 p-2 inline-block text-start' style={{borderLeft: '2px solid grey'}}> R{expense.expectedAmount}</div>
                             <div className='w-2/12 p-2 inline-block text-start' style={{borderLeft: '2px solid grey'}}> R{expense.actualAmount}</div>

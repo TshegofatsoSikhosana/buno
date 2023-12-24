@@ -1,14 +1,22 @@
 import {  IncomeItem } from "@/model/models";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 interface IncomeItemFormProps {
     handleAddIncomeItem: (selectedItem:IncomeItem)=> void
+    handleEditIncomeItem: (selectedItem:IncomeItem)=> void;
+    item?: IncomeItem
 }
  
 function IncomeItemForm(props: IncomeItemFormProps){
 
     const [selectedItem, setSelectedItem] = useState<IncomeItem | null>(null)
 
+
+    useEffect(()=>{
+        if(props.item){
+            setSelectedItem(props.item);
+        }
+    },[props.item])
 
     function updateItem(e:any,target: string){
         const value = e.target.value
@@ -21,12 +29,16 @@ function IncomeItemForm(props: IncomeItemFormProps){
     }
 
     function handleAddIncomeItem(e:any){
-        console.log('debiiie')
-        const item = {...selectedItem}
-        item.dateCreated = Date.now().toString();
-        item.year = 2024;
-        if(item){
-            props.handleAddIncomeItem( {...item as IncomeItem})
+        if(selectedItem && selectedItem.id){
+            props.handleEditIncomeItem( {...selectedItem as IncomeItem})
+        }else{
+            console.log('debiiie')
+            const item = {...selectedItem}
+            item.dateCreated = Date.now().toString();
+            item.year = 2024;
+            if(item){
+                props.handleAddIncomeItem( {...item as IncomeItem})
+            }
         }
     }
 
@@ -54,7 +66,9 @@ function IncomeItemForm(props: IncomeItemFormProps){
                     <button 
                         className="inline-block bg-blue-500 p-2 w-100 btn-add-item"
                         style={{borderRadius: '8px'}}
-                        onClick={handleAddIncomeItem}>Add Item</button>
+                        onClick={handleAddIncomeItem}>
+                            {selectedItem && selectedItem.id ? 'Edit'  : 'Add'} Item
+                        </button>
                 </div>
             </div> 
         </>);

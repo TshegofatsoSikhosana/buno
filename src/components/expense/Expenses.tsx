@@ -8,6 +8,7 @@ import { ExpenseService } from "@/service/ExpenseService";
 import editSvg from '../../assets/edit-icon.svg'
 import deleteSvg from '../../assets/garbage-icon.svg'
 import Image from "next/image";
+import RowActions from "../RowActions";
 interface ExpensesProps {
     year: number
 }
@@ -59,16 +60,17 @@ function Expenses(props: ExpensesProps){
         setOpenForm(false)
     }
 
-    function deleteItem(){
-        if(expenses &&  Number(selectedItem) >= 0 ){
-            console.log('deleting', expenses[selectedItem-1])
-            es.delete(Number(expenses[selectedItem-1].id))
+    function deleteItem(index:number){
+        const expense = getItem();
+        if(expense){
+            console.log('deleting', expense)
+            es.delete(Number(expense.id))
         return <dialog open>Deleted</dialog>
         }
     }
 
     function isSelected(category:ExpenseCategory){
-        return selectedExpenseCategory === category;
+        return Number(selectedExpenseCategory) === Number(category);
     }
 
     function getItem(){
@@ -123,19 +125,11 @@ function Expenses(props: ExpensesProps){
                                 onClick={(e)=> handleItemClick(index,ExpenseCategory.LIVING)}
                                 onMouseLeave={(e)=> handleItemClick(-1)}>
                                     <div className='w-1/12 inline-block text-center' > 
-                                    {
-                                        Number(selectedItem) - 1 === index && isSelected(ExpenseCategory.LIVING) ? 
-                                        (<div className="justify-center mt-2">
-                                        <button className="mr-3 inline-block" onClick={(e) => deleteItem()}>
-                                            <Image alt="delete" src={deleteSvg} height={25} width={25} className="btn-delete"/>
-                                        </button>
-                                        <button className="inline-block" onClick={(e) => setOpenForm(true)}>
-                                            <Image alt="edit" src={editSvg} height={25} width={25} className=" btn-edit"/>
-                                        </button>
-                                        </div>) : 
-                                        <></>
+                                    {Number(selectedItem) - 1 === index  && isSelected(ExpenseCategory.LIVING) ? 
+                                        (<RowActions deleteItem={deleteItem} setOpenForm={setOpenForm} index={index}/>)
+                                        : <></>
                                     }
-                                </div>
+                                    </div>
                                     <div className='w-5/12 p-2 inline-block' style={{borderLeft: '2px solid rgb(70, 70, 80,180)'}}>
                                         {expense.description}
                                        
@@ -162,17 +156,9 @@ function Expenses(props: ExpensesProps){
                                 onClick={(e)=> handleItemClick(index, ExpenseCategory.EXCEPTION)}
                                 onMouseLeave={(e)=> handleItemClick(-1)}>
                                 <div className='w-1/12 inline-block text-center' > 
-                                    {
-                                        Number(selectedItem) - 1 === index && isSelected(ExpenseCategory.EXCEPTION) ? 
-                                        (<div className="justify-center mt-2">
-                                        <button className="mr-3 inline-block" onClick={(e) => deleteItem()}>
-                                            <Image alt="delete" src={deleteSvg} height={25} width={25} className="btn-delete"/>
-                                        </button>
-                                        <button className="inline-block" onClick={(e) => setOpenForm(true)}>
-                                            <Image alt="edit" src={editSvg} height={25} width={25} className=" btn-edit"/>
-                                        </button>
-                                        </div>) : 
-                                        <></>
+                                    {Number(selectedItem) - 1 === index  && isSelected(ExpenseCategory.EXCEPTION) ? 
+                                        (<RowActions deleteItem={deleteItem} setOpenForm={setOpenForm} index={index}/>)
+                                        : <></>
                                     }
                                 </div>
                                 <div className='w-5/12 p-2 inline-block' style={{borderLeft: '2px solid rgb(70, 70, 80,180)'}}>{expense.description}</div>
@@ -195,18 +181,10 @@ function Expenses(props: ExpensesProps){
                                 key={index}
                                 onClick={(e)=> handleItemClick(index,ExpenseCategory.PERSONAL)}
                                 onMouseLeave={(e)=> handleItemClick(-1)}>
-                               <div className='w-1/12 inline-block text-center' > 
-                                    {
-                                        Number(selectedItem) - 1 === index && isSelected(ExpenseCategory.PERSONAL) ? 
-                                        (<div className="justify-center mt-2">
-                                        <button className="mr-3 inline-block" onClick={(e) => deleteItem()}>
-                                            <Image alt="delete" src={deleteSvg} height={25} width={25} className="btn-delete"/>
-                                        </button>
-                                        <button className="inline-block" onClick={(e) => setOpenForm(true)}>
-                                            <Image alt="edit" src={editSvg} height={25} width={25} className=" btn-edit"/>
-                                        </button>
-                                        </div>) : 
-                                        <></>
+                                <div className='w-1/12 inline-block text-center' > 
+                                    {Number(selectedItem) - 1 === index  && isSelected(ExpenseCategory.PERSONAL)? 
+                                        (<RowActions deleteItem={deleteItem} setOpenForm={setOpenForm} index={index}/>)
+                                        : <></>
                                     }
                                 </div>
                                 <div className='w-5/12 p-2 inline-block' style={{borderLeft: '2px solid rgb(70, 70, 80,180)'}}>{expense.description}</div>

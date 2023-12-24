@@ -24,11 +24,13 @@ function ExpenseItemForm(props: ExpenseItemFormProps){
         const item = {...selectedItem}
         //@ts-ignore
         item[target] = value;
+        if(target === "category") item[target] = Number(value)
         setSelectedItem(item as ExpenseItem)
     }
 
     function handleAddExpenseItem(e:any){
         if(selectedItem && selectedItem.id){
+            
             props.handleEditExpsenseItem( {...selectedItem as ExpenseItem})
         }else{
             const item = {...selectedItem}
