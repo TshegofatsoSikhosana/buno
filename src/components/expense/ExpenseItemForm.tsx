@@ -1,15 +1,22 @@
 import { ExpenseCategory, ExpenseItem } from "@/model/models";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 interface ExpenseItemFormProps {
     handleAddExpenseItem: (selectedItem:ExpenseItem)=> void
+    handleEditExpsenseItem: (selectedItem:ExpenseItem)=> void;
+    item?: ExpenseItem
 }
  
 function ExpenseItemForm(props: ExpenseItemFormProps){
 
     const [selectedItem, setSelectedItem] = useState<ExpenseItem | null>(null)
 
-
+    useEffect(()=>{
+        if(props.item){
+            setSelectedItem(props.item);
+        }
+    },[props.item])
+    
     function updateItem(e:any,target: string){
         const value = e.target.value
         console.log('Updating,', value);
@@ -21,13 +28,16 @@ function ExpenseItemForm(props: ExpenseItemFormProps){
     }
 
     function handleAddExpenseItem(e:any){
-        console.log('debiiie')
-        const item = {...selectedItem}
-        item.dateCreated = Date.now().toString();
-        item.year= 2023
-        item.category = Number(selectedItem?.category)
-        if(item){
-            props.handleAddExpenseItem( {...item as ExpenseItem})
+        if(selectedItem && selectedItem.id){
+            props.handleEditExpsenseItem( {...selectedItem as ExpenseItem})
+        }else{
+            const item = {...selectedItem}
+            item.dateCreated = Date.now().toString();
+            item.year= 2024
+            item.category = Number(selectedItem?.category)
+            if(item){
+                props.handleAddExpenseItem( {...item as ExpenseItem})
+            }
         }
     }
 
@@ -68,7 +78,9 @@ function ExpenseItemForm(props: ExpenseItemFormProps){
                     <button 
                         className="inline-block bg-blue-500 p-2 w-100 btn-add-item"
                         style={{borderRadius: '8px'}}
-                        onClick={handleAddExpenseItem}>Add Item</button>
+                        onClick={handleAddExpenseItem}>
+                            {selectedItem && selectedItem.id ? 'Edit'  : 'Add'} Item
+                    </button>
                 </div>
             </div> 
         </>);

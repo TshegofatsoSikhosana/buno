@@ -24,7 +24,7 @@ function InvestmentItemForm(props: InvestmentItemFormProps){
         console.log('debiiie')
         const item = {...selectedItem}
         item.dateCreated = Date.now().toString();
-        item.year = 2023
+        item.year = 2024
         if(item){
             props.handleAddIvestmentItem( {...item as InvestmentItem})
         }

@@ -19,7 +19,7 @@ enum Tab{
 }
 export default function Home() {
 
-  const [year, setYear] = useState<number>(2023)
+  const [year, setYear] = useState<number>(2024)
   const expenses = useLiveQuery(() => db.expenses.where({year: year}).toArray());
   const investments = useLiveQuery(() => db.investments.where({year: year}).toArray());
   const incomes = useLiveQuery(() => db.income.where({year: year}).toArray());
@@ -82,23 +82,23 @@ export default function Home() {
         <h2 className='font-bold text-stone-100 text-end inline-block w-9/12' style={{fontSize: '36px'}}>2023 December Budget</h2>
         </div>
         <div className='w-100 p-5'>
-          <div className='inline-block mr-5 w-2/12' style={{border:'2px solid rgb(30,150,222,80)', padding:'1rem',borderRadius:'10px' }}>
+          <div className='inline-block mr-5 w-2/12' style={{border:'2px solid rgb(30,150,222,0.5)', padding:'1rem',borderRadius:'10px' }}>
             <h1>Total Expenses</h1>
             <div>R{getExpensesTotal()}</div>
           </div>
 
-          <div className='inline-block mr-5  w-2/12' style={{border:'2px solid rgb(30,150,222,80)', padding:'1rem',borderRadius:'10px' }}>
+          <div className='inline-block mr-5  w-2/12' style={{border:'2px solid rgb(30,150,222,0.5)', padding:'1rem',borderRadius:'10px' }}>
             <div>Total Investments</div>
             <div>R{getInvestmentsTotal()}</div>
           </div>
 
-          <div  className='inline-block mr-5 w-2/12' style={{border:'2px solid rgb(30,150,222,80)', padding:'1rem',borderRadius:'10px' }}>
+          <div  className='inline-block mr-5 w-2/12' style={{border:'2px solid rgb(30,150,222,0.5)', padding:'1rem',borderRadius:'10px' }}>
             <div>Total Income</div>
             <div>R{getIncomesTotal()}</div>
           </div>
 
 
-          <div  className='inline-block mr-5 w-2/12 text-center btn-add' style={{border:'2px solid rgb(30,150,222,80)', padding:'1rem',borderRadius:'10px' }}>
+          <div  className='inline-block mr-5 w-2/12 text-center btn-add' style={{border:'2px solid rgb(30,150,222,0.5)', padding:'1rem',borderRadius:'10px' }}>
             <div>Clone</div>
             <div>Bugdet</div>
           </div>

@@ -3,7 +3,7 @@ import { ExpenseCategory, ExpenseItem } from "@/model/models";
 import { log } from "console";
 import { useLiveQuery } from "dexie-react-hooks";
 import ExpenseItemForm from "./ExpenseItemForm";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ExpenseService } from "@/service/ExpenseService";
 import editSvg from '../../assets/edit-icon.svg'
 import deleteSvg from '../../assets/garbage-icon.svg'
@@ -16,10 +16,12 @@ function Expenses(props: ExpensesProps){
 
     const expenses = useLiveQuery(() => db.expenses.where({year: props.year}).toArray());
     const [openForm,setOpenForm] = useState(false);
-    const [selectedItem,setSelectedItem] = useState<number | undefined>();
+    const [selectedItem,setSelectedItem] = useState<number>(-1);
+    const [selectedExpenseCategory,setSelectExpenseCatergory] = useState<ExpenseCategory | undefined>()
     
 
     const es = new ExpenseService();
+
 
     function getActualTotal(type: ExpenseCategory){
         let amt:number = 0;
@@ -43,21 +45,49 @@ function Expenses(props: ExpensesProps){
         setOpenForm(false)
     }
 
-    function handleItemClick(index:number){
+    function handleItemClick(index:number, category?: ExpenseCategory | undefined){
         console.log("Selected", index); 
         setSelectedItem(index+1);
+
+        setSelectExpenseCatergory(category);
+    }
+
+    function handleEditExpenseItem(selectedItem: ExpenseItem){
+        if(selectedItem){
+            es.update( {...selectedItem})
+        }
+        setOpenForm(false)
+    }
+
+    function deleteItem(){
+        if(expenses &&  Number(selectedItem) >= 0 ){
+            console.log('deleting', expenses[selectedItem-1])
+            es.delete(Number(expenses[selectedItem-1].id))
+        return <dialog open>Deleted</dialog>
+        }
+    }
+
+    function isSelected(category:ExpenseCategory){
+        return selectedExpenseCategory === category;
+    }
+
+    function getItem(){
+        if(expenses){
+            return expenses.filter((e)=> e.category == selectedExpenseCategory)[selectedItem-1]
+        }
+        return undefined
     }
 
     return <>
-                { openForm ? <ExpenseItemForm handleAddExpenseItem={handleAddExpenseItem} />:( 
+      { openForm ? <ExpenseItemForm 
+                                handleAddExpenseItem={handleAddExpenseItem}
+                                handleEditExpsenseItem={handleEditExpenseItem}
+                                item={expenses && Number(selectedItem) >= 0 ? getItem() : undefined} />:( 
                     <button
                         className="p-2 mb-2 btn-add"
-                            style={{borderRadius: '8px', border:'2px solid rgb(70, 70, 80,180)'}}
-                            onClick={(e)=> setOpenForm(true)}>
-                                Add Expense
-                    </button>)
-                }
-                
+                        style={{borderRadius: '8px', border:'2px solid grey'}}
+                        onClick={(e)=> setOpenForm(true)}>Add Expense</button>
+                )}
                 <div className='w-11/12 grid-flow-row font-bold' style={{color:'rgb(30,150,222,255)'}}> 
                     <div className='w-6/12 p-2 inline-block' ></div>
                     <div className='w-3/12 p-2 inline-block text-center' style={{border: '1px solid rgb(70, 70, 80,180)'}} >
@@ -90,12 +120,22 @@ function Expenses(props: ExpensesProps){
                                 className='w-11/12 grid-flow-row row-text-block'
                                 style={{border: '1px solid rgb(70, 70, 80,180)'}}
                                 key={index}
-                                onClick={(e)=> handleItemClick(index)}
+                                onClick={(e)=> handleItemClick(index,ExpenseCategory.LIVING)}
                                 onMouseLeave={(e)=> handleItemClick(-1)}>
-                                    <div className='w-1/12 inline-block text-center' > {Number(selectedItem) - 1 === index ? <div className="justify-center mt-2">
-                                            <button className="mr-3 inline-block"><Image alt="delete" src={deleteSvg} height={25} width={25} className="btn-delete"/></button>
-                                            <button className="inline-block"><Image alt="edit" src={editSvg} height={25} width={25} className=" btn-edit"/></button>
-                                        </div> : <></>}</div>
+                                    <div className='w-1/12 inline-block text-center' > 
+                                    {
+                                        Number(selectedItem) - 1 === index && isSelected(ExpenseCategory.LIVING) ? 
+                                        (<div className="justify-center mt-2">
+                                        <button className="mr-3 inline-block" onClick={(e) => deleteItem()}>
+                                            <Image alt="delete" src={deleteSvg} height={25} width={25} className="btn-delete"/>
+                                        </button>
+                                        <button className="inline-block" onClick={(e) => setOpenForm(true)}>
+                                            <Image alt="edit" src={editSvg} height={25} width={25} className=" btn-edit"/>
+                                        </button>
+                                        </div>) : 
+                                        <></>
+                                    }
+                                </div>
                                     <div className='w-5/12 p-2 inline-block' style={{borderLeft: '2px solid rgb(70, 70, 80,180)'}}>
                                         {expense.description}
                                        
@@ -116,8 +156,25 @@ function Expenses(props: ExpensesProps){
                     </div>
                 </div>
                 {expenses?.filter((e)=> e.category === ExpenseCategory.EXCEPTION).map((expense, index)=>{
-                    return <div className='w-11/12 grid-flow-row row-text-block' style={{border: '1px solid rgb(70, 70, 80,180)'}} key={index}>
-                                <div className='w-1/12 inline-block'></div>
+                    return <div className='w-11/12 grid-flow-row row-text-block' 
+                                style={{border: '1px solid rgb(70, 70, 80,180)'}}
+                                key={index}
+                                onClick={(e)=> handleItemClick(index, ExpenseCategory.EXCEPTION)}
+                                onMouseLeave={(e)=> handleItemClick(-1)}>
+                                <div className='w-1/12 inline-block text-center' > 
+                                    {
+                                        Number(selectedItem) - 1 === index && isSelected(ExpenseCategory.EXCEPTION) ? 
+                                        (<div className="justify-center mt-2">
+                                        <button className="mr-3 inline-block" onClick={(e) => deleteItem()}>
+                                            <Image alt="delete" src={deleteSvg} height={25} width={25} className="btn-delete"/>
+                                        </button>
+                                        <button className="inline-block" onClick={(e) => setOpenForm(true)}>
+                                            <Image alt="edit" src={editSvg} height={25} width={25} className=" btn-edit"/>
+                                        </button>
+                                        </div>) : 
+                                        <></>
+                                    }
+                                </div>
                                 <div className='w-5/12 p-2 inline-block' style={{borderLeft: '2px solid rgb(70, 70, 80,180)'}}>{expense.description}</div>
                                 <div className='w-3/12 p-2 inline-block text-start'  style={{borderLeft: '2px solid rgb(70, 70, 80,180)'}}> R{expense.actualAmount}</div>
                         <div className='w-3/12 p-2 inline-block text-start'  style={{borderLeft: '2px solid rgb(70, 70, 80,180)'}}> R{expense.expectedAmount}</div>
@@ -133,8 +190,25 @@ function Expenses(props: ExpensesProps){
                     </div>
                 </div>
                 {expenses?.filter((e)=> e.category === ExpenseCategory.PERSONAL).map((expense, index)=>{
-                    return <div className='w-11/12 grid-flow-row row-text-block' style={{border: '1px solid rgb(70, 70, 80,180)'}} key={index}>
-                               <div className='w-1/12 inline-block '></div>
+                    return <div className='w-11/12 grid-flow-row row-text-block'
+                                style={{border: '1px solid rgb(70, 70, 80,180)'}}
+                                key={index}
+                                onClick={(e)=> handleItemClick(index,ExpenseCategory.PERSONAL)}
+                                onMouseLeave={(e)=> handleItemClick(-1)}>
+                               <div className='w-1/12 inline-block text-center' > 
+                                    {
+                                        Number(selectedItem) - 1 === index && isSelected(ExpenseCategory.PERSONAL) ? 
+                                        (<div className="justify-center mt-2">
+                                        <button className="mr-3 inline-block" onClick={(e) => deleteItem()}>
+                                            <Image alt="delete" src={deleteSvg} height={25} width={25} className="btn-delete"/>
+                                        </button>
+                                        <button className="inline-block" onClick={(e) => setOpenForm(true)}>
+                                            <Image alt="edit" src={editSvg} height={25} width={25} className=" btn-edit"/>
+                                        </button>
+                                        </div>) : 
+                                        <></>
+                                    }
+                                </div>
                                 <div className='w-5/12 p-2 inline-block' style={{borderLeft: '2px solid rgb(70, 70, 80,180)'}}>{expense.description}</div>
                                 <div className='w-3/12 p-2 inline-block text-start'  style={{borderLeft: '2px solid rgb(70, 70, 80,180)'}}> R{expense.actualAmount}</div>
                         <div className='w-3/12 p-2 inline-block text-start'  style={{borderLeft: '2px solid rgb(70, 70, 80,180)'}}> R{expense.expectedAmount}</div>

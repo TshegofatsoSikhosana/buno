@@ -42,6 +42,10 @@ export class GroceryService{
         db.groceries.put({...grocery});
     }
 
+    delete(id:number){
+        db.groceries.delete(id);
+    }
+
     initializeWithTemplate(){
      
     const groceries: GroceryItem[] = [

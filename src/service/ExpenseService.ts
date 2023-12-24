@@ -38,6 +38,10 @@ export class ExpenseService{
         db.expenses.put({...expense});
     }
 
+    delete(id:number){
+        db.expenses.delete(id);
+    }
+
     initializeWithTemplate(){
         const expenses: ExpenseItem[] = [
             {

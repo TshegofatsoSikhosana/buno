@@ -1,14 +1,21 @@
 import { GroceryItem } from "@/model/models";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 interface GroceryItemFormProps {
-    handleAddGroceryItem: (selectedItem:GroceryItem)=> void
+    handleAddGroceryItem: (selectedItem:GroceryItem)=> void;
+    handleEditGroceryItem: (selectedItem:GroceryItem)=> void;
+    item?: GroceryItem
 }
  
 function GroceryItemForm(props: GroceryItemFormProps){
 
     const [selectedItem, setSelectedItem] = useState<GroceryItem | null>(null)
 
+    useEffect(()=>{
+        if(props.item){
+            setSelectedItem(props.item);
+        }
+    },[props.item])
 
     function updateItem(e:any,target: string){
         const value = e.target.value
@@ -21,12 +28,16 @@ function GroceryItemForm(props: GroceryItemFormProps){
     }
 
     function handleAddGroceryItem(e:any){
-        console.log('debiiie')
-        const item = {...selectedItem}
-        item.dateCreated = Date.now().toString();
-        item.year = 2023 
-        if(item){
-            props.handleAddGroceryItem( {...item as GroceryItem})
+        
+        if(selectedItem && selectedItem.id){
+            props.handleEditGroceryItem( {...selectedItem as GroceryItem})
+        }else{
+            const item = {...selectedItem}
+            item.dateCreated = Date.now().toString();
+            item.year = 2024 
+            if(item){
+                props.handleAddGroceryItem( {...item as GroceryItem})
+            }
         }
     }
 
@@ -66,7 +77,9 @@ function GroceryItemForm(props: GroceryItemFormProps){
                     <button 
                         className="inline-block bg-blue-500 p-2 w-100 btn-add-item"
                         style={{borderRadius: '8px'}}
-                        onClick={handleAddGroceryItem}>Add Item</button>
+                        onClick={handleAddGroceryItem}>
+                            {selectedItem && selectedItem.id ? 'Edit'  : 'Add'} Item
+                    </button>
                 </div>
             </div> 
         </>);

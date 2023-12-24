@@ -4,6 +4,9 @@ import { useLiveQuery } from "dexie-react-hooks";
 import { useState } from "react";
 import GroceryItemForm from "./GroceryItemForm";
 import { GroceryService } from "@/service/GroceryService";
+import Image from "next/image";
+import editSvg from '../../assets/edit-icon.svg'
+import deleteSvg from '../../assets/garbage-icon.svg'
 
 interface GroceryProps {
     year: number
@@ -13,6 +16,8 @@ function Groceries(props: GroceryProps){
 
     const [openForm,setOpenForm] = useState(false);
     const groceries  =useLiveQuery(() => db.groceries.where({year: props.year}).toArray());
+    const [selectedItem,setSelectedItem] = useState<number>(-1);
+
     const gs = new GroceryService();
     function getActualTotal(){
         let amt:number = 0;
@@ -45,8 +50,26 @@ function Groceries(props: GroceryProps){
         setOpenForm(false)
     }
 
+    function handleEditGroceryItem(selectedItem: GroceryItem){
+        if(selectedItem){
+            gs.update( {...selectedItem})
+        }
+        setOpenForm(false)
+    }
+
+    function deleteItem(){
+        if(groceries &&     Number(selectedItem) >= 0 ){
+            console.log('deleting', groceries[selectedItem-1])
+            gs.delete(Number(groceries[selectedItem-1].id))
+        return <dialog open>Deleted</dialog>
+        }
+    }
+
     return <>
-                { openForm ? <GroceryItemForm handleAddGroceryItem={handleAddGroceryItem} />:( 
+                { openForm ? <GroceryItemForm 
+                                handleAddGroceryItem={handleAddGroceryItem}
+                                handleEditGroceryItem={handleEditGroceryItem}
+                                item={groceries && Number(selectedItem) >= 0 ? groceries[selectedItem-1] : undefined} />:( 
                     <button
                         className="p-2 mb-2 btn-add"
                         style={{borderRadius: '8px', border:'2px solid grey'}}
@@ -56,17 +79,20 @@ function Groceries(props: GroceryProps){
                     <div className='w-6/12 text-end grid-flow-row p-2 font-bold inline-block'> 
                     </div>
                     <div className='w-2/12 text-center grid-flow-row p-2 font-bold inline-block' style={{border: '1px solid rgb(169,169,169,169)', color:'rgb(30,150,222,255)'}}> 
+                        Expected
+                    </div>
+                    <div className='w-2/12 text-center grid-flow-row p-2 font-bold inline-block' style={{border: '1px solid rgb(169,169,169,169)', color:'rgb(30,150,222,255)'}}> 
                         Actual
                     </div>
                     <div className='w-2/12 text-center grid-flow-row p-2 font-bold inline-block' style={{border: '1px solid rgb(169,169,169,169)', color:'rgb(30,150,222,255)'}}> 
                         Discount
                     </div>
-                    <div className='w-2/12 text-center grid-flow-row p-2 font-bold inline-block' style={{border: '1px solid rgb(169,169,169,169)', color:'rgb(30,150,222,255)'}}> 
-                        Expected
-                    </div>
                 </div>
                 <div>
                     <div className='w-6/12 text-start grid-flow-row p-2 font-bold inline-block'> 
+                    </div>
+                    <div className='w-2/12 text-start grid-flow-row p-2 font-bold inline-block' style={{border: '1px solid rgb(169,169,169,169)', color:'rgb(30,150,222,255)'}}> 
+                        R{getExpectedTotal()}
                     </div>
                     <div className='w-2/12 text-start grid-flow-row p-2 font-bold inline-block' style={{border: '1px solid rgb(169,169,169,169)', color:'rgb(30,150,222,255)'}}> 
                         R{getActualTotal()}
@@ -74,16 +100,26 @@ function Groceries(props: GroceryProps){
                     <div className='w-2/12 text-start grid-flow-row p-2 font-bold inline-block' style={{border: '1px solid rgb(169,169,169,169)', color:'rgb(30,150,222,255)'}}> 
                         R{getDiscountTotal()}
                     </div>
-                    <div className='w-2/12 text-start grid-flow-row p-2 font-bold inline-block' style={{border: '1px solid rgb(169,169,169,169)', color:'rgb(30,150,222,255)'}}> 
-                        R{getExpectedTotal()}
-                    </div>
                 </div>
                 {groceries?.map((expense, index)=>{
-                    return <div className='w-100 grid-flow-row row-text-block' style={{border: '1px solid grey'}} key={index}>
-                            <div className='w-6/12 p-2 inline-block' style={{borderLeft: '2px solid grey'}}>{expense.description}</div>
+                    return <div 
+                            className='w-100 grid-flow-row row-text-block'
+                            style={{border: '1px solid grey'}}
+                            key={index}
+                            onClick={(e)=> setSelectedItem(index+1)}
+                            onMouseLeave={(e)=> setSelectedItem(-1)}>
+                         <div className='w-1/12 inline-block text-center' > {Number(selectedItem) - 1 === index ? <div className="justify-center mt-2">
+                                            <button className="mr-3 inline-block" onClick={(e) => deleteItem()}>
+                                                <Image alt="delete" src={deleteSvg} height={25} width={25} className="btn-delete"/>
+                                            </button>
+                                            <button className="inline-block" onClick={(e) => setOpenForm(true)}>
+                                                <Image alt="edit" src={editSvg} height={25} width={25} className=" btn-edit"/>
+                                            </button>
+                                        </div> : <></>}</div>
+                            <div className='w-5/12 p-2 inline-block' style={{borderLeft: '2px solid grey'}}>{expense.description}</div>
+                            <div className='w-2/12 p-2 inline-block text-start' style={{borderLeft: '2px solid grey'}}> R{expense.expectedAmount}</div>
                             <div className='w-2/12 p-2 inline-block text-start' style={{borderLeft: '2px solid grey'}}> R{expense.actualAmount}</div>
                             <div className='w-2/12 p-2 inline-block text-start' style={{borderLeft: '2px solid grey'}}> R{expense.discountAmount}</div>
-                            <div className='w-2/12 p-2 inline-block text-start' style={{borderLeft: '2px solid grey'}}> R{expense.expectedAmount}</div>
                         </div>
                 })}
         </>;

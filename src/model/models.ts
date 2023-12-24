@@ -1,4 +1,5 @@
 export interface GroceryItem{
+    id?: number
     description: string,
     quantity: number,
     expectedAmount: number,
@@ -25,6 +26,7 @@ export enum ExpenseCategory{
 
 
 export interface ExpenseItem{
+    id?: number
     description: string,
     category: ExpenseCategory,
     expectedAmount: number,
@@ -36,6 +38,7 @@ export interface ExpenseItem{
 }
 
 export interface InvestmentItem{
+    id?: number
     description: string,
     bank?: string,
     expectedAmount: number,
@@ -46,6 +49,7 @@ export interface InvestmentItem{
 }
 
 export interface IncomeItem{
+    id?: number
     description: string,
     category: string,
     expectedAmount: number,
