@@ -6,7 +6,7 @@ import ExpenseItemForm from "./ExpenseItemForm";
 import { useEffect, useState } from "react";
 import { ExpenseService } from "@/service/ExpenseService";
 import editSvg from '../../assets/edit-icon.svg'
-import deleteSvg from '../../assets/garbage-icon.svg'
+import closeSvg from '../../assets/close.svg'
 import Image from "next/image";
 import RowActions from "../RowActions";
 import { filterItems, overSpentItems, stillNeedToPay, unexpectedItems } from "@/app/util/utils";
@@ -84,11 +84,22 @@ function Expenses(props: ExpensesProps){
     }
 
     return <>
-      { openForm ? <ExpenseItemForm 
-                                handleAddExpenseItem={handleAddExpenseItem}
-                                handleEditExpsenseItem={handleEditExpenseItem}
-                                item={filteredExpenses && Number(selectedItem) >= 0 ? getItem() : undefined} />:( 
-                    <button
+      { openForm ?  <>
+                        {/* <div className="w-100">
+                            <Image alt="delete"
+                                src={closeSvg}
+                                height={25} width={25}
+                                className="btn-delete inline-block"/>
+                            <div className="inline-block text-slate-600">Close</div>
+                        </div> */}
+                        <ExpenseItemForm 
+                            handleAddExpenseItem={handleAddExpenseItem}
+                            handleEditExpsenseItem={handleEditExpenseItem}
+                            item={filteredExpenses 
+                            && Number(selectedItem) >= 0 ? getItem() : undefined} 
+                            />
+                    </>:
+                    (<button
                         className="p-2 mb-2 btn-add"
                         style={{borderRadius: '8px', border:'2px solid rgb(70, 70, 80,180)'}}
                         onClick={(e)=> setOpenForm(true)}>Add Expense</button>

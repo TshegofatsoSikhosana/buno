@@ -88,7 +88,7 @@ export default function Home() {
       <div className='w-11/12'>
         <h1 className="inline-block w-3/12">Welcome back, Tshegofatso</h1>
         <h2 className='font-bold text-stone-100 text-end inline-block w-9/12' style={{fontSize: '36px'}}>
-          2023 December Budget <button className="inline-block" onClick={(e) => props.setOpenForm(true)}>
+          2023 December Budget <button className="inline-block" >
         <Image alt="edit" src={settingsSvg} height={25} width={25} className=" btn-edit"/>
     </button>
         </h2>

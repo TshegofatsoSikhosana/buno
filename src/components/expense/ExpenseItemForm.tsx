@@ -1,5 +1,7 @@
 import { ExpenseCategory, ExpenseItem } from "@/model/models";
+import Image from "next/image";
 import { useEffect, useState } from "react";
+import closeSvg from '../../assets/close.svg'
 
 interface ExpenseItemFormProps {
     handleAddExpenseItem: (selectedItem:ExpenseItem)=> void
@@ -45,6 +47,13 @@ function ExpenseItemForm(props: ExpenseItemFormProps){
 
     return (<>
             <div className="p-2">
+            <div className="w-100">
+                            <Image alt="delete"
+                                src={closeSvg}
+                                height={25} width={25}
+                                className="btn-delete inline-block"/>
+                            <div className="inline-block text-slate-600">Close</div>
+                        </div>
                 <div className="p-2">
                     <div className="inline-block mr-2 ">
                         <div> Description</div>
