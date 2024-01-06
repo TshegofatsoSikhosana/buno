@@ -35,6 +35,11 @@ body {
   cursor: pointer;
 }
 
+.btn-close:hover{
+  color: rgba(222, 30, 40, 0.671);
+  cursor: pointer;
+}
+
 .btn-add-item{
   background-color: rgb(19, 21, 32);
   border: 2px solid grey

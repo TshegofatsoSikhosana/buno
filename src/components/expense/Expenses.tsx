@@ -5,19 +5,20 @@ import { useLiveQuery } from "dexie-react-hooks";
 import ExpenseItemForm from "./ExpenseItemForm";
 import { useEffect, useState } from "react";
 import { ExpenseService } from "@/service/ExpenseService";
-import editSvg from '../../assets/edit-icon.svg'
 import closeSvg from '../../assets/close.svg'
 import Image from "next/image";
 import RowActions from "../RowActions";
-import { filterItems, overSpentItems, stillNeedToPay, unexpectedItems } from "@/app/util/utils";
 import FilterSelector from "../FilterSelector";
+import { filterItems } from "@/app/util/utils";
+
 interface ExpensesProps {
-    year: number
+    year: number;
+    month: number;
 }
  
 function Expenses(props: ExpensesProps){
 
-    const expenses = useLiveQuery(() => db.expenses.where({year: props.year}).toArray());
+    const [expenses,setExpenses] = useState<ExpenseItem[]>([]);
     const [openForm,setOpenForm] = useState(false);
     const [selectedItem,setSelectedItem] = useState<number>(-1);
     const [filterType,setFilterType] = useState<number>(-1);
@@ -32,8 +33,20 @@ function Expenses(props: ExpensesProps){
                 const e = filterItems(filterType, expenses);
                 setFilteredExpenses([...e])
         }
-      
-    },[filterType, expenses])
+    },[filterType, expenses]);
+
+    useEffect(()=>{
+        getExpenses();
+    },[props.month,props.year]);
+
+    function getExpenses(){
+        db.expenses.where({year: props.year})
+        .and((i)=> Number(i.month) == props.month)
+        .toArray()
+        .then((ex)=> {
+            setExpenses([...ex]);
+        });
+    }
 
     function getActualTotal(type: ExpenseCategory){
         return filteredExpenses ? es.getActualTotal(type,filteredExpenses) : 0
@@ -45,9 +58,14 @@ function Expenses(props: ExpensesProps){
 
     function handleAddExpenseItem(selectedItem: ExpenseItem){
         if(selectedItem){
-            es.addNew( {...selectedItem})
+            let item = {...selectedItem};
+            item.month = props.month.toString();
+            item.year = props.year;
+            item.dateCreated = Date.now().toString();
+            es.addNew( {...item})
         }
         setOpenForm(false)
+        getExpenses();
     }
 
     function handleItemClick(index:number, category?: ExpenseCategory | undefined){
@@ -61,6 +79,7 @@ function Expenses(props: ExpensesProps){
             es.update( {...selectedItem})
         }
         setOpenForm(false)
+        getExpenses();
     }
 
     function deleteItem(index:number){
@@ -68,7 +87,7 @@ function Expenses(props: ExpensesProps){
         if(expense){
             console.log('deleting', expense)
             es.delete(Number(expense.id))
-        return <dialog open>Deleted</dialog>
+            getExpenses();
         }
     }
 
@@ -85,13 +104,13 @@ function Expenses(props: ExpensesProps){
 
     return <>
       { openForm ?  <>
-                        {/* <div className="w-100">
+                         <div className="w-100 " onClick={()=> setOpenForm(false)}>
                             <Image alt="delete"
                                 src={closeSvg}
                                 height={25} width={25}
-                                className="btn-delete inline-block"/>
-                            <div className="inline-block text-slate-600">Close</div>
-                        </div> */}
+                                className="inline-block"/>
+                            <div className="inline-block text-slate-600 btn-close">Close</div>
+                        </div>
                         <ExpenseItemForm 
                             handleAddExpenseItem={handleAddExpenseItem}
                             handleEditExpsenseItem={handleEditExpenseItem}

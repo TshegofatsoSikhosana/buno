@@ -5,20 +5,20 @@ import { useEffect, useState } from "react";
 import GroceryItemForm from "./GroceryItemForm";
 import { GroceryService } from "@/service/GroceryService";
 import Image from "next/image";
-import editSvg from '../../assets/edit-icon.svg'
-import deleteSvg from '../../assets/garbage-icon.svg'
 import RowActions from "../RowActions";
 import FilterSelector from "../FilterSelector";
 import { filterItems } from "@/app/util/utils";
+import closeSvg from '../../assets/close.svg';
 
 interface GroceryProps {
-    year: number
+    year: number;
+    month: number;
 }
  
 function Groceries(props: GroceryProps){
 
     const [openForm,setOpenForm] = useState(false);
-    const groceries  =useLiveQuery(() => db.groceries.where({year: props.year}).toArray());
+    const [groceries,setGroceries]  = useState<GroceryItem[]>([]);
     const [selectedItem,setSelectedItem] = useState<number>(-1);
     const [filterType,setFilterType] = useState<number>(-1);
     const [filteredGroceries, setFilteredGroceries] = useState<GroceryItem[]>()
@@ -39,9 +39,14 @@ function Groceries(props: GroceryProps){
 
     function handleAddGroceryItem(selectedItem: GroceryItem){
         if(selectedItem){
-            gs.addNew( {...selectedItem})
+            let item = {...selectedItem};
+            item.month = props.month.toString();
+            item.year = props.year;
+            item.dateCreated = Date.now().toString();
+            gs.addNew( {...item})
         }
         setOpenForm(false)
+        getGroceries();
     }
 
     function handleEditGroceryItem(selectedItem: GroceryItem){
@@ -49,13 +54,14 @@ function Groceries(props: GroceryProps){
             gs.update( {...selectedItem})
         }
         setOpenForm(false)
+        getGroceries();
     }
 
     function deleteItem(index: number){
         if(filteredGroceries && Number(selectedItem) >= 0 ){
             console.log('deleting', filteredGroceries[index])
             gs.delete(Number(filteredGroceries[index].id))
-            return <dialog open>Deleted</dialog>
+            getGroceries();
         }
     }
 
@@ -64,19 +70,41 @@ function Groceries(props: GroceryProps){
             const g = filterItems(filterType,groceries)
             setFilteredGroceries([...g])
         }
-    },[filterType, groceries])
+    },[filterType, groceries]);
 
+    useEffect(()=>{
+        getGroceries();
+    },[props.month,props.year]);
+
+    function getGroceries(){
+        db.groceries.where({year: props.year})
+        .and((i)=> Number(i.month) == props.month)
+        .toArray()
+        .then((ex)=> {
+            setGroceries([...ex]);
+        });
+    }
 
     return <>
-                { openForm ? <GroceryItemForm 
-                                handleAddGroceryItem={handleAddGroceryItem}
-                                handleEditGroceryItem={handleEditGroceryItem}
-                                item={groceries && Number(selectedItem) >= 0 ? groceries[selectedItem-1] : undefined} />:( 
-                    <button
-                        className="p-2 mb-2 btn-add"
-                        style={{borderRadius: '8px', border:'2px solid rgb(70, 70, 80,180)'}}
-                        onClick={(e)=> setOpenForm(true)}>Add Grocery Item</button>
-                )}
+                { openForm ? <>
+                                <div className="w-100 " onClick={()=> setOpenForm(false)}>
+                                    <Image alt="delete"
+                                        src={closeSvg}
+                                        height={25} width={25}
+                                        className="inline-block"/>
+                                    <div className="inline-block text-slate-600 btn-close">Close</div>
+                                </div>
+                                <GroceryItemForm 
+                                    handleAddGroceryItem={handleAddGroceryItem}
+                                    handleEditGroceryItem={handleEditGroceryItem}
+                                    item={filteredGroceries && Number(selectedItem) >= 0 ? filteredGroceries[selectedItem-1] : undefined} />
+                            
+                            </>:( 
+                                <button
+                                    className="p-2 mb-2 btn-add"
+                                    style={{borderRadius: '8px', border:'2px solid rgb(70, 70, 80,180)'}}
+                                    onClick={(e)=> setOpenForm(true)}>Add Grocery Item</button>
+                            )}
                 <div>
                     <div className='w-6/12 text-end grid-flow-row p-2 font-bold inline-block'> 
                     </div>

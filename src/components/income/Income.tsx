@@ -7,16 +7,19 @@ import { IncomeService } from "@/service/IncomeService";
 import RowActions from "../RowActions";
 import FilterSelector from "../FilterSelector";
 import { filterItems } from "@/app/util/utils";
+import Image from "next/image";
+import closeSvg from '../../assets/close.svg';
 
 interface IncomeProps {
-    year: number
+    year: number;
+    month: number;
 }
  
 function Income(props: IncomeProps){
 
     const [openForm,setOpenForm] = useState(false);
 
-    const incomes = useLiveQuery(() => db.income.where({year: props.year}).toArray());
+    const [incomes,setIncomes] = useState<IncomeItem[]>([]);
     const [selectedItem,setSelectedItem] = useState<number>(-1);
     const [filterType,setFilterType] = useState<number>(-1);
     const [filteredIncomes, setFilteredGroceries] = useState<IncomeItem[]>()
@@ -28,7 +31,20 @@ function Income(props: IncomeProps){
             const g = filterItems(filterType,incomes)
             setFilteredGroceries([...g])
         }
-    },[filterType, incomes])
+    },[filterType, incomes]);
+
+    useEffect(()=>{
+        getIncomes();
+    },[props.month,props.year]);
+
+    function getIncomes(){
+        db.income.where({year: props.year})
+        .and((i)=> Number(i.month) == props.month)
+        .toArray()
+        .then((ex)=> {
+            setIncomes([...ex]);
+        });
+    }
 
     function getActualTotal(){
         return filteredIncomes ? is.getActualTotal(filteredIncomes) : 0
@@ -41,9 +57,14 @@ function Income(props: IncomeProps){
 
     function handleAddIncomeItem(selectedItem: IncomeItem){
         if(selectedItem){
-            db.income.add( {...selectedItem})
+            let item = {...selectedItem};
+            item.month = props.month.toString();
+            item.year = props.year;
+            item.dateCreated = Date.now().toString();
+            db.income.add( {...item})
         }
-        setOpenForm(false)
+        setOpenForm(false);
+        getIncomes();
     }
 
     function handleEditIncomeItem(selectedItem: IncomeItem){
@@ -52,7 +73,8 @@ function Income(props: IncomeProps){
             selectedItem.dateCreated =  Date.now().toString()
             is.update( {...selectedItem})
         }
-        setOpenForm(false)
+        setOpenForm(false);
+        getIncomes();
     }
 
     function openFormFn() {
@@ -68,16 +90,25 @@ function Income(props: IncomeProps){
         if(filteredIncomes && Number(selectedItem) >= 0 ){
             console.log('deleting', filteredIncomes[index])
             is.delete(Number(filteredIncomes[index].id))
-        return <dialog open>Deleted</dialog>
+            getIncomes();
         }
     }
 
 
     return <>
-                { openForm ? <IncomeItemForm 
-                                handleAddIncomeItem={handleAddIncomeItem}
-                                handleEditIncomeItem={handleEditIncomeItem}
-                                item={incomes && Number(selectedItem) >= 0 ? incomes[selectedItem-1] : undefined} />
+                { openForm ? <>
+                                <div className="w-100 " onClick={()=> setOpenForm(false)}>
+                                    <Image alt="delete"
+                                        src={closeSvg}
+                                        height={25} width={25}
+                                        className="inline-block"/>
+                                    <div className="inline-block text-slate-600 btn-close">Close</div>
+                                </div>
+                                <IncomeItemForm 
+                                    handleAddIncomeItem={handleAddIncomeItem}
+                                    handleEditIncomeItem={handleEditIncomeItem}
+                                    item={incomes && Number(selectedItem) >= 0 ? incomes[selectedItem-1] : undefined} />
+                            </>
                      :(<button
                         className="p-2 mb-2 btn-add"
                         style={{borderRadius: '8px', border:'2px solid rgb(70, 70, 80,180)'}}

@@ -1,5 +1,5 @@
 import { db } from "@/config/database.config";
-import { ExpenseCategory, ExpenseItem, InvestmentItem } from "@/model/models";
+import {  InvestmentItem } from "@/model/models";
 import { useLiveQuery } from "dexie-react-hooks";
 import InvestmentItemForm from "./InvestmentItemForm";
 import { useEffect, useState } from "react";
@@ -7,14 +7,17 @@ import { InvestmentService } from "@/service/InvestmentService";
 import RowActions from "../RowActions";
 import FilterSelector from "../FilterSelector";
 import { filterItems } from "@/app/util/utils";
+import Image from "next/image";
+import closeSvg from '../../assets/close.svg';
 
 interface InvestmentProps {
-    year: number
+    year: number;
+    month:number;
 }
  
 function Investments(props: InvestmentProps){
 
-    const investments = useLiveQuery(() => db.investments.where({year: props.year}).toArray());
+    const [investments,setInvestments] = useState<InvestmentItem[]>([]);
     const [openForm,setOpenForm] = useState(false);
     const [selectedItem,setSelectedItem] = useState<number>(-1);
     const [filterType,setFilterType] = useState<number>(-1);
@@ -27,7 +30,20 @@ function Investments(props: InvestmentProps){
             const g = filterItems(filterType,investments)
             setFilteredInvestments([...g])
         }
-    },[filterType, investments])
+    },[filterType, investments]);
+
+    useEffect(()=>{
+        getInvestments();
+    },[props.month,props.year]);
+
+    function getInvestments(){
+        db.income.where({year: props.year})
+        .and((i)=> Number(i.month) == props.month)
+        .toArray()
+        .then((ex)=> {
+            setInvestments([...ex]);
+        });
+    }
 
     function getActualTotal(){
         return filteredInvestments ? is.getActualTotal(filteredInvestments) : 0
@@ -39,31 +55,46 @@ function Investments(props: InvestmentProps){
 
     function handleAddIvestmentItem(selectedItem: InvestmentItem){
         if(selectedItem){
-            db.investments.add( {...selectedItem})
+            let item = {...selectedItem};
+            item.month = props.month.toString();
+            item.year = props.year;
+            item.dateCreated = Date.now().toString();
+            db.investments.add( {...item})
         }
         setOpenForm(false)
+        getInvestments();
     }
 
     function handleEditInvestmentItem(selectedItem: InvestmentItem){
         if(selectedItem){
             is.update( {...selectedItem})
         }
-        setOpenForm(false)
+        setOpenForm(false);
+        getInvestments();
     }
 
     function deleteItem(index: number){
         if(filteredInvestments &&     Number(selectedItem) >= 0 ){
             console.log('deleting', filteredInvestments[index])
             is.delete(Number(filteredInvestments[index].id))
-        return <dialog open>Deleted</dialog>
+            getInvestments();
         }
     }
 
     return <>
-                { openForm ? <InvestmentItemForm
-                                handleAddIvestmentItem={handleAddIvestmentItem} 
-                                handleEditInvestmentItem={handleEditInvestmentItem}
-                                item={investments && Number(selectedItem) >= 0 ? investments[selectedItem-1] : undefined} />
+                { openForm ? <>
+                                <div className="w-100 " onClick={()=> setOpenForm(false)}>
+                                    <Image alt="delete"
+                                        src={closeSvg}
+                                        height={25} width={25}
+                                        className="inline-block"/>
+                                    <div className="inline-block text-slate-600 btn-close">Close</div>
+                                </div>
+                                <InvestmentItemForm
+                                    handleAddIvestmentItem={handleAddIvestmentItem} 
+                                    handleEditInvestmentItem={handleEditInvestmentItem}
+                                    item={investments && Number(selectedItem) >= 0 ? investments[selectedItem-1] : undefined} />
+                            </>
                 :(<button 
                     className="p-2 mb-2 btn-add"
                     style={{borderRadius: '8px', border:'2px solid rgb(70, 70, 80,180)'}}
