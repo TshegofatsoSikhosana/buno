@@ -40,6 +40,26 @@ body {
   cursor: pointer;
 }
 
+
+.btn-minus, .btn-plus{
+  border-radius: 10px;
+  text-align: center;
+  width:30px;
+}
+
+.btn-minus:hover, .btn-plus:hover{
+  cursor: pointer;
+}
+
+.btn-minus{
+  background-color: rgba(30, 148, 222, 0.671);
+}
+
+.btn-plus{
+  background-color: green;
+}
+
+
 .btn-add-item{
   background-color: rgb(19, 21, 32);
   border: 2px solid grey
@@ -50,7 +70,7 @@ body {
 
 .row-text-block:hover{
   background-color: rgb(19, 88, 51);
-  margin-bottom: 7px
+  margin-bottom: 7px;
 }
 
 .row-text-block > span:hover{

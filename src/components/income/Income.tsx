@@ -104,7 +104,7 @@ function Income(props: IncomeProps){
                                         src={closeSvg}
                                         height={25} width={25}
                                         className="inline-block"/>
-                                    <div className="inline-block text-slate-600 btn-close">Close</div>
+                                    <div className="inline-block text-slate-600 btn-close">CLOSE</div>
                                 </div>
                                 <IncomeItemForm 
                                     handleAddIncomeItem={handleAddIncomeItem}
@@ -114,7 +114,7 @@ function Income(props: IncomeProps){
                      :(<button
                         className="p-2 mb-2 btn-add"
                         style={{borderRadius: '8px', border:'2px solid rgb(70, 70, 80,180)'}}
-                        onClick={(e)=> setOpenForm(true)}>Add Income Item</button>
+                        onClick={(e)=> setOpenForm(true)}>Add Income</button>
                 )}
                   <div className='w-11/12 grid-flow-row font-bold' style={{color:'rgb(30,150,222,255)'}}> 
                     <div className='w-6/12 p-2 inline-block' ></div>

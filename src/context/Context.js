@@ -1,7 +1,7 @@
 
 'use client';
 
-import { createContext, useContext,  useState } from "react";
+import { createContext, useContext,  useEffect,  useState } from "react";
 
 const AppContext = createContext({})
 
@@ -10,8 +10,15 @@ const AppState = {
     month: Number
 }
 export const AppContextProvider = ({ children }) => {
-    const [state, setState] = useState({year: 2024,month:1});
+    const [state, setState] = useState({year: 0,month:0});
 
+    useEffect(()=>{
+        const date = new Date();
+        const s = {...state}
+        s.month = date.getMonth()+1;
+        s.year = date.getFullYear();
+        setState({...s});
+    },[])
     return (
         <AppContext.Provider value={{ state, setState }}>
             {children}

@@ -89,7 +89,7 @@ function Investments(props: InvestmentProps){
                                         src={closeSvg}
                                         height={25} width={25}
                                         className="inline-block"/>
-                                    <div className="inline-block text-slate-600 btn-close">Close</div>
+                                    <div className="inline-block text-slate-600 btn-close">CLOSE</div>
                                 </div>
                                 <InvestmentItemForm
                                     handleAddIvestmentItem={handleAddIvestmentItem} 

@@ -98,9 +98,11 @@ export default function Home() {
   }
 
   function updateMonth(month:number){
-    const s = {...state}
-    s.month = month;
-    setState(s)
+    if(month > 0 && month <= 12){
+      const s = {...state}
+      s.month = month;
+      setState(s)
+    }
   }
 
   return (
@@ -133,20 +135,24 @@ export default function Home() {
           {openForm ? 
               <>
                 <div className="p-2">
-                    <div className="inline-block mr-2 w-4/12">
+                    <div className="inline-block mr-2 w-4/12 p-2">
                         <div> Year</div>
-                        <input type="number" className="text-black w-10/12" value={year} onChange={(e)=> updateYear(Number(e.target.value))}/>
+                        <input type="text" className="text-black mr-3 w-6/12 inline-block" value={year} />
+                        <div className='btn-minus w-1/12 inline-block p-1 mr-1' onClick={(e)=> updateYear(year-1)}> -</div> 
+                        <div className='btn-plus w-1/12 inline-block p-1'  onClick={(e)=> updateYear(year+1)}> +</div> 
                     </div>
                     <div className="inline-block mr-2 w-4/12">
                         <div> Month</div>
-                        <input type="number" min={1} max={12} className="text-black w-10/12" value={month}  onChange={(e)=> updateMonth(Number(e.target.value))}/>
+                        <input type="text" className="text-black mr-3 w-6/12 inline-block" value={month} />
+                        <div className='btn-minus w-1/12 inline-block p-1 mr-1' onClick={(e)=>  updateMonth(Number(month-1))}> -</div> 
+                        <div className='btn-plus w-1/12 inline-block p-1' onClick={(e)=>  updateMonth(Number(month+1))}> +</div> 
                     </div>
                     <div className="w-3/12 inline-block" onClick={()=> setOpenForm(false)}>
                     <Image alt="delete"
                         src={closeSvg}
                         height={25} width={25}
                         className="inline-block"/>
-                    <div className="inline-block text-slate-600 btn-close">Close</div>
+                    <div className="inline-block text-slate-600 btn-close">CLOSE</div>
                 </div>
                 </div>
             </>: null}
