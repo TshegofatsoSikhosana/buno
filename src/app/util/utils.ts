@@ -14,6 +14,20 @@ export function discountedItems(data:any[]){
     return data?.filter((e)=> e.discountAmount && e.discountAmount > 0);
 }
 
+export function getRemainingTotal(items: any[]){
+    let amt:number = 0;
+    let expected: number= 0;
+    if(items){
+        for (let index = 0; index < items.length; index++) {
+            const e = items[index];
+            amt += Number(e.actualAmount);
+            expected += Number(e.expectedAmount)
+        }
+    }
+    return expected - amt
+}
+
+
 export function filterItems(filterType: FilterType,data:any[]){
     if(filterType === FilterType.STILL_NEED_TO_PAY){
         return stillNeedToPay(data);

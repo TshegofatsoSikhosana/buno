@@ -20,8 +20,6 @@ function IncomeItemForm(props: IncomeItemFormProps){
 
     function updateItem(e:any,target: string){
         const value = e.target.value
-        console.log('Updating,', value);
-        
         const item = {...selectedItem}
         //@ts-ignore
         item[target] = value;
@@ -32,7 +30,6 @@ function IncomeItemForm(props: IncomeItemFormProps){
         if(selectedItem && selectedItem.id){
             props.handleEditIncomeItem( {...selectedItem as IncomeItem})
         }else{
-            console.log('debiiie')
             const item = {...selectedItem}
             item.dateCreated = Date.now().toString();
             item.year = 2024;

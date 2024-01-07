@@ -1,6 +1,5 @@
 import { db } from "@/config/database.config";
-import {  IncomeItem, InvestmentItem } from "@/model/models";
-import { useLiveQuery } from "dexie-react-hooks";
+import {  IncomeItem } from "@/model/models";
 import IncomeItemForm from "./IncomeItemForm";
 import { useEffect, useState } from "react";
 import { IncomeService } from "@/service/IncomeService";
@@ -9,14 +8,15 @@ import FilterSelector from "../FilterSelector";
 import { filterItems } from "@/app/util/utils";
 import Image from "next/image";
 import closeSvg from '../../assets/close.svg';
+import { useAppContext } from "@/context/Context";
 
 interface IncomeProps {
-    year: number;
-    month: number;
+    setTotalIncomes: (v:number)=> void;
 }
  
 function Income(props: IncomeProps){
-
+    // @ts-ignore:next-line
+    const {state} = useAppContext();
     const [openForm,setOpenForm] = useState(false);
 
     const [incomes,setIncomes] = useState<IncomeItem[]>([]);
@@ -35,14 +35,16 @@ function Income(props: IncomeProps){
 
     useEffect(()=>{
         getIncomes();
-    },[props.month,props.year]);
+    },[state.month,state.year]);
 
     function getIncomes(){
-        db.income.where({year: props.year})
-        .and((i)=> Number(i.month) == props.month)
+        db.income.where({year: state.year})
+        .and((i)=> Number(i.month) == state.month)
         .toArray()
         .then((ex)=> {
             setIncomes([...ex]);
+            props.setTotalIncomes(is.getRemainingIncome(ex));
+
         });
     }
 
@@ -58,8 +60,8 @@ function Income(props: IncomeProps){
     function handleAddIncomeItem(selectedItem: IncomeItem){
         if(selectedItem){
             let item = {...selectedItem};
-            item.month = props.month.toString();
-            item.year = props.year;
+            item.month = state.month.toString();
+            item.year = state.year;
             item.dateCreated = Date.now().toString();
             db.income.add( {...item})
         }

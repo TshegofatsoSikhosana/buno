@@ -1,7 +1,5 @@
 import { db } from "@/config/database.config";
 import { ExpenseCategory, ExpenseItem } from "@/model/models";
-import { log } from "console";
-import { useLiveQuery } from "dexie-react-hooks";
 import ExpenseItemForm from "./ExpenseItemForm";
 import { useEffect, useState } from "react";
 import { ExpenseService } from "@/service/ExpenseService";
@@ -10,14 +8,16 @@ import Image from "next/image";
 import RowActions from "../RowActions";
 import FilterSelector from "../FilterSelector";
 import { filterItems } from "@/app/util/utils";
+import { useAppContext } from "@/context/Context";
 
 interface ExpensesProps {
-    year: number;
-    month: number;
+    setTotalExpenses: (v:number)=> void;
 }
  
 function Expenses(props: ExpensesProps){
 
+    // @ts-ignore:next-line
+    const {state} = useAppContext();
     const [expenses,setExpenses] = useState<ExpenseItem[]>([]);
     const [openForm,setOpenForm] = useState(false);
     const [selectedItem,setSelectedItem] = useState<number>(-1);
@@ -29,7 +29,6 @@ function Expenses(props: ExpensesProps){
 
     useEffect(()=>{
         if(expenses){
-                console.log('Filter Type', filterType);
                 const e = filterItems(filterType, expenses);
                 setFilteredExpenses([...e])
         }
@@ -37,14 +36,15 @@ function Expenses(props: ExpensesProps){
 
     useEffect(()=>{
         getExpenses();
-    },[props.month,props.year]);
+    },[state.month,state.year]);
 
     function getExpenses(){
-        db.expenses.where({year: props.year})
-        .and((i)=> Number(i.month) == props.month)
+        db.expenses.where({year: state.year})
+        .and((i)=> Number(i.month) == state.month)
         .toArray()
         .then((ex)=> {
             setExpenses([...ex]);
+            props.setTotalExpenses(es.getRemainingExpenses(ex));
         });
     }
 
@@ -59,8 +59,8 @@ function Expenses(props: ExpensesProps){
     function handleAddExpenseItem(selectedItem: ExpenseItem){
         if(selectedItem){
             let item = {...selectedItem};
-            item.month = props.month.toString();
-            item.year = props.year;
+            item.month = state.month.toString();
+            item.year = state.year;
             item.dateCreated = Date.now().toString();
             es.addNew( {...item})
         }
@@ -69,7 +69,6 @@ function Expenses(props: ExpensesProps){
     }
 
     function handleItemClick(index:number, category?: ExpenseCategory | undefined){
-        console.log("Selected", index); 
         setSelectedItem(index+1);
         setSelectExpenseCatergory(category);
     }

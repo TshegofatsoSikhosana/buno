@@ -1,3 +1,4 @@
+import { getRemainingTotal } from "@/app/util/utils";
 import { db } from "@/config/database.config";
 import { IncomeItem } from "@/model/models";
 
@@ -25,7 +26,9 @@ export class IncomeService {
        
         return amt
     }
-
+    getRemainingIncome(incomes:IncomeItem[]){
+        return getRemainingTotal(incomes);
+    }
 
     addNew(income:IncomeItem) {
         db.income.add(income);

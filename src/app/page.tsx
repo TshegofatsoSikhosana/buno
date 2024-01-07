@@ -4,15 +4,15 @@ import Expenses from '@/components/expense/Expenses'
 import Groceries from '@/components/groceries/Groceries';
 import Income from '@/components/income/Income';
 import Investments from '@/components/investment/Investments';
-import { db } from '@/config/database.config';
-import { useLiveQuery } from 'dexie-react-hooks';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import settingsSvg from '../assets/settings.svg'
 import { DatePicker } from 'react-responsive-datepicker';
 import 'react-responsive-datepicker/dist/index.css'
 import closeSvg from '../assets/close.svg'
-import { ExpenseItem, IncomeItem, InvestmentItem } from '@/model/models';
+import { useAppContext } from '@/context/Context';
+import { db } from '@/config/database.config';
+import { getRemainingTotal } from './util/utils';
 
 
 enum Tab{
@@ -23,13 +23,15 @@ enum Tab{
 }
 export default function Home() {
 
-  const [year, setYear] = useState<number>(2024);
-  const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November" , "December"]
-  const [month,setMonth] = useState<number>(1);
-  const [expenses,setExpenses] = useState<ExpenseItem[]>([]);
+  // @ts-ignore:next-line
+  const {state,setState} = useAppContext();
 
-  const [investments,setInvestments] = useState<InvestmentItem[]>([]);
-  const [incomes,setIncomes] = useState<IncomeItem[]>([]);
+  const [year, setYear] = useState<number>(state.year);
+  const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November" , "December"]
+  const [month,setMonth] = useState<number>(state.month);
+  const [totalExpenses,setTotalExpenses] = useState<number>(0);
+  const [totalInvestments,setTotalInvestments] = useState<number>(0);
+  const [totalIncomes,setTotalIncomes] = useState<number>(0);
 
   const [active, setActive] = useState<Tab>(Tab.EXPENSES);
   const [openForm,setOpenForm] = useState(false);
@@ -41,54 +43,20 @@ export default function Home() {
   function renderContent(){
     switch (active) {
       case Tab.INVESTMENTS:
-        return <Investments year={year} month={month}/>
+        return <Investments setTotalInvestments={setTotalInvestments}/>
       case Tab.INCOME:
-        return <Income year={year} month={month}/>
+        return <Income setTotalIncomes={setTotalIncomes}/>
       case Tab.GROCERIES:
-        return <Groceries year={year} month={month}/>
+        return <Groceries />
       default:
-        return <Expenses year={year} month={month}/>
+        return <Expenses setTotalExpenses={setTotalExpenses} />
     }
   }
 
-  function getExpensesTotal(){
-    let amt:number = 0;
-    let expected: number= 0;
-    if(expenses){
-        for (let index = 0; index < expenses.length; index++) {
-            const e = expenses[index];
-            amt += Number(e.actualAmount);
-            expected += Number(e.expectedAmount)
-        }
-    }
-    return expected - amt
-  }
-
-  function getIncomesTotal(){
-    let amt:number = 0;
-    let expected: number= 0;
-    if(incomes){
-        for (let index = 0; index < incomes.length; index++) {
-            const e = incomes[index];
-            amt += Number(e.actualAmount);
-            expected += Number(e.expectedAmount)
-        }
-    }
-    return expected - amt
-  }
-
-  function getInvestmentsTotal(){
-    let amt:number = 0;
-    let expected: number= 0;
-    if(investments){
-        for (let index = 0; index < investments.length; index++) {
-            const e = investments[index];
-            amt += Number(e.actualAmount);
-            expected += Number(e.expectedAmount)
-        }
-    }
-    return expected - amt
-  }
+  useEffect(()=>{
+    setMonth(state.month);
+    setYear(state.year);
+  },[state.month,state.year]);
 
   useEffect(()=>{
     getExpenses();
@@ -101,7 +69,7 @@ export default function Home() {
     .and((i)=> Number(i.month) == month)
     .toArray()
     .then((ex)=> {
-        setExpenses([...ex]);
+        setTotalExpenses(getRemainingTotal([...ex]));
     });
   }
 
@@ -110,7 +78,7 @@ export default function Home() {
     .and((i)=> Number(i.month) == month)
     .toArray()
     .then((ex)=> {
-        setIncomes([...ex]);
+        setTotalIncomes(getRemainingTotal([...ex]));
     });
   }
 
@@ -119,8 +87,20 @@ export default function Home() {
     .and((i)=> Number(i.month) == month)
     .toArray()
     .then((ex)=> {
-        setInvestments([...ex]);
+        setTotalInvestments(getRemainingTotal([...ex]));
     });
+  }
+
+  function updateYear(year:number){
+    const s = {...state}
+    s.year = year;
+    setState(s)
+  }
+
+  function updateMonth(month:number){
+    const s = {...state}
+    s.month = month;
+    setState(s)
   }
 
   return (
@@ -137,37 +117,37 @@ export default function Home() {
         <div className='w-100 p-5'>
           <div className='inline-block mr-5 w-2/12' style={{border:'2px solid rgb(30,150,222,0.5)', padding:'1rem',borderRadius:'10px' }}>
             <h1>Expenses</h1>
-            <div>R{getExpensesTotal()}</div>
+            <div>R{totalExpenses}</div>
           </div>
 
           <div className='inline-block mr-5  w-2/12' style={{border:'2px solid rgb(30,150,222,0.5)', padding:'1rem',borderRadius:'10px' }}>
             <div>Investments</div>
-            <div>R{getInvestmentsTotal()}</div>
+            <div>R{totalInvestments}</div>
           </div>
 
           <div  className='inline-block mr-5 w-2/12' style={{border:'2px solid rgb(30,150,222,0.5)', padding:'1rem',borderRadius:'10px' }}>
             <div>Income</div>
-            <div>R{getIncomesTotal()}</div>
+            <div>R{totalIncomes}</div>
           </div>
           <div className="inline-block w-5/12">
           {openForm ? 
               <>
-                  <div className="w-100 " onClick={()=> setOpenForm(false)}>
+                <div className="p-2">
+                    <div className="inline-block mr-2 w-4/12">
+                        <div> Year</div>
+                        <input type="number" className="text-black w-10/12" value={year} onChange={(e)=> updateYear(Number(e.target.value))}/>
+                    </div>
+                    <div className="inline-block mr-2 w-4/12">
+                        <div> Month</div>
+                        <input type="number" min={1} max={12} className="text-black w-10/12" value={month}  onChange={(e)=> updateMonth(Number(e.target.value))}/>
+                    </div>
+                    <div className="w-3/12 inline-block" onClick={()=> setOpenForm(false)}>
                     <Image alt="delete"
                         src={closeSvg}
                         height={25} width={25}
                         className="inline-block"/>
                     <div className="inline-block text-slate-600 btn-close">Close</div>
                 </div>
-                <div className="p-2">
-                    <div className="inline-block mr-2 ">
-                        <div> Year</div>
-                        <input type="number" className="text-black" value={year} onChange={(e)=> setYear(Number(e.target.value))}/>
-                    </div>
-                    <div className="inline-block mr-2">
-                        <div> Month</div>
-                        <input type="number" min={1} max={12} className="text-black" value={month}  onChange={(e)=> setMonth(Number(e.target.value))}/>
-                    </div>
                 </div>
             </>: null}
         </div>

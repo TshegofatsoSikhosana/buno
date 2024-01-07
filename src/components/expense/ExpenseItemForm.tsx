@@ -1,7 +1,5 @@
-import { ExpenseCategory, ExpenseItem } from "@/model/models";
-import Image from "next/image";
+import { ExpenseItem } from "@/model/models";
 import { useEffect, useState } from "react";
-import closeSvg from '../../assets/close.svg'
 
 interface ExpenseItemFormProps {
     handleAddExpenseItem: (selectedItem:ExpenseItem)=> void
@@ -21,8 +19,6 @@ function ExpenseItemForm(props: ExpenseItemFormProps){
     
     function updateItem(e:any,target: string){
         const value = e.target.value
-        console.log('Updating,', value);
-        
         const item = {...selectedItem}
         //@ts-ignore
         item[target] = value;

@@ -19,8 +19,6 @@ function InvestmentItemForm(props: InvestmentItemFormProps){
 
     function updateItem(e:any,target: string){
         const value = e.target.value
-        console.log('Updating,', value);
-        
         const item = {...selectedItem}
         //@ts-ignore
         item[target] = value;
@@ -31,7 +29,6 @@ function InvestmentItemForm(props: InvestmentItemFormProps){
         if(selectedItem && selectedItem.id){
             props.handleEditInvestmentItem( {...selectedItem as InvestmentItem})
         }else{
-            console.log('debiiie')
             const item = {...selectedItem}
             item.dateCreated = Date.now().toString();
             item.year = 2024

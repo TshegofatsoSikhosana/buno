@@ -1,6 +1,5 @@
 import { db } from "@/config/database.config";
 import {GroceryItem } from "@/model/models";
-import { useLiveQuery } from "dexie-react-hooks";
 import { useEffect, useState } from "react";
 import GroceryItemForm from "./GroceryItemForm";
 import { GroceryService } from "@/service/GroceryService";
@@ -9,14 +8,15 @@ import RowActions from "../RowActions";
 import FilterSelector from "../FilterSelector";
 import { filterItems } from "@/app/util/utils";
 import closeSvg from '../../assets/close.svg';
+import { useAppContext } from "@/context/Context";
 
 interface GroceryProps {
-    year: number;
-    month: number;
 }
  
 function Groceries(props: GroceryProps){
 
+    // @ts-ignore:next-line
+    const {state} = useAppContext();
     const [openForm,setOpenForm] = useState(false);
     const [groceries,setGroceries]  = useState<GroceryItem[]>([]);
     const [selectedItem,setSelectedItem] = useState<number>(-1);
@@ -40,8 +40,8 @@ function Groceries(props: GroceryProps){
     function handleAddGroceryItem(selectedItem: GroceryItem){
         if(selectedItem){
             let item = {...selectedItem};
-            item.month = props.month.toString();
-            item.year = props.year;
+            item.month = state.month.toString();
+            item.year = state.year;
             item.dateCreated = Date.now().toString();
             gs.addNew( {...item})
         }
@@ -74,11 +74,11 @@ function Groceries(props: GroceryProps){
 
     useEffect(()=>{
         getGroceries();
-    },[props.month,props.year]);
+    },[state.month,state.year]);
 
     function getGroceries(){
-        db.groceries.where({year: props.year})
-        .and((i)=> Number(i.month) == props.month)
+        db.groceries.where({year: state.year})
+        .and((i)=> Number(i.month) == state.month)
         .toArray()
         .then((ex)=> {
             setGroceries([...ex]);

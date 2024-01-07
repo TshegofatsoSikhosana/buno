@@ -1,8 +1,11 @@
 import { db } from "@/config/database.config";
 import { ExpenseCategory, ExpenseItem, GroceryItem } from "@/model/models";
+import { BudgetService } from "./BudgetService";
+import { getRemainingTotal } from "@/app/util/utils";
 
 
 export class ExpenseService{
+
     constructor(){
 
     }
@@ -27,6 +30,10 @@ export class ExpenseService{
         }
        
         return amt
+    }
+
+    getRemainingExpenses(expenses:ExpenseItem[]){
+        return getRemainingTotal(expenses)
     }
 
 

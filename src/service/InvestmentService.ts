@@ -1,3 +1,4 @@
+import { getRemainingTotal } from "@/app/util/utils";
 import { db } from "@/config/database.config";
 import { InvestmentItem } from "@/model/models";
 
@@ -24,6 +25,10 @@ export class InvestmentService {
         }
        
         return amt
+    }
+
+    getRemainingInvestments(investments:InvestmentItem[]){
+        return getRemainingTotal(investments);
     }
 
 

@@ -1,6 +1,5 @@
 import { db } from "@/config/database.config";
 import {  InvestmentItem } from "@/model/models";
-import { useLiveQuery } from "dexie-react-hooks";
 import InvestmentItemForm from "./InvestmentItemForm";
 import { useEffect, useState } from "react";
 import { InvestmentService } from "@/service/InvestmentService";
@@ -9,14 +8,15 @@ import FilterSelector from "../FilterSelector";
 import { filterItems } from "@/app/util/utils";
 import Image from "next/image";
 import closeSvg from '../../assets/close.svg';
+import { useAppContext } from "@/context/Context";
 
 interface InvestmentProps {
-    year: number;
-    month:number;
+    setTotalInvestments: (v:number)=> void;
 }
  
 function Investments(props: InvestmentProps){
-
+    // @ts-ignore:next-line
+    const {state} = useAppContext();
     const [investments,setInvestments] = useState<InvestmentItem[]>([]);
     const [openForm,setOpenForm] = useState(false);
     const [selectedItem,setSelectedItem] = useState<number>(-1);
@@ -34,14 +34,15 @@ function Investments(props: InvestmentProps){
 
     useEffect(()=>{
         getInvestments();
-    },[props.month,props.year]);
+    },[state.month,state.year]);
 
     function getInvestments(){
-        db.income.where({year: props.year})
-        .and((i)=> Number(i.month) == props.month)
+        db.investments.where({year: state.year})
+        .and((i)=> Number(i.month) == state.month)
         .toArray()
         .then((ex)=> {
             setInvestments([...ex]);
+            props.setTotalInvestments(is.getRemainingInvestments(ex));
         });
     }
 
@@ -56,8 +57,8 @@ function Investments(props: InvestmentProps){
     function handleAddIvestmentItem(selectedItem: InvestmentItem){
         if(selectedItem){
             let item = {...selectedItem};
-            item.month = props.month.toString();
-            item.year = props.year;
+            item.month = state.month.toString();
+            item.year = state.year;
             item.dateCreated = Date.now().toString();
             db.investments.add( {...item})
         }
