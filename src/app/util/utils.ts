@@ -27,6 +27,17 @@ export function getRemainingTotal(items: any[]){
     return expected - amt
 }
 
+export function getProjectedTotal(items: any[]){
+    let expected: number= 0;
+    if(items){
+        for (let index = 0; index < items.length; index++) {
+            const e = items[index];
+            expected += Number(e.expectedAmount)
+        }
+    }
+    return expected
+}
+
 
 export function filterItems(filterType: FilterType,data:any[]){
     if(filterType === FilterType.STILL_NEED_TO_PAY){
@@ -51,4 +62,14 @@ export enum FilterType{
     UNEXPECTED,
     OVERSPENT,
     DISCOUNTED
+}
+export function prepareCloneItems(data:any[], month:number,year:number){
+    data.forEach((item)=>{
+        item.year = year;
+        item.month = month;
+        item.actualAmount = 0;
+        item.dateCreated = Date.now();
+        item.id = undefined;
+    })
+    return data
 }

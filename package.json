@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "generate-types": "openapi-typescript luno-api-spec/openapi.json --output src/model/api.ts"
   },
   "dependencies": {
     "dexie": "^3.2.4",
@@ -23,6 +24,7 @@
     "autoprefixer": "^10.0.1",
     "eslint": "^8",
     "eslint-config-next": "14.0.4",
+    "openapi-typescript": "^6.7.3",
     "postcss": "^8",
     "tailwindcss": "^3.3.0",
     "typescript": "^5"

@@ -18,7 +18,7 @@
 
 body {
   color: rgb(var(--foreground-rgb));
-  background-color: rgb(19, 21, 32);
+  background-color: rgb(18, 21, 33);
   font-size: 21px;
 }
 
@@ -153,3 +153,42 @@ body {
   width: 36px;
   height: 36px;
 } */
+
+.modal-wrapper {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  margin:auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.9);
+  color:white
+
+}
+
+.modal {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 0 10px 20px rgba(241, 241, 247, 0.25);
+  width: 60%;
+  height:80%;
+  background-color: rgb(0, 43, 70);
+  color:white;
+  overflow-y: scroll;
+}
+
+.modal-backdrop {
+  /* position: absolute; */
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.7); 
+  backdrop-filter: blur(5px); 
+  pointer-events: none; 
+  /* z-index: -1000; */
+}

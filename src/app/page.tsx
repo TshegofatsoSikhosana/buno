@@ -7,12 +7,16 @@ import Investments from '@/components/investment/Investments';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import settingsSvg from '../assets/settings.svg'
+import cloneSvg from '../assets/clone.svg'
 import { DatePicker } from 'react-responsive-datepicker';
 import 'react-responsive-datepicker/dist/index.css'
 import closeSvg from '../assets/close.svg'
 import { useAppContext } from '@/context/Context';
 import { db } from '@/config/database.config';
 import { getRemainingTotal } from './util/utils';
+import Link from 'next/link';
+import CloneModal from '@/components/clone/CloneModal';
+import Icon from '@/components/shared/Icon';
 
 
 enum Tab{
@@ -35,6 +39,7 @@ export default function Home() {
 
   const [active, setActive] = useState<Tab>(Tab.EXPENSES);
   const [openForm,setOpenForm] = useState(false);
+  const [openCloneModal,setOpenCloneModal] = useState(false);
 
   function isTabActive(type: Tab){
     return type == active ? 'active-section' : ''
@@ -112,7 +117,10 @@ export default function Home() {
         <h2 className='font-bold text-stone-100 text-end inline-block w-9/12' style={{fontSize: '36px'}}>
           {year} {months[month-1]} Budget 
         <button className="inline-block" >
-          <Image alt="edit" src={settingsSvg} height={25} width={25} className=" btn-edit ml-2" onClick={(e)=> setOpenForm(!openForm)}/>        
+          <Icon svgPath={settingsSvg} onClick={() => setOpenForm(!openForm)}/>    
+        </button>
+        <button  className="inline-block">
+          <Icon svgPath={cloneSvg} onClick={() => setOpenCloneModal(true)}/>      
         </button>
         </h2>
         </div>
@@ -158,13 +166,10 @@ export default function Home() {
             </>: null}
         </div>
 
-          {/* <div  className='inline-block mr-5 w-3/12 text-center btn-add' style={{border:'2px solid rgb(30,150,222,0.5)', padding:'1rem',borderRadius:'10px' }}>
-            <div>Clone</div>
-            <div>Bugdet</div>
-          </div> */}
-          <div  className='inline-block w-3/12' style={{padding:'1rem' }}>
+          <CloneModal open={openCloneModal} setOpen={setOpenCloneModal}/>
+          {/* <d/>iv  className='inline-block w-3/12' style={{padding:'1rem' }}> */}
             {/* <Calendar/> */}
-          </div>
+          {/* </div> */}
         </div>
         <div className='w-100'>
           <div 
@@ -191,6 +196,12 @@ export default function Home() {
            >
               Income
           </div>
+          {/* <Link href={"/luno"}
+            className={`inline-block p-4 ${isTabActive(Tab.INCOME)}`}
+            
+           >
+              Luno Dashboard
+          </Link> */}
         </div>
         <div className='content border-white w-100 h-100 p-4'>
           {renderContent()}

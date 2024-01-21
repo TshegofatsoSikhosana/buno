@@ -1,7 +1,7 @@
 import { db } from "@/config/database.config";
 import { ExpenseCategory, ExpenseItem, GroceryItem } from "@/model/models";
 import { BudgetService } from "./BudgetService";
-import { getRemainingTotal } from "@/app/util/utils";
+import { getRemainingTotal, prepareCloneItems } from "@/app/util/utils";
 
 
 export class ExpenseService{
@@ -48,6 +48,21 @@ export class ExpenseService{
     delete(id:number){
         db.expenses.delete(id);
     }
+
+    async clone(year:number,month:number){
+
+        const date = new Date();
+
+        const currMonth = date.getMonth()+1;
+        const currYear = date.getFullYear();
+
+        return await db.expenses.where({year: currYear})
+        .and((i)=> Number(i.month) == currMonth)
+        .toArray()
+        .then((e)=> prepareCloneItems(e,month,year));
+    }
+
+   
 
     initializeWithTemplate(){
         const expenses: ExpenseItem[] = [
