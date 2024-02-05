@@ -1,4 +1,4 @@
-import { getRemainingTotal } from "@/app/util/utils";
+import { getRemainingTotal, prepareCloneItems } from "@/util/utils";
 import { db } from "@/config/database.config";
 import { InvestmentItem } from "@/model/models";
 
@@ -42,6 +42,20 @@ export class InvestmentService {
 
     delete(id:number){
         db.investments.delete(id);
+    }
+
+
+    async clone(year:number,month:number){
+
+        const date = new Date();
+
+        const currMonth = date.getMonth()+1;
+        const currYear = date.getFullYear();
+
+        return await db.investments.where({year: currYear})
+        .and((i)=> Number(i.month) == currMonth)
+        .toArray()
+        .then((e)=> prepareCloneItems(e,month,year));
     }
 
     initializeWithTemplate(){

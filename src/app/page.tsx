@@ -13,7 +13,7 @@ import 'react-responsive-datepicker/dist/index.css'
 import closeSvg from '../assets/close.svg'
 import { useAppContext } from '@/context/Context';
 import { db } from '@/config/database.config';
-import { getRemainingTotal } from './util/utils';
+import { getRemainingTotal, months } from '../util/utils';
 import Link from 'next/link';
 import CloneModal from '@/components/clone/CloneModal';
 import Icon from '@/components/shared/Icon';
@@ -31,7 +31,6 @@ export default function Home() {
   const {state,setState} = useAppContext();
 
   const [year, setYear] = useState<number>(state.year);
-  const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November" , "December"]
   const [month,setMonth] = useState<number>(state.month);
   const [totalExpenses,setTotalExpenses] = useState<number>(0);
   const [totalInvestments,setTotalInvestments] = useState<number>(0);

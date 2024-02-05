@@ -6,7 +6,9 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 
 import deleteSvg from '../../../assets/garbage-icon.svg'
-import { getProjectedTotal } from "@/app/util/utils";
+import { getProjectedTotal, months } from "@/util/utils";
+import { budgetSelectors } from "@/store";
+import { useSelector } from "react-redux";
 
 interface ExpenseStepProps{
     year: number;
@@ -19,16 +21,14 @@ function ExpenseStep(props:ExpenseStepProps) {
 
     const es = new ExpenseService();
 
-    const [filteredExpenses,setFilteredExpenses] = useState([] as any[]);
-
-    const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November" , "December"]
+    const filteredExpenses = useSelector(budgetSelectors.getCloneExpenses)
 
 
-    useEffect(()=>{
-    es.clone(props.year,props.month).then((res)=>{
-        setFilteredExpenses(res);
-    });
-    },[props])
+    // useEffect(()=>{
+    // es.clone(props.year,props.month).then((res)=>{
+    //     setFilteredExpenses(res);
+    // });
+    // },[props])
 
     return ( <div>
 
@@ -46,7 +46,7 @@ function ExpenseStep(props:ExpenseStepProps) {
                         Expected
                     </div>
                     <div className='w-3/12 p-2 inline-block text-start' style={{border: '1px solid rgb(70, 70, 80,180)'}} >
-                        R{getProjectedTotal(filteredExpenses)}
+                        R{getProjectedTotal(filteredExpenses as ExpenseItem[])}
                     </div>
                 </div>
                 {filteredExpenses?.map((expense, index)=>{

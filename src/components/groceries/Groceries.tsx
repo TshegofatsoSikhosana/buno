@@ -6,7 +6,7 @@ import { GroceryService } from "@/service/GroceryService";
 import Image from "next/image";
 import RowActions from "../RowActions";
 import FilterSelector from "../FilterSelector";
-import { filterItems } from "@/app/util/utils";
+import { filterItems } from "@/util/utils";
 import closeSvg from '../../assets/close.svg';
 import { useAppContext } from "@/context/Context";
 

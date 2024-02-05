@@ -1,10 +1,15 @@
 import { BudgetService } from "@/service/BudgetService";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import closeSvg from '../../assets/close.svg'
 import Image from "next/image";
 import SelectYear from "./stepper/SelectYear";
 import ExpenseStep from "./stepper/ExpenseStep";
 import IncomeStep from "./stepper/IncomeStep";
+import InvestmentStep from "./stepper/InvestmentStep";
+import GroceriesStep from "./stepper/GroceriesStep";
+import { useAppDispatch } from "@/store/hooks";
+import { budgetActions } from "@/store";
+import { CloneBudget } from "@/model/models";
 
 
 interface SimpleDialogProps{
@@ -16,17 +21,28 @@ function CloneModal(props:SimpleDialogProps){
   const bs = new BudgetService();
 
   const [year, setYear] = useState<number>(2024);
-  const [month,setMonth] = useState<number>(1)
+  const [month,setMonth] = useState<number>(1);
+  const dispatch = useAppDispatch();
  
   const [stepIndex,setStepIndex] = useState(0);
   const steps = [
     <SelectYear month={month} updateMonth={updateMonth} year={year} setYear={setYear}/>,
     <IncomeStep month={month}  year={year} />,
     <ExpenseStep month={month}  year={year} />,
+    <InvestmentStep month={month}  year={year} />,
+    <GroceriesStep month={month}  year={year} />,
   ]
+
+  useEffect(()=>{
+    bs.initializeBudgetClone(year,month).then((budgetClone)=>{
+      dispatch(budgetActions.setCloneBudget(budgetClone)) 
+    });
+  },[year,month]);
+
+
   const handleClose = () => {
-    // console.log(bs.clone(2024,2));
     props.setOpen(false);
+    dispatch(budgetActions.resetCloneBudget()) 
   }
 
   function updateMonth(month:number){
@@ -36,9 +52,17 @@ function CloneModal(props:SimpleDialogProps){
   }
 
   function updateStep(step:number){
+    if(step === steps.length-1){
+      // bs.initializeBudgetClone(year,month).then((budgetClone)=>{
+      //   dispatch(budgetActions.setCloneBudget(budgetClone)) 
+      // });
+    }
+
+
     if(step >= 0 && step <= steps.length-1){
         setStepIndex(step)
     }
+
   }
   return (
     <>
@@ -52,9 +76,10 @@ function CloneModal(props:SimpleDialogProps){
                         {steps[stepIndex]}
 
                         <div className="inline-block mr-2 w-4/12 p-2" >
-                            <button className="btn-add-item p-3 mt-2 w-8/12" style={{borderRadius:'20px'}} onClick={(e)=> updateStep(stepIndex+1)}>
-                                Continue
-                            </button>
+                           
+                              <button className="btn-add-item p-3 mt-2 w-8/12" style={{borderRadius:'20px'}} onClick={(e)=> updateStep(stepIndex+1)}>
+                              { stepIndex < steps.length-1 ?  'Continue' : 'Clone' } 
+                              </button>
                             { stepIndex !== 0 && 
                             <button className="btn-add p-3 mt-2 w-8/12" style={{borderRadius:'20px'}} onClick={(e)=> updateStep(stepIndex-1)}>
                                 Back

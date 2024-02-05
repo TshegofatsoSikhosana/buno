@@ -1,9 +1,9 @@
-import { ExpenseItem, IncomeItem, InvestmentItem } from "@/model/models";
+import { CloneBudget } from "@/model/models";
 import { ExpenseService } from "./ExpenseService";
 import { GroceryService } from "./GroceryService";
 import { IncomeService } from "./IncomeService";
 import { InvestmentService } from "./InvestmentService";
-import { getRemainingTotal, prepareCloneItems } from "@/app/util/utils";
+import { getRemainingTotal, prepareCloneItems } from "@/util/utils";
 import { db } from "@/config/database.config";
 
 
@@ -22,7 +22,7 @@ export class BudgetService {
         return getRemainingTotal(items);
     }
 
-    async clone(year:number,month:number){
+    async initializeBudgetClone(year:number,month:number){
 
         const date = new Date();
 
@@ -58,7 +58,15 @@ export class BudgetService {
         // investments.forEach(e => this.investmentService.addNew(e))
         // console.log("groceries", groceries);
         // groceries.forEach(e => this.groceryService.addNew(e))
-        
+
+        return {
+                year: year,
+                month: month,
+                expenses: expenses,
+                incomes:incomes,
+                investments: investments,
+                groceries: groceries
+            } as CloneBudget
     }
 
     export(year:number,month:number, type: 'json' | 'csv'){

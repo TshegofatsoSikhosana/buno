@@ -58,3 +58,12 @@ export interface IncomeItem{
     year: number,
     dateCreated: string
 }
+
+export interface CloneBudget{
+    year: number;
+    month: number;
+    expenses:ExpenseItem[];
+    incomes: IncomeItem[];
+    investments: InvestmentItem[];
+    groceries: GroceryItem[]
+}

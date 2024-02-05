@@ -1,4 +1,4 @@
-import { getRemainingTotal, prepareCloneItems } from "@/app/util/utils";
+import { getRemainingTotal, prepareCloneItems } from "@/util/utils";
 import { db } from "@/config/database.config";
 import { IncomeItem } from "@/model/models";
 

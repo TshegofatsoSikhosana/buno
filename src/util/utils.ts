@@ -7,7 +7,7 @@ export function unexpectedItems(data:any[]){
 }
 
 export function overSpentItems(data:any[]){
-    return data?.filter((e)=> !(e.expectedAmount <= 0) && e.actualAmount > e.expectedAmount);
+    return data?.filter((e)=> !(e.expectedAmount <= 0) && e.expectedAmount - e.actualAmount < 0);
 }
 
 export function discountedItems(data:any[]){
@@ -73,3 +73,5 @@ export function prepareCloneItems(data:any[], month:number,year:number){
     })
     return data
 }
+
+export const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November" , "December"]

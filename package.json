@@ -10,11 +10,14 @@
     "generate-types": "openapi-typescript luno-api-spec/openapi.json --output src/model/api.ts"
   },
   "dependencies": {
+    "@reduxjs/toolkit": "^2.1.0",
     "dexie": "^3.2.4",
     "dexie-react-hooks": "^1.1.7",
     "next": "14.0.4",
     "react": "^18",
     "react-dom": "^18",
+    "react-persist": "^1.0.2",
+    "react-redux": "^9.1.0",
     "react-responsive-datepicker": "^1.0.6"
   },
   "devDependencies": {

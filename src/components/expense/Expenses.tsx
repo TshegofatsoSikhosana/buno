@@ -7,7 +7,7 @@ import closeSvg from '../../assets/close.svg'
 import Image from "next/image";
 import RowActions from "../RowActions";
 import FilterSelector from "../FilterSelector";
-import { filterItems } from "@/app/util/utils";
+import { filterItems } from "@/util/utils";
 import { useAppContext } from "@/context/Context";
 
 interface ExpensesProps {

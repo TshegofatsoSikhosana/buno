@@ -3,7 +3,7 @@
 
 import { createContext, useContext,  useEffect,  useState } from "react";
 
-const AppContext = createContext({})
+const AppContext = createContext({state: {year: 0,month:0}})
 
 const AppState = {
     year: Number,

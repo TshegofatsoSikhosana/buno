@@ -1,4 +1,4 @@
-import { FilterType } from "@/app/util/utils";
+import { FilterType } from "@/util/utils";
 
 interface FilterSelectorProps {
     filterType:FilterType

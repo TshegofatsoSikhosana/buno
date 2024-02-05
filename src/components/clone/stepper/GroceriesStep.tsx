@@ -1,24 +1,25 @@
 
 import { getProjectedTotal, months } from "@/util/utils";
-import { IncomeService } from "@/service/IncomeService";
 import { useEffect, useState } from "react";
+import { GroceryService } from "@/service/GroceryService";
 
 
-interface IncomeStepProps{
+interface GroceriesStepProps{
     year: number;
     month: number;
 }
 
 
-function IncomeStep(props:IncomeStepProps) {
 
-    const is = new IncomeService();
+function GroceriesStep(props:GroceriesStepProps) {
 
-    const [filteredIncomes,setFilteredIncomes] = useState([] as any[]);
+    const gs = new GroceryService();
+
+    const [filteredGroceries,setFilteredGroceries] = useState([] as any[]);
 
     useEffect(()=>{
-    is.clone(props.year,props.month).then((res)=>{
-        setFilteredIncomes(res);
+    gs.clone(props.year,props.month).then((res)=>{
+        setFilteredGroceries(res);
     });
     },[props])
 
@@ -28,7 +29,7 @@ function IncomeStep(props:IncomeStepProps) {
 
                 {props.year} {months[props.month-1]}
             </h2>
-            <h1>Income Projection</h1>
+            <h1>Groceries Projection</h1>
 
                 <div className='w-11/12 grid-flow-row font-bold' style={{color:'rgb(30,150,222,255)'}}> 
                     <div className='w-6/12 p-2 inline-block' >
@@ -38,10 +39,10 @@ function IncomeStep(props:IncomeStepProps) {
                         Expected Total
                     </div>
                     <div className='w-3/12 p-2 inline-block text-center' style={{border: '1px solid rgb(70, 70, 80,180)'}} >
-                        R{getProjectedTotal(filteredIncomes)}
+                        R{getProjectedTotal(filteredGroceries)}
                     </div>
                 </div>
-                {filteredIncomes?.map((incomeItem, index)=>{
+                {filteredGroceries?.map((incomeItem, index)=>{
                     return <div 
                                 className='w-11/12 grid-flow-row row-text-block'
                                 style={{border: '1px solid rgb(70, 70, 80,180)'}}
@@ -69,4 +70,4 @@ function IncomeStep(props:IncomeStepProps) {
     </div> );
 }
 
-export default IncomeStep;
+export default GroceriesStep;
