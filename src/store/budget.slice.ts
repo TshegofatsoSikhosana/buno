@@ -5,7 +5,9 @@ import { PayloadAction, createEntityAdapter, createSlice } from "@reduxjs/toolki
 export const BUDGET_KEY_FEATURE = 'budget'
 
 export interface BudgetState{
-    budget: CloneBudget
+    budget: CloneBudget;
+    currentYear: number;
+    currentMonth: number;
 }
 const budgetTypeAdapter = createEntityAdapter();
 
@@ -18,7 +20,9 @@ const initialBudgetState: BudgetState = budgetTypeAdapter.getInitialState({
         investments:[],
         month: 1,
         year: 1
-    }
+    },
+    currentMonth: new Date().getMonth()+1,
+    currentYear: new Date().getFullYear()
 });
 
 
@@ -27,6 +31,12 @@ const budgetSlice = createSlice({
     name: BUDGET_KEY_FEATURE,
     initialState: initialBudgetState,
     reducers: {
+        setCurrentYear: (state: BudgetState, action: PayloadAction<number>) => {
+            state.currentYear = action.payload;
+        },
+        setCurrentMonth: (state: BudgetState, action: PayloadAction<number>) => {
+            state.currentMonth = action.payload;
+        },
         setCloneBudget: (state: BudgetState, action: PayloadAction<CloneBudget>) => {
             state.budget = action.payload;
         },

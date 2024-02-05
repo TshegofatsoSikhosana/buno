@@ -8,7 +8,8 @@ import Image from "next/image";
 import RowActions from "../RowActions";
 import FilterSelector from "../FilterSelector";
 import { filterItems } from "@/util/utils";
-import { useAppContext } from "@/context/Context";
+import { useSelector } from "react-redux";
+import { budgetSelectors } from "@/store";
 
 interface ExpensesProps {
     setTotalExpenses: (v:number)=> void;
@@ -16,8 +17,9 @@ interface ExpensesProps {
  
 function Expenses(props: ExpensesProps){
 
-    // @ts-ignore:next-line
-    const {state} = useAppContext();
+    const year= useSelector(budgetSelectors.getCurrentYear);
+    const month = useSelector(budgetSelectors.getCurrentMonth);
+
     const [expenses,setExpenses] = useState<ExpenseItem[]>([]);
     const [openForm,setOpenForm] = useState(false);
     const [selectedItem,setSelectedItem] = useState<number>(-1);
@@ -36,11 +38,11 @@ function Expenses(props: ExpensesProps){
 
     useEffect(()=>{
         getExpenses();
-    },[state.month,state.year]);
+    },[month,year]);
 
     function getExpenses(){
-        db.expenses.where({year: state.year})
-        .and((i)=> Number(i.month) == state.month)
+        db.expenses.where({year: year})
+        .and((i)=> Number(i.month) == month)
         .toArray()
         .then((ex)=> {
             setExpenses([...ex]);
@@ -59,8 +61,8 @@ function Expenses(props: ExpensesProps){
     function handleAddExpenseItem(selectedItem: ExpenseItem){
         if(selectedItem){
             let item = {...selectedItem};
-            item.month = state.month.toString();
-            item.year = state.year;
+            item.month = month.toString();
+            item.year = year;
             item.dateCreated = Date.now().toString();
             es.addNew( {...item})
         }

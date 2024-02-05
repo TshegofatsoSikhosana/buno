@@ -8,15 +8,17 @@ import FilterSelector from "../FilterSelector";
 import { filterItems } from "@/util/utils";
 import Image from "next/image";
 import closeSvg from '../../assets/close.svg';
-import { useAppContext } from "@/context/Context";
+import { useSelector } from "react-redux";
+import { budgetSelectors } from "@/store";
 
 interface InvestmentProps {
     setTotalInvestments: (v:number)=> void;
 }
  
 function Investments(props: InvestmentProps){
-    // @ts-ignore:next-line
-    const {state} = useAppContext();
+
+    const year= useSelector(budgetSelectors.getCurrentYear);
+    const month = useSelector(budgetSelectors.getCurrentMonth);
     const [investments,setInvestments] = useState<InvestmentItem[]>([]);
     const [openForm,setOpenForm] = useState(false);
     const [selectedItem,setSelectedItem] = useState<number>(-1);
@@ -34,11 +36,11 @@ function Investments(props: InvestmentProps){
 
     useEffect(()=>{
         getInvestments();
-    },[state.month,state.year]);
+    },[month,year]);
 
     function getInvestments(){
-        db.investments.where({year: state.year})
-        .and((i)=> Number(i.month) == state.month)
+        db.investments.where({year: year})
+        .and((i)=> Number(i.month) == month)
         .toArray()
         .then((ex)=> {
             setInvestments([...ex]);
@@ -57,8 +59,8 @@ function Investments(props: InvestmentProps){
     function handleAddIvestmentItem(selectedItem: InvestmentItem){
         if(selectedItem){
             let item = {...selectedItem};
-            item.month = state.month.toString();
-            item.year = state.year;
+            item.month = month.toString();
+            item.year = year;
             item.dateCreated = Date.now().toString();
             db.investments.add( {...item})
         }

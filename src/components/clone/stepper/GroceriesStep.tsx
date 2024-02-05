@@ -1,7 +1,8 @@
 
 import { getProjectedTotal, months } from "@/util/utils";
-import { useEffect, useState } from "react";
 import { GroceryService } from "@/service/GroceryService";
+import { useSelector } from "react-redux";
+import { budgetSelectors } from "@/store";
 
 
 interface GroceriesStepProps{
@@ -15,13 +16,7 @@ function GroceriesStep(props:GroceriesStepProps) {
 
     const gs = new GroceryService();
 
-    const [filteredGroceries,setFilteredGroceries] = useState([] as any[]);
-
-    useEffect(()=>{
-    gs.clone(props.year,props.month).then((res)=>{
-        setFilteredGroceries(res);
-    });
-    },[props])
+    const filteredGroceries = useSelector(budgetSelectors.getCloneGroceries)
 
     return ( <div>
 

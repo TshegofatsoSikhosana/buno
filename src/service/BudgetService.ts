@@ -49,16 +49,6 @@ export class BudgetService {
         .toArray()
         .then((e)=> prepareCloneItems(e,month,year));
 
-
-        console.log("expenses", expenses);
-        // expenses.forEach(e => this.expenseService.addNew(e))
-        // console.log("incomes", incomes);
-        // incomes.forEach(e => this.incomeService.addNew(e))
-        // console.log("investments", investments);
-        // investments.forEach(e => this.investmentService.addNew(e))
-        // console.log("groceries", groceries);
-        // groceries.forEach(e => this.groceryService.addNew(e))
-
         return {
                 year: year,
                 month: month,
@@ -67,6 +57,15 @@ export class BudgetService {
                 investments: investments,
                 groceries: groceries
             } as CloneBudget
+    }
+
+    async cloneBudget(budget: CloneBudget){
+        // db.expenses.bulkAdd(budget.expenses);
+        // db.income.bulkAdd(budget.incomes)
+        // db.investments.bulkAdd(budget.investments)
+        // db.groceries.bulkAdd(budget.groceries)
+
+        console.log("expenses", budget);
     }
 
     export(year:number,month:number, type: 'json' | 'csv'){

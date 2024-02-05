@@ -8,8 +8,8 @@ import IncomeStep from "./stepper/IncomeStep";
 import InvestmentStep from "./stepper/InvestmentStep";
 import GroceriesStep from "./stepper/GroceriesStep";
 import { useAppDispatch } from "@/store/hooks";
-import { budgetActions } from "@/store";
-import { CloneBudget } from "@/model/models";
+import { budgetActions, budgetSelectors } from "@/store";
+import { useSelector } from "react-redux";
 
 
 interface SimpleDialogProps{
@@ -20,11 +20,13 @@ interface SimpleDialogProps{
 function CloneModal(props:SimpleDialogProps){
   const bs = new BudgetService();
 
+  const budget = useSelector(budgetSelectors.getCloneBudget);
+  const dispatch = useAppDispatch();
   const [year, setYear] = useState<number>(2024);
   const [month,setMonth] = useState<number>(1);
-  const dispatch = useAppDispatch();
  
   const [stepIndex,setStepIndex] = useState(0);
+
   const steps = [
     <SelectYear month={month} updateMonth={updateMonth} year={year} setYear={setYear}/>,
     <IncomeStep month={month}  year={year} />,
@@ -52,10 +54,13 @@ function CloneModal(props:SimpleDialogProps){
   }
 
   function updateStep(step:number){
-    if(step === steps.length-1){
-      // bs.initializeBudgetClone(year,month).then((budgetClone)=>{
-      //   dispatch(budgetActions.setCloneBudget(budgetClone)) 
-      // });
+    if(step === steps.length){
+      bs.cloneBudget(budget)
+          .then((res)=>{
+            handleClose();
+            dispatch(budgetActions.setCurrentYear(year))
+            dispatch(budgetActions.setCurrentMonth(month))
+          });
     }
 
 
@@ -76,15 +81,14 @@ function CloneModal(props:SimpleDialogProps){
                         {steps[stepIndex]}
 
                         <div className="inline-block mr-2 w-4/12 p-2" >
-                           
                               <button className="btn-add-item p-3 mt-2 w-8/12" style={{borderRadius:'20px'}} onClick={(e)=> updateStep(stepIndex+1)}>
                               { stepIndex < steps.length-1 ?  'Continue' : 'Clone' } 
                               </button>
                             { stepIndex !== 0 && 
-                            <button className="btn-add p-3 mt-2 w-8/12" style={{borderRadius:'20px'}} onClick={(e)=> updateStep(stepIndex-1)}>
-                                Back
-                            </button>
-                        }
+                                <button className="btn-add p-3 mt-2 w-8/12" style={{borderRadius:'20px'}} onClick={(e)=> updateStep(stepIndex-1)}>
+                                    Back
+                                </button>
+                            }
                         </div>
                     </div>
                 </div>

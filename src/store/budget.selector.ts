@@ -9,13 +9,31 @@ export const getCloneBudget = createSelector(
     (state)=> state.budget
 );
 
-
 export const getCloneExpenses = createSelector(
     getDataState,
     (state)=> state.budget?.expenses
 );
 
+export const getCloneGroceries = createSelector(
+    getDataState,
+    (state)=> state.budget?.groceries
+);
+
+export const getCloneInvestments = createSelector(
+    getDataState,
+    (state)=> state.budget?.investments
+);
 export const getCloneIncomes = createSelector(
     getDataState,
     (state)=> state.budget?.incomes
+);
+
+export const getCurrentYear = createSelector(
+    getDataState,
+    (state)=> state.currentYear
+);
+
+export const getCurrentMonth = createSelector(
+    getDataState,
+    (state)=> state.currentMonth
 );

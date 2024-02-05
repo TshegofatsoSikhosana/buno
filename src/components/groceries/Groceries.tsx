@@ -8,15 +8,17 @@ import RowActions from "../RowActions";
 import FilterSelector from "../FilterSelector";
 import { filterItems } from "@/util/utils";
 import closeSvg from '../../assets/close.svg';
-import { useAppContext } from "@/context/Context";
+import { useSelector } from "react-redux";
+import { budgetSelectors } from "@/store";
 
 interface GroceryProps {
 }
  
 function Groceries(props: GroceryProps){
 
-    // @ts-ignore:next-line
-    const {state} = useAppContext();
+    const year= useSelector(budgetSelectors.getCurrentYear);
+    const month = useSelector(budgetSelectors.getCurrentMonth);
+
     const [openForm,setOpenForm] = useState(false);
     const [groceries,setGroceries]  = useState<GroceryItem[]>([]);
     const [selectedItem,setSelectedItem] = useState<number>(-1);
@@ -40,8 +42,8 @@ function Groceries(props: GroceryProps){
     function handleAddGroceryItem(selectedItem: GroceryItem){
         if(selectedItem){
             let item = {...selectedItem};
-            item.month = state.month.toString();
-            item.year = state.year;
+            item.month = month.toString();
+            item.year = year;
             item.dateCreated = Date.now().toString();
             gs.addNew( {...item})
         }
@@ -74,11 +76,11 @@ function Groceries(props: GroceryProps){
 
     useEffect(()=>{
         getGroceries();
-    },[state.month,state.year]);
+    },[month,year]);
 
     function getGroceries(){
-        db.groceries.where({year: state.year})
-        .and((i)=> Number(i.month) == state.month)
+        db.groceries.where({year: year})
+        .and((i)=> Number(i.month) == month)
         .toArray()
         .then((ex)=> {
             setGroceries([...ex]);

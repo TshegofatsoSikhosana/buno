@@ -8,15 +8,17 @@ import FilterSelector from "../FilterSelector";
 import { filterItems } from "@/util/utils";
 import Image from "next/image";
 import closeSvg from '../../assets/close.svg';
-import { useAppContext } from "@/context/Context";
+import { useSelector } from "react-redux";
+import { budgetSelectors } from "@/store";
 
 interface IncomeProps {
     setTotalIncomes: (v:number)=> void;
 }
  
 function Income(props: IncomeProps){
-    // @ts-ignore:next-line
-    const {state} = useAppContext();
+
+    const year= useSelector(budgetSelectors.getCurrentYear);
+    const month = useSelector(budgetSelectors.getCurrentMonth);
     const [openForm,setOpenForm] = useState(false);
 
     const [incomes,setIncomes] = useState<IncomeItem[]>([]);
@@ -35,11 +37,11 @@ function Income(props: IncomeProps){
 
     useEffect(()=>{
         getIncomes();
-    },[state.month,state.year]);
+    },[month,year]);
 
     function getIncomes(){
-        db.income.where({year: state.year})
-        .and((i)=> Number(i.month) == state.month)
+        db.income.where({year: year})
+        .and((i)=> Number(i.month) == month)
         .toArray()
         .then((ex)=> {
             setIncomes([...ex]);
@@ -60,8 +62,8 @@ function Income(props: IncomeProps){
     function handleAddIncomeItem(selectedItem: IncomeItem){
         if(selectedItem){
             let item = {...selectedItem};
-            item.month = state.month.toString();
-            item.year = state.year;
+            item.month = month.toString();
+            item.year = year;
             item.dateCreated = Date.now().toString();
             db.income.add( {...item})
         }

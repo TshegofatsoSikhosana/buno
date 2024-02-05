@@ -11,12 +11,14 @@ import cloneSvg from '../assets/clone.svg'
 import { DatePicker } from 'react-responsive-datepicker';
 import 'react-responsive-datepicker/dist/index.css'
 import closeSvg from '../assets/close.svg'
-import { useAppContext } from '@/context/Context';
 import { db } from '@/config/database.config';
 import { getRemainingTotal, months } from '../util/utils';
 import Link from 'next/link';
 import CloneModal from '@/components/clone/CloneModal';
 import Icon from '@/components/shared/Icon';
+import { useAppDispatch } from '@/store/hooks';
+import { budgetActions, budgetSelectors } from '@/store';
+import { useSelector } from 'react-redux';
 
 
 enum Tab{
@@ -27,11 +29,11 @@ enum Tab{
 }
 export default function Home() {
 
-  // @ts-ignore:next-line
-  const {state,setState} = useAppContext();
+  const dispatch = useAppDispatch();
 
-  const [year, setYear] = useState<number>(state.year);
-  const [month,setMonth] = useState<number>(state.month);
+  const year= useSelector(budgetSelectors.getCurrentYear);
+  const month = useSelector(budgetSelectors.getCurrentMonth);
+  
   const [totalExpenses,setTotalExpenses] = useState<number>(0);
   const [totalInvestments,setTotalInvestments] = useState<number>(0);
   const [totalIncomes,setTotalIncomes] = useState<number>(0);
@@ -56,11 +58,6 @@ export default function Home() {
         return <Expenses setTotalExpenses={setTotalExpenses} />
     }
   }
-
-  useEffect(()=>{
-    setMonth(state.month);
-    setYear(state.year);
-  },[state.month,state.year]);
 
   useEffect(()=>{
     getExpenses();
@@ -96,16 +93,12 @@ export default function Home() {
   }
 
   function updateYear(year:number){
-    const s = {...state}
-    s.year = year;
-    setState(s)
+    dispatch(budgetActions.setCurrentYear(year))
   }
 
   function updateMonth(month:number){
     if(month > 0 && month <= 12){
-      const s = {...state}
-      s.month = month;
-      setState(s)
+      dispatch(budgetActions.setCurrentMonth(month))
     }
   }
 

@@ -1,7 +1,8 @@
 
 import { getProjectedTotal, months } from "@/util/utils";
 import { IncomeService } from "@/service/IncomeService";
-import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import { budgetSelectors } from "@/store";
 
 
 interface IncomeStepProps{
@@ -14,13 +15,7 @@ function IncomeStep(props:IncomeStepProps) {
 
     const is = new IncomeService();
 
-    const [filteredIncomes,setFilteredIncomes] = useState([] as any[]);
-
-    useEffect(()=>{
-    is.clone(props.year,props.month).then((res)=>{
-        setFilteredIncomes(res);
-    });
-    },[props])
+    const filteredIncomes = useSelector(budgetSelectors.getCloneIncomes)
 
     return ( <div>
 

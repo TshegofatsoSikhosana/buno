@@ -1,7 +1,8 @@
 
 import { getProjectedTotal, months } from "@/util/utils";
 import { InvestmentService } from "@/service/InvestmentService";
-import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import { budgetSelectors } from "@/store";
 
 
 interface InvestmentStepProps{
@@ -15,13 +16,7 @@ function InvestmentStep(props:InvestmentStepProps) {
 
     const is = new InvestmentService();
 
-    const [filteredInvestments,setFilteredInvestments] = useState([] as any[]);
-
-    useEffect(()=>{
-    is.clone(props.year,props.month).then((res)=>{
-        setFilteredInvestments(res);
-    });
-    },[props])
+    const filteredInvestments = useSelector(budgetSelectors.getCloneInvestments)
 
     return ( <div>
 

@@ -1,10 +1,7 @@
 import RowActions from "@/components/RowActions";
 import { ExpenseItem } from "@/model/models";
-import { BudgetService } from "@/service/BudgetService";
 import { ExpenseService } from "@/service/ExpenseService";
 import Image from "next/image";
-import { useEffect, useState } from "react";
-
 import deleteSvg from '../../../assets/garbage-icon.svg'
 import { getProjectedTotal, months } from "@/util/utils";
 import { budgetSelectors } from "@/store";
@@ -22,13 +19,6 @@ function ExpenseStep(props:ExpenseStepProps) {
     const es = new ExpenseService();
 
     const filteredExpenses = useSelector(budgetSelectors.getCloneExpenses)
-
-
-    // useEffect(()=>{
-    // es.clone(props.year,props.month).then((res)=>{
-    //     setFilteredExpenses(res);
-    // });
-    // },[props])
 
     return ( <div>
 

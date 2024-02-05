@@ -1,5 +1,6 @@
-import { useAppContext } from "@/context/Context";
+import { budgetSelectors } from "@/store";
 import { months } from "@/util/utils";
+import { useSelector } from "react-redux";
 
 interface SelectYearProps{
     setYear: (v:number) => void;
@@ -9,14 +10,15 @@ interface SelectYearProps{
 }
 
 function SelectYear(props:SelectYearProps){
-    const {state} = useAppContext();
-
+    const year= useSelector(budgetSelectors.getCurrentYear);
+    const month = useSelector(budgetSelectors.getCurrentMonth);
+    
     return (
         <div className="w11/12"> 
             <h1>Clone Budget From</h1>
         
             <h2 className='font-bold text-stone-100 text-end inline-block' style={{fontSize: '36px'}}>
-                {state.year} {months[state.month-1]}
+                {year} {months[month-1]}
             </h2>
             <h2>To</h2>
             <h2 className='font-bold text-stone-100 text-end inline-block' style={{fontSize: '36px'}}>
