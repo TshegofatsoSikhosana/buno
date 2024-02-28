@@ -49,14 +49,14 @@ function ExpenseStep(props:ExpenseStepProps) {
                                 >
                                     <div className='w-1/12 inline-block text-center' > 
                                     {/* {Number(selectedItem) - 1 === index  && isSelected(ExpenseCategory.LIVING) ?  */}
-                                    
+{/*                                     
                                     <div className="justify-center mt-2">
                                         <button className="inline-block"
-                                        //  onClick={(e) => props.deleteItem(props.index)}
+                                         onClick={(e) => props.deleteItem(props.index)}
                                         >
                                             <Image alt="delete" src={deleteSvg} height={25} width={25} className="btn-delete"/>
                                         </button>
-                                    </div>
+                                    </div> */}
                                         {/* : <></>
                                     } */}
                                     </div>

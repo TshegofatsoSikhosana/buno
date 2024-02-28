@@ -56,26 +56,6 @@ function Investments(props: InvestmentProps){
         return filteredInvestments ? is.getExpectedTotal(filteredInvestments) : 0
     }
 
-    function handleAddIvestmentItem(selectedItem: InvestmentItem){
-        if(selectedItem){
-            let item = {...selectedItem};
-            item.month = month.toString();
-            item.year = year;
-            item.dateCreated = Date.now().toString();
-            db.investments.add( {...item})
-        }
-        setOpenForm(false)
-        getInvestments();
-    }
-
-    function handleEditInvestmentItem(selectedItem: InvestmentItem){
-        if(selectedItem){
-            is.update( {...selectedItem})
-        }
-        setOpenForm(false);
-        getInvestments();
-    }
-
     function deleteItem(index: number){
         if(filteredInvestments &&     Number(selectedItem) >= 0 ){
             console.log('deleting', filteredInvestments[index])
@@ -84,26 +64,26 @@ function Investments(props: InvestmentProps){
         }
     }
 
+
+    function close(v:boolean){
+        setOpenForm(v);
+        setSelectedItem(-1);
+    }
+
     return <>
-                { openForm ? <>
-                                <div className="w-100 " onClick={()=> setOpenForm(false)}>
-                                    <Image alt="delete"
-                                        src={closeSvg}
-                                        height={25} width={25}
-                                        className="inline-block"/>
-                                    <div className="inline-block text-slate-600 btn-close">CLOSE</div>
-                                </div>
-                                <InvestmentItemForm
-                                    handleAddIvestmentItem={handleAddIvestmentItem} 
-                                    handleEditInvestmentItem={handleEditInvestmentItem}
-                                    item={investments && Number(selectedItem) >= 0 ? investments[selectedItem-1] : undefined} />
-                            </>
-                :(<button 
+                <button 
                     className="p-2 mb-2 btn-add"
                     style={{borderRadius: '8px', border:'2px solid rgb(70, 70, 80,180)'}}
                     onClick={(e)=> setOpenForm(true)}>
                         Add Investment
-                </button>)
+                </button>
+                { openForm && (
+                        <InvestmentItemForm
+                            open={openForm}
+                            setOpen={close}
+                            refresh={getInvestments}
+                            item={investments && Number(selectedItem) >= 0 ? investments[selectedItem-1] : undefined} />
+                        )
                 }
                 <div className='w-11/12 grid-flow-row font-bold' style={{color:'rgb(30,150,222,255)'}}> 
                     <div className='w-6/12 p-2 inline-block' ></div>

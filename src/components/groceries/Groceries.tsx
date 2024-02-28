@@ -7,7 +7,6 @@ import Image from "next/image";
 import RowActions from "../RowActions";
 import FilterSelector from "../FilterSelector";
 import { filterItems } from "@/util/utils";
-import closeSvg from '../../assets/close.svg';
 import { useSelector } from "react-redux";
 import { budgetSelectors } from "@/store";
 
@@ -21,10 +20,10 @@ function Groceries(props: GroceryProps){
 
     const [openForm,setOpenForm] = useState(false);
     const [groceries,setGroceries]  = useState<GroceryItem[]>([]);
-    const [selectedItem,setSelectedItem] = useState<number>(-1);
     const [filterType,setFilterType] = useState<number>(-1);
     const [filteredGroceries, setFilteredGroceries] = useState<GroceryItem[]>()
-
+    const [selectedItem,setSelectedItem] = useState<number>(-1);
+    
     const gs = new GroceryService();
     
     function getActualTotal(){
@@ -37,26 +36,6 @@ function Groceries(props: GroceryProps){
 
     function getExpectedTotal(){
         return filteredGroceries ? gs.getExpectedTotal(filteredGroceries) : 0
-    }
-
-    function handleAddGroceryItem(selectedItem: GroceryItem){
-        if(selectedItem){
-            let item = {...selectedItem};
-            item.month = month.toString();
-            item.year = year;
-            item.dateCreated = Date.now().toString();
-            gs.addNew( {...item})
-        }
-        setOpenForm(false)
-        getGroceries();
-    }
-
-    function handleEditGroceryItem(selectedItem: GroceryItem){
-        if(selectedItem){
-            gs.update( {...selectedItem})
-        }
-        setOpenForm(false)
-        getGroceries();
     }
 
     function deleteItem(index: number){
@@ -77,6 +56,7 @@ function Groceries(props: GroceryProps){
     useEffect(()=>{
         getGroceries();
     },[month,year]);
+    
 
     function getGroceries(){
         db.groceries.where({year: year})
@@ -87,26 +67,27 @@ function Groceries(props: GroceryProps){
         });
     }
 
+    function close(v:boolean){
+        setOpenForm(v);
+        setSelectedItem(-1);
+    }
+
     return <>
-                { openForm ? <>
-                                <div className="w-100 " onClick={()=> setOpenForm(false)}>
-                                    <Image alt="delete"
-                                        src={closeSvg}
-                                        height={25} width={25}
-                                        className="inline-block"/>
-                                    <div className="inline-block text-slate-600 btn-close">CLOSE</div>
-                                </div>
-                                <GroceryItemForm 
-                                    handleAddGroceryItem={handleAddGroceryItem}
-                                    handleEditGroceryItem={handleEditGroceryItem}
-                                    item={filteredGroceries && Number(selectedItem) >= 0 ? filteredGroceries[selectedItem-1] : undefined} />
-                            
-                            </>:( 
-                                <button
-                                    className="p-2 mb-2 btn-add"
-                                    style={{borderRadius: '8px', border:'2px solid rgb(70, 70, 80,180)'}}
-                                    onClick={(e)=> setOpenForm(true)}>Add Grocery Item</button>
-                            )}
+                <button
+                    className="p-2 mb-2 btn-add"
+                    style={{borderRadius: '8px', border:'2px solid rgb(70, 70, 80,180)'}}
+                    onClick={(e)=> setOpenForm(true)}>
+                        {"Add Grocery Item"}
+                </button>
+                {openForm && (
+                        <GroceryItemForm 
+                            open={openForm}
+                            setOpen={close}
+                            refresh={getGroceries}
+                            item={filteredGroceries && Number(selectedItem) >= 0 ? filteredGroceries[selectedItem-1] : undefined}
+                    />)
+                }
+            
                 <div>
                     <div className='w-6/12 text-end grid-flow-row p-2 font-bold inline-block'> 
                     </div>

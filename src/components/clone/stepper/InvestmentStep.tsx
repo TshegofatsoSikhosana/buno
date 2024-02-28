@@ -10,18 +10,15 @@ interface InvestmentStepProps{
     month: number;
 }
 
-
-
 function InvestmentStep(props:InvestmentStepProps) {
 
     const is = new InvestmentService();
 
     const filteredInvestments = useSelector(budgetSelectors.getCloneInvestments)
 
-    return ( <div>
-
-                <h2 className='font-bold text-stone-100 text-end inline-block' style={{fontSize: '36px'}}>
-
+    return ( 
+        <div>
+            <h2 className='font-bold text-stone-100 text-end inline-block' style={{fontSize: '36px'}}>
                 {props.year} {months[props.month-1]}
             </h2>
             <h1>Investment Projection</h1>
@@ -59,10 +56,9 @@ function InvestmentStep(props:InvestmentStepProps) {
                                     </div>
                                     <div className='w-3/12 p-2 inline-block text-start'> 
                                     </div>
-                                    
-                </div>
-                })}
-    </div> );
+                    </div>
+                    })}
+        </div> );
 }
 
 export default InvestmentStep;

@@ -45,6 +45,9 @@ function CloneModal(props:SimpleDialogProps){
   const handleClose = () => {
     props.setOpen(false);
     dispatch(budgetActions.resetCloneBudget()) 
+    setStepIndex(0)
+    setMonth(1);
+    setYear(2024)
   }
 
   function updateMonth(month:number){
@@ -54,7 +57,12 @@ function CloneModal(props:SimpleDialogProps){
   }
 
   function updateStep(step:number){
-    if(step === steps.length){
+    if(step === 1){
+      bs.initializeBudgetClone(year,month).then((budgetClone)=>{
+        dispatch(budgetActions.setCloneBudget(budgetClone)) 
+      });
+    } 
+    else if(step === steps.length){
       bs.cloneBudget(budget)
           .then((res)=>{
             handleClose();
@@ -63,12 +71,11 @@ function CloneModal(props:SimpleDialogProps){
           });
     }
 
-
     if(step >= 0 && step <= steps.length-1){
         setStepIndex(step)
     }
-
   }
+
   return (
     <>
             <dialog open={props.open} onClose={handleClose}
@@ -77,18 +84,20 @@ function CloneModal(props:SimpleDialogProps){
                 <div
                     className="w-9/12 modal-wrapper">
                     <Image alt="edit" src={closeSvg} height={50} width={50} className=" btn-edit ml-2"  onClick={handleClose}/>
-                    <div className="modal text-center">
-                        {steps[stepIndex]}
+                    <div className="modal">
+                      <div className="h-90 text-center overflow-y-scroll">
+                          {steps[stepIndex]}
 
-                        <div className="inline-block mr-2 w-4/12 p-2" >
-                              <button className="btn-add-item p-3 mt-2 w-8/12" style={{borderRadius:'20px'}} onClick={(e)=> updateStep(stepIndex+1)}>
-                              { stepIndex < steps.length-1 ?  'Continue' : 'Clone' } 
-                              </button>
-                            { stepIndex !== 0 && 
-                                <button className="btn-add p-3 mt-2 w-8/12" style={{borderRadius:'20px'}} onClick={(e)=> updateStep(stepIndex-1)}>
-                                    Back
+                          <div className="inline-block mr-2 w-4/12 p-2" >
+                                <button className="btn-add-item p-3 mt-2 w-8/12" style={{borderRadius:'20px'}} onClick={(e)=> updateStep(stepIndex+1)}>
+                                { stepIndex < steps.length-1 ?  'Continue' : 'Clone' } 
                                 </button>
-                            }
+                              { stepIndex !== 0 && 
+                                  <button className="btn-add p-3 mt-2 w-8/12" style={{borderRadius:'20px'}} onClick={(e)=> updateStep(stepIndex-1)}>
+                                      Back
+                                  </button>
+                              }
+                          </div>
                         </div>
                     </div>
                 </div>

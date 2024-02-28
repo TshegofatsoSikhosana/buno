@@ -58,38 +58,6 @@ function Income(props: IncomeProps){
         return filteredIncomes ? is.getExpectedTotal(filteredIncomes) : 0
     }
 
-
-    function handleAddIncomeItem(selectedItem: IncomeItem){
-        if(selectedItem){
-            let item = {...selectedItem};
-            item.month = month.toString();
-            item.year = year;
-            item.dateCreated = Date.now().toString();
-            db.income.add( {...item})
-        }
-        setOpenForm(false);
-        getIncomes();
-    }
-
-    function handleEditIncomeItem(selectedItem: IncomeItem){
-        if(selectedItem){
-            selectedItem.year = 2024
-            selectedItem.dateCreated =  Date.now().toString()
-            is.update( {...selectedItem})
-        }
-        setOpenForm(false);
-        getIncomes();
-    }
-
-    function openFormFn() {
-        setOpenForm(true)
-        incomes?.forEach((g)=> {
-            g.month = '1';
-            g.year = 2024
-            is.update(g)
-        })
-    }
-
     function deleteItem(index: number){
         if(filteredIncomes && Number(selectedItem) >= 0 ){
             console.log('deleting', filteredIncomes[index])
@@ -98,26 +66,25 @@ function Income(props: IncomeProps){
         }
     }
 
-
+    function close(v:boolean){
+        setOpenForm(v);
+        setSelectedItem(-1);
+    }
+    
     return <>
-                { openForm ? <>
-                                <div className="w-100 " onClick={()=> setOpenForm(false)}>
-                                    <Image alt="delete"
-                                        src={closeSvg}
-                                        height={25} width={25}
-                                        className="inline-block"/>
-                                    <div className="inline-block text-slate-600 btn-close">CLOSE</div>
-                                </div>
-                                <IncomeItemForm 
-                                    handleAddIncomeItem={handleAddIncomeItem}
-                                    handleEditIncomeItem={handleEditIncomeItem}
-                                    item={incomes && Number(selectedItem) >= 0 ? incomes[selectedItem-1] : undefined} />
-                            </>
-                     :(<button
+                <button
                         className="p-2 mb-2 btn-add"
                         style={{borderRadius: '8px', border:'2px solid rgb(70, 70, 80,180)'}}
-                        onClick={(e)=> setOpenForm(true)}>Add Income</button>
-                )}
+                        onClick={(e)=> setOpenForm(true)}>
+                            Add Income
+                </button>
+                { openForm &&
+                        <IncomeItemForm 
+                            open={openForm}
+                            setOpen={close}
+                            refresh={getIncomes}
+                            item={incomes && Number(selectedItem) >= 0 ? incomes[selectedItem-1] : undefined} />
+                }
                   <div className='w-11/12 grid-flow-row font-bold' style={{color:'rgb(30,150,222,255)'}}> 
                     <div className='w-6/12 p-2 inline-block' ></div>
                     <div className='w-3/12 p-2 inline-block text-center' style={{border: '1px solid rgb(70, 70, 80,180)'}} >

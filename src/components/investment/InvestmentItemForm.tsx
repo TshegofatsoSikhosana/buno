@@ -1,15 +1,23 @@
 import {  InvestmentItem } from "@/model/models";
+import { InvestmentService } from "@/service/InvestmentService";
+import { budgetSelectors } from "@/store";
 import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import FormModal from "../shared/FormModal";
 
 interface InvestmentItemFormProps {
-    handleAddIvestmentItem: (selectedItem:InvestmentItem)=> void
-    handleEditInvestmentItem: (selectedItem:InvestmentItem)=> void;
-    item?: InvestmentItem
+    open: boolean;
+    setOpen: (b:boolean)=> void;
+    refresh: ()=> void;
+    item?: InvestmentItem;
 }
  
 function InvestmentItemForm(props: InvestmentItemFormProps){
 
     const [selectedItem, setSelectedItem] = useState<InvestmentItem | null>(null)
+    const year= useSelector(budgetSelectors.getCurrentYear);
+    const month = useSelector(budgetSelectors.getCurrentMonth);
+    const is = new InvestmentService();
 
     useEffect(()=>{
         if(props.item){
@@ -27,50 +35,73 @@ function InvestmentItemForm(props: InvestmentItemFormProps){
 
     function handleAddInvestmentItem(e:any){
         if(selectedItem && selectedItem.id){
-            props.handleEditInvestmentItem( {...selectedItem as InvestmentItem})
+            handleEditInvestmentItem( {...selectedItem as InvestmentItem})
         }else{
             const item = {...selectedItem}
-            item.dateCreated = Date.now().toString();
-            item.year = 2024
             if(item){
-                props.handleAddIvestmentItem( {...item as InvestmentItem})
+                saveInvestmentItem( {...item as InvestmentItem})
             }
         }
     }
+    function saveInvestmentItem(selectedItem: InvestmentItem){
+        if(selectedItem){
+            let item = {...selectedItem};
+            item.month = month.toString();
+            item.year = year;
+            item.dateCreated = Date.now().toString();
+            is.addNew({...item})
+        }
+        props.setOpen(false)
+        props.refresh();
+    }
+
+    function handleEditInvestmentItem(selectedItem: InvestmentItem){
+        if(selectedItem){
+            is.update( {...selectedItem})
+        }
+        props.setOpen(false)
+        props.refresh();
+    }
 
     return (<>
-            <div className="p-2">
-                <div className="p-2">
-                    <div className="inline-block mr-2 ">
-                        <div> Description</div>
-                        <input type="text" className="text-black" value={selectedItem?.description} onChange={(e)=> updateItem(e,'description')}/>
-                    </div>
-                    <div className="inline-block mr-2">
-                        <div> Expected Amount</div>
-                        <input type="number" className="text-black" value={selectedItem?.expectedAmount}  onChange={(e)=> updateItem(e,'expectedAmount')}/>
-                    </div>
-                </div>
-                <div className="p-2">
-                    <div className="inline-block mr-2">
-                        <div> Actual Amount</div>
-                        <input type="number" className="text-black" value={selectedItem?.actualAmount}  onChange={(e)=> updateItem(e,'actualAmount')}/>
-                    </div>
-                    <div className="inline-block mr-2">
-                        <div> Month</div>
-                        <input type="number" className="text-black" value={selectedItem?.month}  onChange={(e)=> updateItem(e,'month')}/>
-                    </div>
-                    <div className="inline-block mr-2 ">
-                        <div> Bank</div>
-                        <input type="text" className="text-black" value={selectedItem?.bank} onChange={(e)=> updateItem(e,'bank')}/>
-                    </div>
-                    <button 
-                        className="inline-block bg-blue-500 p-2 w-100 btn-add-item"
-                        style={{borderRadius: '8px'}}
-                        onClick={handleAddInvestmentItem}>
-                            {selectedItem && selectedItem.id ? 'Edit'  : 'Add'} Item
-                        </button>
-                </div>
-            </div> 
+            <FormModal
+                open={props.open}
+                onClose={props.setOpen}
+                form={
+                    <div className="p-2">
+                        <div className="p-2">
+                            <div className="inline-block mr-2 ">
+                                <div> Description</div>
+                                <input type="text" className="text-black" value={selectedItem?.description} onChange={(e)=> updateItem(e,'description')}/>
+                            </div>
+                            <div className="inline-block mr-2">
+                                <div> Expected Amount</div>
+                                <input type="number" className="text-black" value={selectedItem?.expectedAmount}  onChange={(e)=> updateItem(e,'expectedAmount')}/>
+                            </div>
+                        </div>
+                        <div className="p-2">
+                            <div className="inline-block mr-2">
+                                <div> Actual Amount</div>
+                                <input type="number" className="text-black" value={selectedItem?.actualAmount}  onChange={(e)=> updateItem(e,'actualAmount')}/>
+                            </div>
+                            <div className="inline-block mr-2">
+                                <div> Month</div>
+                                <input type="number" className="text-black" value={selectedItem?.month}  onChange={(e)=> updateItem(e,'month')}/>
+                            </div>
+                            <div className="inline-block mr-2 ">
+                                <div> Bank</div>
+                                <input type="text" className="text-black" value={selectedItem?.bank} onChange={(e)=> updateItem(e,'bank')}/>
+                            </div>
+                            <button 
+                                className="inline-block bg-blue-500 p-2 w-100 btn-add-item"
+                                style={{borderRadius: '8px'}}
+                                onClick={handleAddInvestmentItem}>
+                                    {selectedItem && selectedItem.id ? 'Edit'  : 'Add'} Item
+                                </button>
+                        </div>
+                    </div> 
+                }
+            />
         </>);
 }
  

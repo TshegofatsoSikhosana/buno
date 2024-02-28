@@ -60,10 +60,10 @@ export class BudgetService {
     }
 
     async cloneBudget(budget: CloneBudget){
-        // db.expenses.bulkAdd(budget.expenses);
-        // db.income.bulkAdd(budget.incomes)
-        // db.investments.bulkAdd(budget.investments)
-        // db.groceries.bulkAdd(budget.groceries)
+        db.expenses.bulkAdd(budget.expenses);
+        db.income.bulkAdd(budget.incomes)
+        db.investments.bulkAdd(budget.investments)
+        db.groceries.bulkAdd(budget.groceries)
 
         console.log("expenses", budget);
     }
