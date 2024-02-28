@@ -1,8 +1,6 @@
 import RowActions from "@/components/RowActions";
 import { ExpenseItem } from "@/model/models";
 import { ExpenseService } from "@/service/ExpenseService";
-import Image from "next/image";
-import deleteSvg from '../../../assets/garbage-icon.svg'
 import { getProjectedTotal, months } from "@/util/utils";
 import { budgetSelectors } from "@/store";
 import { useSelector } from "react-redux";
@@ -10,6 +8,7 @@ import { useSelector } from "react-redux";
 interface ExpenseStepProps{
     year: number;
     month: number;
+    key: any;
 }
 
 
@@ -20,7 +19,7 @@ function ExpenseStep(props:ExpenseStepProps) {
 
     const filteredExpenses = useSelector(budgetSelectors.getCloneExpenses)
 
-    return ( <div>
+    return ( <div key={props.key}>
 
                 <h2 className='font-bold text-stone-100 text-end inline-block' style={{fontSize: '36px'}}>
 

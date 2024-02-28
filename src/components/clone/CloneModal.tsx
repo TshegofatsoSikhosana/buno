@@ -28,11 +28,11 @@ function CloneModal(props:SimpleDialogProps){
   const [stepIndex,setStepIndex] = useState(0);
 
   const steps = [
-    <SelectYear month={month} updateMonth={updateMonth} year={year} setYear={setYear}/>,
-    <IncomeStep month={month}  year={year} />,
-    <ExpenseStep month={month}  year={year} />,
-    <InvestmentStep month={month}  year={year} />,
-    <GroceriesStep month={month}  year={year} />,
+    <SelectYear month={month} updateMonth={updateMonth} year={year} setYear={setYear} key="select-year-step"/>,
+    <IncomeStep month={month}  year={year} key="income-step"/>,
+    <ExpenseStep month={month}  year={year} key="expense-step"/>,
+    <InvestmentStep month={month}  year={year} key="investment-step"/>,
+    <GroceriesStep month={month}  year={year} key="groceries-step"/>,
   ]
 
   useEffect(()=>{

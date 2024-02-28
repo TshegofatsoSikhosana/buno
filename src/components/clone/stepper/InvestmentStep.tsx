@@ -8,6 +8,7 @@ import { budgetSelectors } from "@/store";
 interface InvestmentStepProps{
     year: number;
     month: number;
+    key: any;
 }
 
 function InvestmentStep(props:InvestmentStepProps) {
@@ -17,7 +18,7 @@ function InvestmentStep(props:InvestmentStepProps) {
     const filteredInvestments = useSelector(budgetSelectors.getCloneInvestments)
 
     return ( 
-        <div>
+        <div key={props.key}>
             <h2 className='font-bold text-stone-100 text-end inline-block' style={{fontSize: '36px'}}>
                 {props.year} {months[props.month-1]}
             </h2>

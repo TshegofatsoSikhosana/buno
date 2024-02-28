@@ -7,6 +7,7 @@ interface SelectYearProps{
     updateMonth:(v:number) => void;
     year: number;
     month: number;
+    key: any;
 }
 
 function SelectYear(props:SelectYearProps){
@@ -14,7 +15,7 @@ function SelectYear(props:SelectYearProps){
     const month = useSelector(budgetSelectors.getCurrentMonth);
     
     return (
-        <div className="w11/12"> 
+        <div className="w11/12" key={props.key}> 
             <h1>Clone Budget From</h1>
         
             <h2 className='font-bold text-stone-100 text-end inline-block' style={{fontSize: '36px'}}>

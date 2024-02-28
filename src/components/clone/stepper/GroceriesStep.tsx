@@ -8,6 +8,7 @@ import { budgetSelectors } from "@/store";
 interface GroceriesStepProps{
     year: number;
     month: number;
+    key: any;
 }
 
 
@@ -18,7 +19,7 @@ function GroceriesStep(props:GroceriesStepProps) {
 
     const filteredGroceries = useSelector(budgetSelectors.getCloneGroceries)
 
-    return ( <div>
+    return ( <div key={props.key}>
 
                 <h2 className='font-bold text-stone-100 text-end inline-block' style={{fontSize: '36px'}}>
 

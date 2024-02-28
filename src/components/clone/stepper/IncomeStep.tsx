@@ -8,6 +8,7 @@ import { budgetSelectors } from "@/store";
 interface IncomeStepProps{
     year: number;
     month: number;
+    key: any;
 }
 
 
@@ -17,7 +18,7 @@ function IncomeStep(props:IncomeStepProps) {
 
     const filteredIncomes = useSelector(budgetSelectors.getCloneIncomes)
 
-    return ( <div>
+    return ( <div key={props.key}>
 
                 <h2 className='font-bold text-stone-100 text-end inline-block' style={{fontSize: '36px'}}>
 
