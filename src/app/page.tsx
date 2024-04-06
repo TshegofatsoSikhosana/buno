@@ -12,7 +12,7 @@ import { DatePicker } from 'react-responsive-datepicker';
 import 'react-responsive-datepicker/dist/index.css'
 import closeSvg from '../assets/close.svg'
 import { db } from '@/config/database.config';
-import { getRemainingTotal, months } from '../util/utils';
+import { getActualTotal, getExpectedTotal, getRemainingTotal, months } from '../util/utils';
 import Link from 'next/link';
 import CloneModal from '@/components/clone/CloneModal';
 import Icon from '@/components/shared/Icon';
@@ -37,10 +37,12 @@ export default function Home() {
   const [totalExpenses,setTotalExpenses] = useState<number>(0);
   const [totalInvestments,setTotalInvestments] = useState<number>(0);
   const [totalIncomes,setTotalIncomes] = useState<number>(0);
+  const [budgetRemainder,setBudgetRemainder] = useState<number>(0);
 
   const [active, setActive] = useState<Tab>(Tab.EXPENSES);
   const [openForm,setOpenForm] = useState(false);
   const [openCloneModal,setOpenCloneModal] = useState(false);
+
 
   function isTabActive(type: Tab){
     return type == active ? 'active-section' : ''
@@ -63,11 +65,26 @@ export default function Home() {
     getExpenses();
     getIncomes();
     getInvestments();
-  },[year,month])
+    getRemainder();
+  },[year,month]);
+
+  async function getRemainder(){
+    const expenses = await db.expenses.where({year: year})
+    .and((i)=> Number(i.month) == month )
+    .toArray();
+    const investments = await db.investments.where({year: year})
+    .and((i)=> Number(i.month) == month)
+    .toArray();
+    const incomes = await db.income.where({year: year})
+    .and((i)=> Number(i.month) == month)
+    .toArray();
+    const remainder = getExpectedTotal(incomes) - getExpectedTotal(expenses) - getExpectedTotal(investments);
+    setBudgetRemainder(remainder);
+  }
 
   function getExpenses(){
     db.expenses.where({year: year})
-    .and((i)=> Number(i.month) == month)
+    .and((i)=> Number(i.month) == month && i.actualAmount <= 0)
     .toArray()
     .then((ex)=> {
         setTotalExpenses(getRemainingTotal([...ex]));
@@ -76,7 +93,7 @@ export default function Home() {
 
   function getIncomes(){
     db.income.where({year: year})
-    .and((i)=> Number(i.month) == month)
+    .and((i)=> Number(i.month) == month && i.actualAmount <= 0)
     .toArray()
     .then((ex)=> {
         setTotalIncomes(getRemainingTotal([...ex]));
@@ -85,7 +102,7 @@ export default function Home() {
 
   function getInvestments(){
     db.investments.where({year: year})
-    .and((i)=> Number(i.month) == month)
+    .and((i)=> Number(i.month) == month && i.actualAmount <= 0)
     .toArray()
     .then((ex)=> {
         setTotalInvestments(getRemainingTotal([...ex]));
@@ -155,7 +172,13 @@ export default function Home() {
                     <div className="inline-block text-slate-600 btn-close">CLOSE</div>
                 </div>
                 </div>
-            </>: null}
+              </>: <>
+              {/* <div  className='inline-block mr-5 w-4/12' style={{border:'2px solid rgb(30,150,222,0.5)', padding:'1rem',borderRadius:'10px' }}>
+                <div>Remainder</div>
+                <div>R{budgetRemainder}</div>
+              </div> */}
+              </>
+          }
         </div>
 
           <CloneModal open={openCloneModal} setOpen={setOpenCloneModal}/>

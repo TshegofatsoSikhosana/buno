@@ -16,6 +16,7 @@ function FilterSelector(props: FilterSelectorProps){
                 <option value={FilterType.UNEXPECTED}>Unexpected</option>
                 <option value={FilterType.OVERSPENT}>Overspent</option>
                 <option value={FilterType.DISCOUNTED}>Discounted</option>
+                <option value={FilterType.SAVED}>Saved</option>
             </select> );
 }
  
