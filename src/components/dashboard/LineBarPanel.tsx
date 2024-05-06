@@ -103,7 +103,7 @@ function LineBarPanel(){
             labels: groceries?.labels,
             datasets: [{
                 data: groceries?.data,
-                borderColor: 'rgb(75, 192, 192)',    
+                borderColor: 'rgba(30, 148, 222)',    
                 label: 'Groceries'
             },{
                 data: expenses?.data,
@@ -112,7 +112,7 @@ function LineBarPanel(){
             },
             {
                 data: investments?.data,
-                borderColor: '#deedee',
+                borderColor: 'rgb(65, 194, 123)',
                 label: 'Investments'    
             }]
             }}
