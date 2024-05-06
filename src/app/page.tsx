@@ -210,7 +210,7 @@ export default function Home() {
            onClick={(e)=> setActive(Tab.DASHBOARD)}
            > 
             {/* <div className='inline-block p-1'><Icon svgPath={reportSvg} onClick={() => {}}/> </div>  */}
-            <div className='inline-block'> Budget-Dashbord</div>
+            <div className='inline-block'> Budget-Dashboard</div>
           </div>
           {/* <Link href={"/luno"}
             className={`inline-block p-4 ${isTabActive(Tab.INCOME)}`}
