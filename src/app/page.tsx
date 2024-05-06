@@ -7,6 +7,7 @@ import Investments from '@/components/investment/Investments';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import settingsSvg from '../assets/settings.svg'
+import reportSvg from '../assets/report.svg'
 import cloneSvg from '../assets/clone.svg'
 import { DatePicker } from 'react-responsive-datepicker';
 import 'react-responsive-datepicker/dist/index.css'
@@ -180,12 +181,6 @@ export default function Home() {
           {/* </div> */}
         </div>
         <div className='w-100'>
-        <div 
-           className={`inline-block p-4 ${isTabActive(Tab.DASHBOARD, active)}`}
-           onClick={(e)=> setActive(Tab.DASHBOARD)}
-           > 
-              Dashboard
-          </div>
           <div 
            className={`inline-block p-4 ${isTabActive(Tab.GROCERIES, active)}`}
            onClick={(e)=> setActive(Tab.GROCERIES)}
@@ -209,6 +204,13 @@ export default function Home() {
             onClick={(e)=> setActive(Tab.INCOME)}
            >
               Income
+          </div>
+          <div 
+           className={`inline-block p-4 ${isTabActive(Tab.DASHBOARD, active)}`}
+           onClick={(e)=> setActive(Tab.DASHBOARD)}
+           > 
+            {/* <div className='inline-block p-1'><Icon svgPath={reportSvg} onClick={() => {}}/> </div>  */}
+            <div className='inline-block'> Budget-Dashbord</div>
           </div>
           {/* <Link href={"/luno"}
             className={`inline-block p-4 ${isTabActive(Tab.INCOME)}`}

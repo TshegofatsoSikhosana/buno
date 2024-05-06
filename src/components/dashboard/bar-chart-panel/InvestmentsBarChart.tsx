@@ -24,7 +24,7 @@ const InvestmentsBarChart = () => {
         });
       }
     return (
-      <BarChart labels ={groceries.map((g)=> g.description)} data={groceries.map((g)=> g.actualAmount)} title="Investments Budget"/>
+      <BarChart labels ={groceries.map((g)=> g.description)} data={groceries.map((g)=> g.actualAmount)} title="Current Budget Investments"/>
     );
 }
 

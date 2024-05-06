@@ -7,7 +7,7 @@ import ExpsenseBarChart from './ExpensesBarChart';
 import InvestmentsBarChart from './InvestmentsBarChart';
 
 function BarChartPanel(){
-    const [active, setActive] = useState<Tab>(Tab.EXPENSES);
+    const [active, setActive] = useState<Tab>(Tab.GROCERIES);
 
     function renderContent(){
         switch (active) {

@@ -24,7 +24,7 @@ const GroceriesBarChart = () => {
         });
       }
     return (
-        <BarChart labels ={groceries.map((g)=> g.description)} data={groceries.map((g)=> g.actualAmount)} title="Groceries Budget"/>
+        <BarChart labels ={groceries.map((g)=> g.description)} data={groceries.map((g)=> g.actualAmount)} title="Current Budget Groceries"/>
     );
 }
 

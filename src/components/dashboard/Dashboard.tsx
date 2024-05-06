@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { db } from '@/config/database.config';
 import { useSelector } from 'react-redux';
 import { budgetSelectors } from '@/store';
-import { Bar, Doughnut } from 'react-chartjs-2';
+import { Bar, Doughnut, Line } from 'react-chartjs-2';
 import {
     Chart as ChartJS,
     CategoryScale,
@@ -12,16 +12,21 @@ import {
     Tooltip,
     Legend,
     ArcElement,
+    PointElement,
+    LineElement
   } from 'chart.js';
 import { ExpenseItem, GroceryItem } from '@/model/models';
 import BarChartPanel from './bar-chart-panel/BarChartPanel';
+import LineBarPanel from './LineBarPanel';
   ChartJS.register(
     CategoryScale,
     LinearScale,
     BarElement,
     Title,
     Tooltip,
-    Legend
+    Legend,
+    PointElement,
+    LineElement
   );
 ChartJS.register(ArcElement, Tooltip, Legend)
 
@@ -34,7 +39,6 @@ function Dashboard(){
     const [totalGroceries,setTotalGroceries] = useState<number>(0);
     const [totalIncomes,setTotalIncomes] = useState<number>(0);
 
-    const [groceries,setGroceries] = useState<ExpenseItem[]>([]);
     useEffect(()=>{
         getExpenses();
         getGroceries();
@@ -49,7 +53,6 @@ function Dashboard(){
         .then((ex)=> {
             const g=  ex.filter((e)=> e.description.toLowerCase() !== "groceries")
             setTotalExpenses(g.map((e)=> e.actualAmount).reduce((p,c)=> Number(p) + Number(c)));
-            setGroceries(ex.sort((a,b)=> b.actualAmount - a.actualAmount))
         });
       }
     
@@ -88,14 +91,16 @@ function Dashboard(){
                 labels: ["Grocieries","Expense", "Investments","Remainder"],
                 datasets: [{
                     data: [totalGroceries,totalExpenses,totalInvestments,totalIncomes-totalExpenses-totalInvestments-totalGroceries],
-                    backgroundColor:["#deedee","#a33dee","rgb(65, 194, 123)","rgba(30, 148, 222)"],
+                    backgroundColor:["rgba(30, 148, 222)","#a33dee","rgb(65, 194, 123)","#deedee"],
                     }]
                 }}
                 options={{
-                    color:"white"
+                    color:"white",
                 }}
                 style={{color: "white"}}/>
         </div>
+        <div></div>
+        <LineBarPanel/>
     </div>);
 }
 

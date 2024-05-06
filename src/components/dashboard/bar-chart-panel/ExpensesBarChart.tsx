@@ -25,7 +25,7 @@ const ExpsenseBarChart = () => {
         });
       }
     return (
-      <BarChart labels ={groceries.map((g)=> g.description)} data={groceries.map((g)=> g.actualAmount)} title="Expenses Budget"/>
+      <BarChart labels ={groceries.map((g)=> g.description)} data={groceries.map((g)=> g.actualAmount)} title="Current Budget Expenses"/>
     );
 }
 
