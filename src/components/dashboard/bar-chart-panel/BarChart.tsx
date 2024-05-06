@@ -40,7 +40,7 @@ function BarChart(props: BarChartProps){
         <Bar data={{
             datasets: [{
                 data: props.data,
-                backgroundColor:["#deedee","#feadee","#a332dd","#0eadde"],
+                backgroundColor:["#deedee","#a33dee","rgb(65, 194, 123)","rgba(30, 148, 222)"],
                 }]
             }}
             options={{

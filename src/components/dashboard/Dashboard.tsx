@@ -88,7 +88,7 @@ function Dashboard(){
                 labels: ["Grocieries","Expense", "Investments","Remainder"],
                 datasets: [{
                     data: [totalGroceries,totalExpenses,totalInvestments,totalIncomes-totalExpenses-totalInvestments-totalGroceries],
-                    backgroundColor:["#deedee","#feadee","#a332dd","#0eadde"],
+                    backgroundColor:["#deedee","#a33dee","rgb(65, 194, 123)","rgba(30, 148, 222)"],
                     }]
                 }}
                 options={{
