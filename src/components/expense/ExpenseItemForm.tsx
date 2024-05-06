@@ -87,11 +87,6 @@ function ExpenseItemForm(props: ExpenseItemFormProps){
                                 <div> Actual Amount</div>
                                 <input type="number" className="text-black" value={selectedItem?.actualAmount}  onChange={(e)=> updateItem(e,'actualAmount')}/>
                             </div>
-                        
-                            <div className="inline-block mr-2">
-                                <div> Month</div>
-                                <input type="number" className="text-black" value={selectedItem?.month}  onChange={(e)=> updateItem(e,'month')}/>
-                            </div>
                             <div className="inline-block mr-2">
                                 <div> Category</div>
                                 <select className="text-black p-2"

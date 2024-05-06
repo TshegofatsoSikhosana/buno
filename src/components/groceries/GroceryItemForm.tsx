@@ -103,10 +103,6 @@ function GroceryItemForm(props: GroceryItemFormProps){
                                 <input type="number" className="text-black" value={selectedItem?.discountAmount}  onChange={(e)=> updateItem(e,'discountAmount')}/>
                             </div>
                             <div className="inline-block mr-2">
-                                <div> Month</div>
-                                <input type="number" className="text-black" value={selectedItem?.month}  onChange={(e)=> updateItem(e,'month')}/>
-                            </div>
-                            <div className="inline-block mr-2">
                                 <div> Store</div>
                                 <input type="text" className="text-black" value={selectedItem?.store}  onChange={(e)=> updateItem(e,'store')}/>
                             </div>

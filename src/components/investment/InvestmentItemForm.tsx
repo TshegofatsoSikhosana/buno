@@ -84,10 +84,6 @@ function InvestmentItemForm(props: InvestmentItemFormProps){
                                 <div> Actual Amount</div>
                                 <input type="number" className="text-black" value={selectedItem?.actualAmount}  onChange={(e)=> updateItem(e,'actualAmount')}/>
                             </div>
-                            <div className="inline-block mr-2">
-                                <div> Month</div>
-                                <input type="number" className="text-black" value={selectedItem?.month}  onChange={(e)=> updateItem(e,'month')}/>
-                            </div>
                             <div className="inline-block mr-2 ">
                                 <div> Bank</div>
                                 <input type="text" className="text-black" value={selectedItem?.bank} onChange={(e)=> updateItem(e,'bank')}/>

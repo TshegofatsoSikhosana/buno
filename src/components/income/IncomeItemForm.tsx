@@ -85,10 +85,6 @@ function IncomeItemForm(props: IncomeItemFormProps){
                                 <div> Actual Amount</div>
                                 <input type="number" className="text-black" value={selectedItem?.actualAmount}  onChange={(e)=> updateItem(e,'actualAmount')}/>
                             </div>
-                            <div className="inline-block mr-2">
-                                <div> Month</div>
-                                <input type="number" className="text-black" value={selectedItem?.month}  onChange={(e)=> updateItem(e,'month')}/>
-                            </div>
                             <button 
                                 className="inline-block bg-blue-500 p-2 w-100 btn-add-item"
                                 style={{borderRadius: '8px'}}

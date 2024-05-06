@@ -21,10 +21,13 @@ function CloneModal(props:SimpleDialogProps){
   const bs = new BudgetService();
 
   const budget = useSelector(budgetSelectors.getCloneBudget);
+  const budgetYear= useSelector(budgetSelectors.getCurrentYear);
+  const budgetMonth = useSelector(budgetSelectors.getCurrentMonth);
   const dispatch = useAppDispatch();
-  const [year, setYear] = useState<number>(2024);
-  const [month,setMonth] = useState<number>(1);
+  const [year, setYear] = useState<number>(budgetYear);
+  const [month,setMonth] = useState<number>(budgetMonth);
  
+
   const [stepIndex,setStepIndex] = useState(0);
 
   const steps = [
@@ -41,7 +44,16 @@ function CloneModal(props:SimpleDialogProps){
     });
   },[year,month]);
 
-
+ useEffect(()=>{
+  if(budgetMonth === 12){
+    setYear(budgetYear+1)
+    setMonth(1)
+  }
+  else{
+    setMonth(budgetMonth+1)
+  }
+  
+ },[budgetYear, budgetMonth])
   const handleClose = () => {
     props.setOpen(false);
     dispatch(budgetActions.resetCloneBudget()) 

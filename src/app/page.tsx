@@ -19,14 +19,10 @@ import Icon from '@/components/shared/Icon';
 import { useAppDispatch } from '@/store/hooks';
 import { budgetActions, budgetSelectors } from '@/store';
 import { useSelector } from 'react-redux';
+import Dashboard from '@/components/dashboard/Dashboard';
+import { Tab, isTabActive } from '@/model/shared';
 
 
-enum Tab{
-  EXPENSES,
-  INVESTMENTS,
-  INCOME,
-  GROCERIES
-}
 export default function Home() {
 
   const dispatch = useAppDispatch();
@@ -43,11 +39,6 @@ export default function Home() {
   const [openForm,setOpenForm] = useState(false);
   const [openCloneModal,setOpenCloneModal] = useState(false);
 
-
-  function isTabActive(type: Tab){
-    return type == active ? 'active-section' : ''
-  }
-
   function renderContent(){
     switch (active) {
       case Tab.INVESTMENTS:
@@ -56,6 +47,8 @@ export default function Home() {
         return <Income setTotalIncomes={setTotalIncomes}/>
       case Tab.GROCERIES:
         return <Groceries />
+      case Tab.DASHBOARD:
+        return <Dashboard />
       default:
         return <Expenses setTotalExpenses={setTotalExpenses} />
     }
@@ -187,26 +180,32 @@ export default function Home() {
           {/* </div> */}
         </div>
         <div className='w-100'>
+        <div 
+           className={`inline-block p-4 ${isTabActive(Tab.DASHBOARD, active)}`}
+           onClick={(e)=> setActive(Tab.DASHBOARD)}
+           > 
+              Dashboard
+          </div>
           <div 
-           className={`inline-block p-4 ${isTabActive(Tab.GROCERIES)}`}
+           className={`inline-block p-4 ${isTabActive(Tab.GROCERIES, active)}`}
            onClick={(e)=> setActive(Tab.GROCERIES)}
            > 
               Groceries
           </div>
           <div 
-           className={`inline-block p-4 ${isTabActive(Tab.EXPENSES)}`}
+           className={`inline-block p-4 ${isTabActive(Tab.EXPENSES, active)}`}
            onClick={(e)=> setActive(Tab.EXPENSES)}
            > 
               Expenses
           </div>
           <div 
-            className={`inline-block p-4 ${isTabActive(Tab.INVESTMENTS)}`}
+            className={`inline-block p-4 ${isTabActive(Tab.INVESTMENTS, active)}`}
             onClick={(e)=> setActive(Tab.INVESTMENTS)}
            >
               Investments
           </div>
           <div 
-            className={`inline-block p-4 ${isTabActive(Tab.INCOME)}`}
+            className={`inline-block p-4 ${isTabActive(Tab.INCOME, active)}`}
             onClick={(e)=> setActive(Tab.INCOME)}
            >
               Income
