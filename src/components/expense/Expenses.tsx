@@ -58,29 +58,9 @@ function Expenses(props: ExpensesProps){
         return filteredExpenses ? es.getExpectedTotal(type,filteredExpenses) : 0
     }
 
-    function handleAddExpenseItem(selectedItem: ExpenseItem){
-        if(selectedItem){
-            let item = {...selectedItem};
-            item.month = month.toString();
-            item.year = year;
-            item.dateCreated = Date.now().toString();
-            es.addNew( {...item})
-        }
-        setOpenForm(false)
-        getExpenses();
-    }
-
     function handleItemClick(index:number, category?: ExpenseCategory | undefined){
         setSelectedItem(index+1);
         setSelectExpenseCatergory(category);
-    }
-
-    function handleEditExpenseItem(selectedItem: ExpenseItem){
-        if(selectedItem){
-            es.update( {...selectedItem})
-        }
-        setOpenForm(false)
-        getExpenses();
     }
 
     function deleteItem(index:number){
@@ -98,7 +78,7 @@ function Expenses(props: ExpensesProps){
 
     function getItem(){
         if(filteredExpenses){
-            return filteredExpenses.filter((e)=> e.category == selectedExpenseCategory)[selectedItem-1]
+            return filteredExpenses.filter((e)=> e.category === selectedExpenseCategory)[selectedItem-1]
         }
         return undefined
     }

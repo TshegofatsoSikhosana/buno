@@ -44,7 +44,6 @@ function LineBarPanel(){
               }
             })
             const monthsLabels = Array.from(monthSet)
-            console.log("Monthset", monthSet)
             setGroceries({ labels: monthsLabels, data: getTotals(monthsLabels, ex)})
         });
       }
