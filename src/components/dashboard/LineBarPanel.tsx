@@ -9,9 +9,6 @@ import {
     PointElement,
     LineElement
   } from 'chart.js';
-import { ExpenseItem } from '@/model/models';
-import { useSelector } from 'react-redux';
-import { budgetSelectors } from '@/store';
 import { db } from '@/config/database.config';
 import { months } from '@/util/utils';
 import { Line } from 'react-chartjs-2';
@@ -26,76 +23,74 @@ ChartJS.register(
   );
 
 function LineBarPanel(){
-
-    const year= useSelector(budgetSelectors.getCurrentYear);
-    const month = useSelector(budgetSelectors.getCurrentMonth);
     const [groceries,setGroceries] = useState<{labels: string[], data: number[]}>();
     const [expenses,setExpsense] = useState<{labels: string[], data: number[]}>();
     const [investments,setInvestments] = useState<{labels: string[], data: number[]}>();
 
     function getGroceries(){
-        const g = db.groceries
-        .toArray()
-        .then((ex)=> {
-            const monthSet = new Set<string>();
-            ex.forEach((e)=>{
-              if(months[Number(e.month)-1]){
-                monthSet.add(months[Number(e.month)-1]+ " " + e.year)
-              }
-            })
-            const monthsLabels = Array.from(monthSet)
-            setGroceries({ labels: monthsLabels, data: getTotals(monthsLabels, ex)})
-        });
-      }
+      db.groceries
+      .toArray()
+      .then((ex)=> {
+          const monthSet = new Set<string>();
+          ex.forEach((e)=>{
+            if(months[Number(e.month)-1]){
+              monthSet.add(months[Number(e.month)-1]+ " " + e.year)
+            }
+          })
+          const monthsLabels = Array.from(monthSet)
+          setGroceries({ labels: monthsLabels, data: getTotals(monthsLabels, ex)})
+      });
+    }
 
-      function getExpenses(){
-        const g = db.expenses
-        .toArray()
-        .then((ex)=> {
-            const monthSet = new Set<string>();
-            ex.forEach((e)=>{
-                monthSet.add(months[Number(e.month)-1]+ " " + e.year)
-            })
-            const monthsLabels = Array.from(monthSet)
-            setExpsense({ labels: monthsLabels, data: getTotals(monthsLabels, ex.filter((e)=> e.description.toLowerCase() !== "groceries"))})
-        });
-      }
-      function getInvestments(){
-        const g = db.investments
-        .toArray()
-        .then((ex)=> {
-            const monthSet = new Set<string>();
-            ex.forEach((e)=>{
-                monthSet.add(months[Number(e.month)-1]+ " " + e.year)
-            })
-            const monthsLabels = Array.from(monthSet)
-            setInvestments({ labels: monthsLabels, data: getTotals(monthsLabels, ex)})
-        });
-      }
+    function getExpenses(){
+      db.expenses
+      .toArray()
+      .then((ex)=> {
+          const monthSet = new Set<string>();
+          ex.forEach((e)=>{
+              monthSet.add(months[Number(e.month)-1]+ " " + e.year)
+          })
+          const monthsLabels = Array.from(monthSet)
+          setExpsense({ labels: monthsLabels, data: getTotals(monthsLabels, ex.filter((e)=> e.description.toLowerCase() !== "groceries"))})
+      });
+    }
 
-      function getTotals(monthsLabels: string[], data: any[],){
-        const totals = []
-        for (let i = 0; i< monthsLabels.length; i++) {
-          const item = monthsLabels[i];
-        // console.log("Monthset:",item);
+    function getInvestments(){
+      db.investments
+      .toArray()
+      .then((ex)=> {
+          const monthSet = new Set<string>();
+          ex.forEach((e)=>{
+              monthSet.add(months[Number(e.month)-1]+ " " + e.year)
+          })
+          const monthsLabels = Array.from(monthSet)
+          setInvestments({ labels: monthsLabels, data: getTotals(monthsLabels, ex)})
+      });
+    }
 
-          const filtered = data.filter((e)=>  months[Number(e.month)-1] + " " + e.year === item)
-           .map((e)=> Number(e.actualAmount));
+    function getTotals(monthsLabels: string[], data: any[],){
+      const totals = []
+      for (let i = 0; i< monthsLabels.length; i++) {
+        const item = monthsLabels[i];
+      // console.log("Monthset:",item);
 
-          if(filtered){
-            const total = filtered
-            .reduce((a,b)=> Number(a)+Number(b))
-            totals.push(total);
-           }
-         
+        const filtered = data.filter((e)=>  months[Number(e.month)-1] + " " + e.year === item)
+          .map((e)=> Number(e.actualAmount));
+
+        if(filtered){
+          const total = filtered.reduce((a,b)=> Number(a)+Number(b))
+          totals.push(total);
         }
-        return totals;
       }
-      useEffect(()=>{
-        getGroceries()
-        getExpenses()
-        getInvestments()
+      return totals;
+    }
+
+    useEffect(()=>{
+      getGroceries()
+      getExpenses()
+      getInvestments()
       },[])
+      
     return (
         <div className="w-11/12 text-white inline-block">
         {groceries?.data && groceries?.labels &&
