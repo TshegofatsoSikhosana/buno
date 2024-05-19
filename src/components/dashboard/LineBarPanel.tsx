@@ -72,7 +72,6 @@ function LineBarPanel(){
       const totals = []
       for (let i = 0; i< monthsLabels.length; i++) {
         const item = monthsLabels[i];
-      // console.log("Monthset:",item);
 
         const filtered = data.filter((e)=>  months[Number(e.month)-1] + " " + e.year === item)
           .map((e)=> Number(e.actualAmount));
@@ -90,7 +89,7 @@ function LineBarPanel(){
       getExpenses()
       getInvestments()
       },[])
-      
+
     return (
         <div className="w-11/12 text-white inline-block">
         {groceries?.data && groceries?.labels &&
