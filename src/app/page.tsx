@@ -13,8 +13,7 @@ import { DatePicker } from 'react-responsive-datepicker';
 import 'react-responsive-datepicker/dist/index.css'
 import closeSvg from '../assets/close.svg'
 import { db } from '@/config/database.config';
-import { getActualTotal, getExpectedTotal, getRemainingTotal, months } from '../util/utils';
-import Link from 'next/link';
+import { getExpectedTotal, getRemainingTotal, months } from '../util/utils';
 import CloneModal from '@/components/clone/CloneModal';
 import Icon from '@/components/shared/Icon';
 import { useAppDispatch } from '@/store/hooks';
@@ -181,17 +180,17 @@ export default function Home() {
           {/* </div> */}
         </div>
         <div className='w-100'>
+        <div 
+           className={`inline-block p-4 ${isTabActive(Tab.EXPENSES, active)}`}
+           onClick={(e)=> setActive(Tab.EXPENSES)}
+           > 
+              Expenses
+          </div>
           <div 
            className={`inline-block p-4 ${isTabActive(Tab.GROCERIES, active)}`}
            onClick={(e)=> setActive(Tab.GROCERIES)}
            > 
               Groceries
-          </div>
-          <div 
-           className={`inline-block p-4 ${isTabActive(Tab.EXPENSES, active)}`}
-           onClick={(e)=> setActive(Tab.EXPENSES)}
-           > 
-              Expenses
           </div>
           <div 
             className={`inline-block p-4 ${isTabActive(Tab.INVESTMENTS, active)}`}

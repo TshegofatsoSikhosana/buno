@@ -1,12 +1,12 @@
 import { ExpenseCategory, ExpenseItem } from '@/model/models';
 import React, { useEffect, useState } from 'react';
-
 import { useSelector } from 'react-redux';
 import { budgetSelectors } from '@/store';
 import { db } from '@/config/database.config';
-import BarChart from './BarChart';
+import DoughnutChart from './DoughnutChart';
 
-const ExpsenseBarChart = () => {
+
+const ExpsenseDoughnut = () => {
     const [expenses,setExpenses] = useState<ExpenseItem[]>([]);
     const year= useSelector(budgetSelectors.getCurrentYear);
     const month = useSelector(budgetSelectors.getCurrentMonth);
@@ -41,22 +41,13 @@ const ExpsenseBarChart = () => {
 
     return (
       <>
-       <select className="text-white p-2"
-                    style={{borderRadius: '5px', backgroundColor: 'rgb(70, 70, 80,180)'}}
-                    value={filterType}
-                    onChange={(e)=> setFilterType(Number(e.target.value))}>
-                <option value={undefined}>No Category</option>
-                <option value={ExpenseCategory.EXCEPTION}>Exception</option>
-                <option value={ExpenseCategory.LIVING}>Living</option>
-                <option value={ExpenseCategory.PERSONAL}>Personal</option>
-            </select> 
-      {filteredExpenses && 
-        <BarChart labels ={filteredExpenses.map((g)=> g.description)} 
-              data={filteredExpenses.map((g)=> g.actualAmount)}
-              title="Current Budget Expenses"/>
+        {expenses && <DoughnutChart values={expenses.filter((item) => item.actualAmount > 0).map(expense => expense.actualAmount)}
+              colors={expenses.map(expense =>  `rgba(${Math.floor(Math.random() * 255)},${Math.floor(Math.random() * 255)},${Math.floor(Math.random() * 255)})`)} 
+              labels={expenses.map(expense => expense.description)}/>
+
       }
       </>
     );
 }
 
-export default ExpsenseBarChart;
+export default ExpsenseDoughnut;

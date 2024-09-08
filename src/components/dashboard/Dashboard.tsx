@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { db } from '@/config/database.config';
 import { useSelector } from 'react-redux';
 import { budgetSelectors } from '@/store';
-import { Bar, Doughnut, Line } from 'react-chartjs-2';
 import {
     Chart as ChartJS,
     CategoryScale,
@@ -11,13 +10,12 @@ import {
     Title,
     Tooltip,
     Legend,
-    ArcElement,
     PointElement,
     LineElement
   } from 'chart.js';
-import { ExpenseItem, GroceryItem } from '@/model/models';
 import BarChartPanel from './bar-chart-panel/BarChartPanel';
 import LineBarPanel from './LineBarPanel';
+import DoughnutChart from './doughnuts/DoughnutChart';
   ChartJS.register(
     CategoryScale,
     LinearScale,
@@ -28,7 +26,6 @@ import LineBarPanel from './LineBarPanel';
     PointElement,
     LineElement
   );
-ChartJS.register(ArcElement, Tooltip, Legend)
 
 function Dashboard(){
     const year= useSelector(budgetSelectors.getCurrentYear);
@@ -84,23 +81,21 @@ function Dashboard(){
       }
 
     return (<div className='dashboard-container'>
-        
-        <BarChartPanel/>
-        <div className="w-4/12 text-white inline-block">
-            <Doughnut data={{
-                labels: ["Grocieries","Expense", "Investments","Remainder"],
-                datasets: [{
-                    data: [totalGroceries,totalExpenses,totalInvestments,totalIncomes-totalExpenses-totalInvestments-totalGroceries],
-                    backgroundColor:["rgba(30, 148, 222)","#a33dee","rgb(65, 194, 123)","#deedee"],
-                    }]
-                }}
-                options={{
-                    color:"white",
-                }}
-                style={{color: "white"}}/>
-        </div>
-        <div></div>
+
+        {/* <h1 className='w-100 bg-white text-black p-3 text-center mt-4' style={{borderRadius: '10px', fontWeight: 700}}>Per Budget Month View</h1> */}
+        <div className="w-8/12 text-white inline-block">
         <LineBarPanel/>
+        </div>
+        <div className="w-4/12 text-white inline-block">
+               <DoughnutChart includeLabels={true}
+                  values={[totalGroceries,totalExpenses,totalInvestments,totalIncomes-totalExpenses-totalInvestments-totalGroceries]}
+                  labels={["Grocieries","Expense", "Investments","Remainder"]}
+                  colors={["rgba(30, 148, 222)","#a33dee","rgb(65, 194, 123)","#deedee"]}
+                  />            
+        </div>
+        <div className=' bg-white text-black p-3 text-left mt-4' style={{borderRadius: '10px', fontWeight: 700}}> <button style={{border: '2px solid white', padding:'2px'}}>Per Category</button>  <button> Budget Overview</button></div  >
+        <BarChartPanel/>
+       
     </div>);
 }
 

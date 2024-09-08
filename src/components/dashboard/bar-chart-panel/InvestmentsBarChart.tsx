@@ -7,7 +7,7 @@ import { db } from '@/config/database.config';
 import BarChart from './BarChart';
 
 const InvestmentsBarChart = () => {
-    const [groceries,setGroceries] = useState<InvestmentItem[]>([]);
+    const [investments,setInvestements] = useState<InvestmentItem[]>([]);
     const year= useSelector(budgetSelectors.getCurrentYear);
     const month = useSelector(budgetSelectors.getCurrentMonth);
 
@@ -20,11 +20,11 @@ const InvestmentsBarChart = () => {
         .and((i)=> Number(i.month) == month)
         .toArray()
         .then((ex)=> {
-            setGroceries(ex.sort((a,b)=> b.actualAmount - a.actualAmount));
+            setInvestements(ex.sort((a,b)=> b.actualAmount - a.actualAmount));
         });
       }
     return (
-      <BarChart labels ={groceries.map((g)=> g.description)} data={groceries.map((g)=> g.actualAmount)} title="Current Budget Investments"/>
+      <BarChart labels ={investments.map((g)=> g.description)} data={investments.map((g)=> g.actualAmount)} title="Current Budget Investments"/>
     );
 }
 
