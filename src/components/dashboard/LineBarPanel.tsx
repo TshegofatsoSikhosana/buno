@@ -129,12 +129,14 @@ function LineBarPanel(){
                     labels:{ 
                         color:'white'
                     },
+                    
                   },
                   title: {
                     display: true,
                     text: 'Past Budget Totals By Category Overview',
                     color:'white'
                   },
+                  
                 }
             }}
             style={{color: "white"}}/>}
