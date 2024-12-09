@@ -31,15 +31,15 @@ function ShareModal(props:SimpleDialogProps){
 
   const [stepIndex,setStepIndex] = useState(0);
   const steps = [
-    <>
+    <div key={0}>
      <button className="btn-add-item p-3 mt-2 w-8/12" style={{borderRadius:'20px'}} onClick={(e)=> updateStep(stepIndex+1)}>
     { 'Backup/Export' } 
     </button>
     <button className="btn-add-item p-3 mt-2 w-8/12" style={{borderRadius:'20px'}} onClick={(e)=> updateStep(stepIndex+1)}>
     { 'Import' } 
     </button>
-    </>,
-    <Export />
+    </div>,
+    <Export key={1}/>
   ]
 
   // useEffect(()=>{
