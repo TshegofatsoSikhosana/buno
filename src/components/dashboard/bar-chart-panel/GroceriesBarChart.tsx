@@ -39,7 +39,7 @@ const GroceriesBarChart = () => {
                 </select> 
               </div> */}
               <div className="inline w-4/12 p-2">
-                <DatePicker/>
+                {/* <DatePicker/> */}
               </div>
           </div>
         { groceries && 

@@ -40,7 +40,7 @@ function Dashboard(){
         getExpenses();
         getGroceries();
         getInvestments();
-        getIncomes()
+        getIncomes();
     },[year,month]);
 
     function getExpenses(){
@@ -49,7 +49,9 @@ function Dashboard(){
         .toArray()
         .then((ex)=> {
             const g=  ex.filter((e)=> e.description.toLowerCase() !== "groceries")
-            setTotalExpenses(g.map((e)=> e.actualAmount).reduce((p,c)=> Number(p) + Number(c)));
+            if(g.length > 0){
+              setTotalExpenses(g.map((e)=> e.actualAmount).reduce((p,c)=> Number(p) + Number(c)));
+            }
         });
       }
     
@@ -58,7 +60,9 @@ function Dashboard(){
         .and((i)=> Number(i.month) == month)
         .toArray()
         .then((ex)=> {
+          if(ex.length > 0){
             setTotalGroceries(ex.map((e)=> e.actualAmount - Number(e.discountAmount)).reduce((p,c)=> Number(p) + Number(c)));
+          }
         });
       }
 
@@ -67,7 +71,9 @@ function Dashboard(){
         .and((i)=> Number(i.month) == month)
         .toArray()
         .then((ex)=> {
+          if(ex.length > 0){
             setTotalIncomes(ex.map((e)=> e.actualAmount).reduce((p,c)=> Number(p) + Number(c)));
+          }
         });
       }
     
@@ -76,7 +82,9 @@ function Dashboard(){
         .and((i)=> Number(i.month) == month)
         .toArray()
         .then((ex)=> {
+          if(ex.length > 0){
             setTotalInvestments(ex.map((e)=> e.actualAmount).reduce((p,c)=> Number(p) + Number(c)));
+          }
         });
       }
 

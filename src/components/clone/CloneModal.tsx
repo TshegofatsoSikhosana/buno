@@ -39,10 +39,11 @@ function CloneModal(props:SimpleDialogProps){
   ]
 
   useEffect(()=>{
-    bs.initializeBudgetClone(year,month).then((budgetClone)=>{
+    const nextMonth = budgetMonth+1;
+    bs.initializeBudgetClone( budgetYear,budgetMonth, budgetYear, Number(nextMonth)).then((budgetClone)=>{
       dispatch(budgetActions.setCloneBudget(budgetClone)) 
     });
-  },[year,month]);
+  },[budgetYear,budgetMonth]);
 
  useEffect(()=>{
   if(budgetMonth === 12){
@@ -50,10 +51,12 @@ function CloneModal(props:SimpleDialogProps){
     setMonth(1)
   }
   else{
-    setMonth(budgetMonth+1)
+    updateMonth(budgetMonth+1)
   }
   
  },[budgetYear, budgetMonth])
+
+ 
   const handleClose = () => {
     props.setOpen(false);
     dispatch(budgetActions.resetCloneBudget()) 
@@ -69,12 +72,7 @@ function CloneModal(props:SimpleDialogProps){
   }
 
   function updateStep(step:number){
-    if(step === 1){
-      bs.initializeBudgetClone(year,month).then((budgetClone)=>{
-        dispatch(budgetActions.setCloneBudget(budgetClone)) 
-      });
-    } 
-    else if(step === steps.length){
+   if(step === steps.length){
       bs.cloneBudget(budget)
           .then((res)=>{
             handleClose();

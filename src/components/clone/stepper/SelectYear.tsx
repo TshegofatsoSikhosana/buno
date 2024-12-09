@@ -11,7 +11,7 @@ interface SelectYearProps{
 }
 
 function SelectYear(props:SelectYearProps){
-    const year= useSelector(budgetSelectors.getCurrentYear);
+    const year = useSelector(budgetSelectors.getCurrentYear);
     const month = useSelector(budgetSelectors.getCurrentMonth);
     
     return (

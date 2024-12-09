@@ -49,6 +49,7 @@ function LineBarPanel(){
           const monthSet = new Set<string>();
           ex.forEach((e)=>{
               monthSet.add(months[Number(e.month)-1]+ " " + e.year)
+              e.actualAmount = Number(e.actualAmount)
           })
           const monthsLabels = Array.from(monthSet)
           setExpsense({ labels: monthsLabels, data: getTotals(monthsLabels, ex.filter((e)=> e.description.toLowerCase() !== "groceries"))})

@@ -42,15 +42,15 @@ function ShareModal(props:SimpleDialogProps){
     <Export />
   ]
 
-  useEffect(()=>{
-    bs.initializeBudgetClone(year,month).then((budgetClone)=>{
-      dispatch(budgetActions.setCloneBudget(budgetClone)) 
-    });
-  },[year,month]);
+  // useEffect(()=>{
+  //   bs.initializeBudgetClone(year,month).then((budgetClone)=>{
+  //     dispatch(budgetActions.setCloneBudget(budgetClone)) 
+  //   });
+  // },[year,month]);
 
  useEffect(()=>{
   if(budgetMonth === 12){
-    setYear(budgetYear+1)
+    // setYear(budgetYear+1)
     setMonth(1)
   }
   else{

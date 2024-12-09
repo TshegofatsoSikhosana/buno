@@ -22,34 +22,31 @@ export class BudgetService {
         return getRemainingTotal(items);
     }
 
-    async initializeBudgetClone(year:number,month:number){
-
-        const date = new Date();
-
-        const currMonth = date.getMonth()+1;
-        const currYear = date.getFullYear();
-
-        const expenses = await db.expenses.where({year: currYear})
-        .and((i)=> Number(i.month) == currMonth)
+    async initializeBudgetClone(year:number,month:number, nextYear: number, nextMonth: number){      
+         
+        const expenses = await db.expenses.where({year: year})
+        .and((i)=> Number(i.month) == month)
         .toArray()
-        .then((e)=> prepareCloneItems(e,month,year));
+        .then((e)=> prepareCloneItems(e,nextMonth,nextYear));
 
-        const incomes = await db.income.where({year: currYear})
-        .and((i)=> Number(i.month) == currMonth)
-        .toArray()
-        .then((e)=> prepareCloneItems(e,month,year));
-
-        const investments = await db.investments.where({year: currYear})
-        .and((i)=> Number(i.month) == currMonth)
-        .toArray()
-        .then((e)=> prepareCloneItems(e,month,year));
+        console.log('Expenses', expenses);
         
-        const groceries = await db.groceries.where({year: currYear})
-        .and((i)=> Number(i.month) == currMonth)
+        const incomes = await db.income.where({year: year})
+        .and((i)=> Number(i.month) == month)
         .toArray()
-        .then((e)=> prepareCloneItems(e,month,year));
+        .then((e)=> prepareCloneItems(e,nextMonth,nextYear));
 
-        return {
+        const investments = await db.investments.where({year: year})
+        .and((i)=> Number(i.month) == month)
+        .toArray()
+        .then((e)=> prepareCloneItems(e,nextMonth,nextYear));
+        
+        const groceries = await db.groceries.where({year: year})
+        .and((i)=> Number(i.month) == month)
+        .toArray()
+        .then((e)=> prepareCloneItems(e,nextMonth,nextYear));
+
+        const cloneBudget =  {
                 year: year,
                 month: month,
                 expenses: expenses,
@@ -57,6 +54,8 @@ export class BudgetService {
                 investments: investments,
                 groceries: groceries
             } as CloneBudget
+        
+        return cloneBudget;
     }
 
     async cloneBudget(budget: CloneBudget){

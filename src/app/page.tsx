@@ -180,8 +180,8 @@ export default function Home() {
           }
         </div>
 
-          <CloneModal open={openCloneModal} setOpen={setOpenCloneModal}/>
-          <ShareModal open={openShareModal} setOpen={setOpenShareModal}/>
+          {openCloneModal && <CloneModal open={openCloneModal} setOpen={setOpenCloneModal}/>}
+          {openShareModal && <ShareModal open={openShareModal} setOpen={setOpenShareModal}/>}
           {/* <d/>iv  className='inline-block w-3/12' style={{padding:'1rem' }}> */}
             {/* <Calendar/> */}
           {/* </div> */}
