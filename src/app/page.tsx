@@ -7,7 +7,7 @@ import Investments from '@/components/investment/Investments';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import settingsSvg from '../assets/settings.svg'
-import reportSvg from '../assets/report.svg'
+import shareSvg from '../assets/share.svg'
 import cloneSvg from '../assets/clone.svg'
 import { DatePicker } from 'react-responsive-datepicker';
 import 'react-responsive-datepicker/dist/index.css'
@@ -21,6 +21,8 @@ import { budgetActions, budgetSelectors } from '@/store';
 import { useSelector } from 'react-redux';
 import Dashboard from '@/components/dashboard/Dashboard';
 import { Tab, isTabActive } from '@/model/shared';
+import ShareModal from '@/components/share/ShareModal';
+import Link from 'next/link';
 
 
 export default function Home() {
@@ -38,6 +40,7 @@ export default function Home() {
   const [active, setActive] = useState<Tab>(Tab.EXPENSES);
   const [openForm,setOpenForm] = useState(false);
   const [openCloneModal,setOpenCloneModal] = useState(false);
+  const [openShareModal,setOpenShareModal] = useState(false);
 
   function renderContent(){
     switch (active) {
@@ -124,6 +127,9 @@ export default function Home() {
         <button  className="inline-block">
           <Icon svgPath={cloneSvg} onClick={() => setOpenCloneModal(true)}/>      
         </button>
+        <button  className="inline-block">
+          <Icon svgPath={shareSvg} onClick={() => setOpenShareModal(true)}/>      
+        </button>
         </h2>
         </div>
         <div className='w-100 p-5'>
@@ -174,23 +180,24 @@ export default function Home() {
           }
         </div>
 
-          <CloneModal open={openCloneModal} setOpen={setOpenCloneModal}/>
+          {openCloneModal && <CloneModal open={openCloneModal} setOpen={setOpenCloneModal}/>}
+          {openShareModal && <ShareModal open={openShareModal} setOpen={setOpenShareModal}/>}
           {/* <d/>iv  className='inline-block w-3/12' style={{padding:'1rem' }}> */}
             {/* <Calendar/> */}
           {/* </div> */}
         </div>
         <div className='w-100'>
-        <div 
-           className={`inline-block p-4 ${isTabActive(Tab.EXPENSES, active)}`}
-           onClick={(e)=> setActive(Tab.EXPENSES)}
-           > 
-              Expenses
-          </div>
           <div 
            className={`inline-block p-4 ${isTabActive(Tab.GROCERIES, active)}`}
            onClick={(e)=> setActive(Tab.GROCERIES)}
            > 
               Groceries
+          </div>
+          <div 
+           className={`inline-block p-4 ${isTabActive(Tab.EXPENSES, active)}`}
+           onClick={(e)=> setActive(Tab.EXPENSES)}
+           > 
+              Expenses
           </div>
           <div 
             className={`inline-block p-4 ${isTabActive(Tab.INVESTMENTS, active)}`}
@@ -212,7 +219,7 @@ export default function Home() {
             <div className='inline-block'> Budget-Dashboard</div>
           </div>
           {/* <Link href={"/luno"}
-            className={`inline-block p-4 ${isTabActive(Tab.INCOME)}`}
+            className={`inline-block p-4 ${isTabActive(Tab.INCOME, active)}`}
             
            >
               Luno Dashboard

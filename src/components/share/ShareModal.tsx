@@ -2,14 +2,15 @@ import { BudgetService } from "@/service/BudgetService";
 import { useEffect, useState } from "react";
 import closeSvg from '../../assets/close.svg'
 import Image from "next/image";
-import SelectYear from "./stepper/SelectYear";
-import ExpenseStep from "./stepper/ExpenseStep";
-import IncomeStep from "./stepper/IncomeStep";
-import InvestmentStep from "./stepper/InvestmentStep";
-import GroceriesStep from "./stepper/GroceriesStep";
+// import SelectYear from "./stepper/SelectYear";
+// import ExpenseStep from "./stepper/ExpenseStep";
+// import IncomeStep from "./stepper/IncomeStep";
+// import InvestmentStep from "./stepper/InvestmentStep";
+// import GroceriesStep from "./stepper/GroceriesStep";
 import { useAppDispatch } from "@/store/hooks";
 import { budgetActions, budgetSelectors } from "@/store";
 import { useSelector } from "react-redux";
+import Export from "./stepper/Export";
 
 
 interface SimpleDialogProps{
@@ -17,7 +18,7 @@ interface SimpleDialogProps{
     setOpen: (v:boolean)=> void;
 }
 
-function CloneModal(props:SimpleDialogProps){
+function ShareModal(props:SimpleDialogProps){
   const bs = new BudgetService();
 
   const budget = useSelector(budgetSelectors.getCloneBudget);
@@ -29,34 +30,34 @@ function CloneModal(props:SimpleDialogProps){
  
 
   const [stepIndex,setStepIndex] = useState(0);
-
   const steps = [
-    <SelectYear month={month} updateMonth={updateMonth} year={year} setYear={setYear} key="select-year-step"/>,
-    <IncomeStep month={month}  year={year} key="income-step"/>,
-    <ExpenseStep month={month}  year={year} key="expense-step"/>,
-    <InvestmentStep month={month}  year={year} key="investment-step"/>,
-    <GroceriesStep month={month}  year={year} key="groceries-step"/>,
+    <div key={0}>
+     <button className="btn-add-item p-3 mt-2 w-8/12" style={{borderRadius:'20px'}} onClick={(e)=> updateStep(stepIndex+1)}>
+    { 'Backup/Export' } 
+    </button>
+    <button className="btn-add-item p-3 mt-2 w-8/12" style={{borderRadius:'20px'}} onClick={(e)=> updateStep(stepIndex+1)}>
+    { 'Import' } 
+    </button>
+    </div>,
+    <Export key={1}/>
   ]
 
-  useEffect(()=>{
-    const nextMonth = budgetMonth+1;
-    bs.initializeBudgetClone( budgetYear,budgetMonth, budgetYear, Number(nextMonth)).then((budgetClone)=>{
-      dispatch(budgetActions.setCloneBudget(budgetClone)) 
-    });
-  },[budgetYear,budgetMonth]);
+  // useEffect(()=>{
+  //   bs.initializeBudgetClone(year,month).then((budgetClone)=>{
+  //     dispatch(budgetActions.setCloneBudget(budgetClone)) 
+  //   });
+  // },[year,month]);
 
  useEffect(()=>{
   if(budgetMonth === 12){
-    setYear(budgetYear+1)
+    // setYear(budgetYear+1)
     setMonth(1)
   }
   else{
-    updateMonth(budgetMonth+1)
+    setMonth(budgetMonth+1)
   }
   
  },[budgetYear, budgetMonth])
-
- 
   const handleClose = () => {
     props.setOpen(false);
     dispatch(budgetActions.resetCloneBudget()) 
@@ -72,14 +73,19 @@ function CloneModal(props:SimpleDialogProps){
   }
 
   function updateStep(step:number){
-   if(step === steps.length){
-      bs.cloneBudget(budget)
-          .then((res)=>{
-            handleClose();
-            dispatch(budgetActions.setCurrentYear(year))
-            dispatch(budgetActions.setCurrentMonth(month))
-          });
-    }
+    // if(step === 1){
+    //   bs.initializeBudgetClone(year,month).then((budgetClone)=>{
+    //     dispatch(budgetActions.setCloneBudget(budgetClone)) 
+    //   });
+    // } 
+    // else if(step === steps.length){
+    //   bs.cloneBudget(budget)
+    //       .then((res)=>{
+    //         handleClose();
+    //         dispatch(budgetActions.setCurrentYear(year))
+    //         dispatch(budgetActions.setCurrentMonth(month))
+    //       });
+    // }
 
     if(step >= 0 && step <= steps.length-1){
         setStepIndex(step)
@@ -99,9 +105,7 @@ function CloneModal(props:SimpleDialogProps){
                           {steps[stepIndex]}
 
                           <div className="inline-block mr-2 w-4/12 p-2" >
-                                <button className="btn-add-item p-3 mt-2 w-8/12" style={{borderRadius:'20px'}} onClick={(e)=> updateStep(stepIndex+1)}>
-                                { stepIndex < steps.length-1 ?  'Continue' : 'Clone' } 
-                                </button>
+                               
                               { stepIndex !== 0 && 
                                   <button className="btn-add p-3 mt-2 w-8/12" style={{borderRadius:'20px'}} onClick={(e)=> updateStep(stepIndex-1)}>
                                       Back
@@ -116,4 +120,4 @@ function CloneModal(props:SimpleDialogProps){
   );
 };
 
-export default CloneModal;
+export default ShareModal;
