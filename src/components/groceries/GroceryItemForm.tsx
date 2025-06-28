@@ -15,6 +15,7 @@ interface GroceryItemFormProps {
 function GroceryItemForm(props: GroceryItemFormProps){
 
     const [selectedItem, setSelectedItem] = useState<GroceryItem | null>(null);
+    const [hasErrors, setHasErrors] = useState<boolean>(true);
     const year= useSelector(budgetSelectors.getCurrentYear);
     const month = useSelector(budgetSelectors.getCurrentMonth);
     const gs = new GroceryService();
@@ -24,6 +25,10 @@ function GroceryItemForm(props: GroceryItemFormProps){
             setSelectedItem(props.item);
         }
     },[props.item]);
+
+    useEffect(()=>{
+        validInputs()
+    }, [selectedItem])
 
     function updateItem(e:any,target: string){
         const value = e.target.value
@@ -65,6 +70,19 @@ function GroceryItemForm(props: GroceryItemFormProps){
         }
         props.setOpen(false)
         props.refresh();
+    }
+
+    function validInputs(){
+        if(selectedItem){
+            if(Number(selectedItem.actualAmount) >= 0 &&
+                 Number(selectedItem.expectedAmount) >= 0 &&
+                 Number(selectedItem.discountAmount) >= 0 &&
+                 selectedItem.description && selectedItem.store){
+                    setHasErrors(false)
+                    return;
+            }
+        }
+        setHasErrors(true);
     }
 
     return (<>
@@ -109,6 +127,7 @@ function GroceryItemForm(props: GroceryItemFormProps){
                             <button 
                                 className="inline-block bg-blue-500 p-2 w-100 btn-add-item mt-2"
                                 style={{borderRadius: '8px'}}
+                                disabled={hasErrors}
                                 onClick={handleAddGroceryItem}>
                                     {selectedItem && selectedItem.id ? 'Edit'  : 'Add'} Item
                             </button>

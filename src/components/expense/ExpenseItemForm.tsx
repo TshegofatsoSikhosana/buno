@@ -4,6 +4,7 @@ import { budgetSelectors } from "@/store";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import FormModal from "../shared/FormModal";
+import { FormError } from "@/model/form";
 
 interface ExpenseItemFormProps {
     open: boolean;
@@ -14,7 +15,8 @@ interface ExpenseItemFormProps {
  
 function ExpenseItemForm(props: ExpenseItemFormProps){
 
-    const [selectedItem, setSelectedItem] = useState<ExpenseItem | null>(null)
+    const [selectedItem, setSelectedItem] = useState<ExpenseItem | null>({actualAmount: 0, expectedAmount: 0, description:''});
+    const [hasErrors, setHasErrors] = useState<boolean>(true);
     const year= useSelector(budgetSelectors.getCurrentYear);
     const month = useSelector(budgetSelectors.getCurrentMonth);
     const es = new ExpenseService();
@@ -24,6 +26,10 @@ function ExpenseItemForm(props: ExpenseItemFormProps){
             setSelectedItem(props.item);
         }
     },[props.item])
+
+    useEffect(()=>{
+        validInputs()
+    }, [selectedItem])
     
     function updateItem(e:any,target: string){
         const value = e.target.value
@@ -35,15 +41,15 @@ function ExpenseItemForm(props: ExpenseItemFormProps){
     }
 
     function handleAddExpenseItem(e:any){
-        if(selectedItem && selectedItem.id){
-           handleEditExpenseItem( {...selectedItem as ExpenseItem})
-        }else{
-            const item = {...selectedItem}
-            item.category = Number(selectedItem?.category)
-            if(item){
-                saveExpenseItem( {...item as ExpenseItem})
-            }
-        }
+            if(selectedItem && selectedItem.id){
+                handleEditExpenseItem( {...selectedItem as ExpenseItem})
+             }else{
+                 const item = {...selectedItem}
+                 item.category = Number(selectedItem?.category)
+                 if(item){
+                     saveExpenseItem( {...item as ExpenseItem})
+                 }
+             }
     }
 
     function saveExpenseItem(selectedItem: ExpenseItem){
@@ -56,6 +62,19 @@ function ExpenseItemForm(props: ExpenseItemFormProps){
         }
         props.setOpen(false)
         props.refresh();
+    }
+
+    function validInputs(){
+        if(selectedItem){
+            if(Number(selectedItem.actualAmount) >= 0 &&
+                 Number(selectedItem.expectedAmount) >= 0 &&
+                 selectedItem.description &&
+                 Number(selectedItem.category) !== -1){
+                    setHasErrors(false)
+                    return;
+            }
+        }
+        setHasErrors(true);
     }
 
     function handleEditExpenseItem(selectedItem: ExpenseItem){
@@ -102,6 +121,7 @@ function ExpenseItemForm(props: ExpenseItemFormProps){
                             <button 
                                 className="inline-block bg-blue-500 p-2 w-100 btn-add-item"
                                 style={{borderRadius: '8px'}}
+                                disabled={hasErrors}
                                 onClick={handleAddExpenseItem}>
                                     {selectedItem && selectedItem.id ? 'Edit'  : 'Add'} Item
                             </button>

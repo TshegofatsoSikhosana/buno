@@ -14,7 +14,8 @@ interface IncomeItemFormProps {
  
 function IncomeItemForm(props: IncomeItemFormProps){
 
-    const [selectedItem, setSelectedItem] = useState<IncomeItem | null>(null)
+    const [selectedItem, setSelectedItem] = useState<IncomeItem | null>(null);
+    const [hasErrors, setHasErrors] = useState<boolean>(true);
     const year= useSelector(budgetSelectors.getCurrentYear);
     const month = useSelector(budgetSelectors.getCurrentMonth);
     const is = new IncomeService();
@@ -23,7 +24,11 @@ function IncomeItemForm(props: IncomeItemFormProps){
         if(props.item){
             setSelectedItem(props.item);
         }
-    },[props.item])
+    },[props.item]);
+
+    useEffect(()=>{
+        validInputs()
+    }, [selectedItem])
 
     function updateItem(e:any,target: string){
         const value = e.target.value
@@ -64,6 +69,18 @@ function IncomeItemForm(props: IncomeItemFormProps){
         props.refresh();
     }
 
+    function validInputs(){
+        if(selectedItem){
+            if(Number(selectedItem.actualAmount) >= 0 &&
+                 Number(selectedItem.expectedAmount) >= 0 &&
+                 selectedItem.description){
+                    setHasErrors(false)
+                    return;
+            }
+        }
+        setHasErrors(true);
+    }
+
     return (<>
             <FormModal
                 open={props.open}
@@ -88,6 +105,7 @@ function IncomeItemForm(props: IncomeItemFormProps){
                             <button 
                                 className="inline-block bg-blue-500 p-2 w-100 btn-add-item"
                                 style={{borderRadius: '8px'}}
+                                disabled={hasErrors}
                                 onClick={handleAddIncomeItem}>
                                     {selectedItem && selectedItem.id ? 'Edit'  : 'Add'} Item
                                 </button>

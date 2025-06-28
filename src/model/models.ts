@@ -28,7 +28,7 @@ export enum ExpenseCategory{
 export interface ExpenseItem{
     id?: number
     description: string,
-    category: ExpenseCategory,
+    category?: ExpenseCategory,
     expectedAmount: number,
     actualAmount: number,
     month?: string,

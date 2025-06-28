@@ -14,7 +14,8 @@ interface InvestmentItemFormProps {
  
 function InvestmentItemForm(props: InvestmentItemFormProps){
 
-    const [selectedItem, setSelectedItem] = useState<InvestmentItem | null>(null)
+    const [selectedItem, setSelectedItem] = useState<InvestmentItem | null>(null);
+    const [hasErrors, setHasErrors] = useState<boolean>(true);
     const year= useSelector(budgetSelectors.getCurrentYear);
     const month = useSelector(budgetSelectors.getCurrentMonth);
     const is = new InvestmentService();
@@ -24,6 +25,10 @@ function InvestmentItemForm(props: InvestmentItemFormProps){
             setSelectedItem(props.item);
         }
     },[props.item])
+
+    useEffect(()=>{
+        validInputs()
+    }, [selectedItem])
 
     function updateItem(e:any,target: string){
         const value = e.target.value
@@ -63,6 +68,18 @@ function InvestmentItemForm(props: InvestmentItemFormProps){
         props.refresh();
     }
 
+    function validInputs(){
+        if(selectedItem){
+            if(Number(selectedItem.actualAmount) >= 0 &&
+                 Number(selectedItem.expectedAmount) >= 0 &&
+                 selectedItem.description){
+                    setHasErrors(false)
+                    return;
+            }
+        }
+        setHasErrors(true);
+    }
+
     return (<>
             <FormModal
                 open={props.open}
@@ -91,6 +108,7 @@ function InvestmentItemForm(props: InvestmentItemFormProps){
                             <button 
                                 className="inline-block bg-blue-500 p-2 w-100 btn-add-item"
                                 style={{borderRadius: '8px'}}
+                                disabled={hasErrors}
                                 onClick={handleAddInvestmentItem}>
                                     {selectedItem && selectedItem.id ? 'Edit'  : 'Add'} Item
                                 </button>
