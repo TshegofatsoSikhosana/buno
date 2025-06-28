@@ -62,57 +62,9 @@ export default function Home() {
     getIncomes();
     getInvestments();
     getRemainder();
-    fix();
   },[year,month]);
 
 
-  async function fix(){
-    const exp = await db.expenses.where({year: 2024})
-    .and((i)=> Number(i.month) == 13 )
-    .toArray();
-
-    const gros = await db.groceries.where({year: 2024})
-    .and((i)=> Number(i.month) == 13 )
-    .toArray();
-
-    const invest = await db.investments.where({year: 2024})
-    .and((i)=> Number(i.month) == 13 )
-    .toArray();
-
-    const inco = await db.income.where({year: 2024})
-    .and((i)=> Number(i.month) == 13 )
-    .toArray();
-
-    console.log(exp);
-    console.log(gros);
-    console.log(invest);
-    console.log(inco);
-    
-    // exp.forEach(e=>{
-    //   e.year = 2025;
-    //   e.month = "1";
-    // })
-
-    // gros.forEach(e=>{
-    //   e.year = 2025;
-    //   e.month = "1";
-    // })
-
-    // inco.forEach(e=>{
-    //   e.year = 2025;
-    //   e.month = "1";
-    // })
-
-    // invest.forEach(e=>{
-    //   e.year = 2025;
-    //   e.month = "1";
-    // })
-
-    // db.expenses.bulkPut(exp);
-    // db.income.bulkPut(inco);
-    // db.investments.bulkPut(invest);
-    // db.groceries.bulkPut(gros);
-  }
   async function getRemainder(){
     const expenses = await db.expenses.where({year: year})
     .and((i)=> Number(i.month) == month )

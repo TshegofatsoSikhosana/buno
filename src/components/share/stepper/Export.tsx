@@ -27,7 +27,8 @@ function Export(){
     },[])
 
     const handleDownload = () => {
-    const blob = new Blob([JSON.stringify(backup, null, 2)], { type: 'application/json' });
+    const data = { version: Date.now(), ...backup}
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
 
     if(downloadLinkRef?.current){

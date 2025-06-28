@@ -11,6 +11,7 @@ import { useAppDispatch } from "@/store/hooks";
 import { budgetActions, budgetSelectors } from "@/store";
 import { useSelector } from "react-redux";
 import Export from "./stepper/Export";
+import Import from "./stepper/Import";
 
 
 interface SimpleDialogProps{
@@ -30,17 +31,6 @@ function ShareModal(props:SimpleDialogProps){
  
 
   const [stepIndex,setStepIndex] = useState(0);
-  const steps = [
-    <div key={0}>
-     <button className="btn-add-item p-3 mt-2 w-8/12" style={{borderRadius:'20px'}} onClick={(e)=> updateStep(stepIndex+1)}>
-    { 'Backup/Export' } 
-    </button>
-    <button className="btn-add-item p-3 mt-2 w-8/12" style={{borderRadius:'20px'}} onClick={(e)=> updateStep(stepIndex+1)}>
-    { 'Import' } 
-    </button>
-    </div>,
-    <Export key={1}/>
-  ]
 
   // useEffect(()=>{
   //   bs.initializeBudgetClone(year,month).then((budgetClone)=>{
@@ -66,11 +56,18 @@ function ShareModal(props:SimpleDialogProps){
     setYear(2024)
   }
 
-  function updateMonth(month:number){
-    if(month > 0 && month <= 12){
-        setMonth(month)
-    }
-  }
+  const steps = [
+    <div key={0}>
+     <button className="btn-add-item p-3 mt-2 w-8/12" style={{borderRadius:'20px'}} onClick={(e)=> updateStep(stepIndex+1)}>
+    { 'Backup/Export' } 
+    </button>
+    <button className="btn-add-item p-3 mt-2 w-8/12" style={{borderRadius:'20px'}} onClick={(e)=> updateStep(2)}>
+    { 'Import' } 
+    </button>
+    </div>,
+    <Export key={1}/>,
+    <Import key={2} handleOnClose={handleClose}/>
+  ]
 
   function updateStep(step:number){
     // if(step === 1){
@@ -91,6 +88,9 @@ function ShareModal(props:SimpleDialogProps){
         setStepIndex(step)
     }
   }
+
+
+
 
   return (
     <>
