@@ -40,7 +40,7 @@ function CloneModal(props:SimpleDialogProps){
 
   useEffect(()=>{
     const nextMonth = budgetMonth+1;
-    bs.initializeBudgetClone( budgetYear,budgetMonth, budgetYear, Number(nextMonth)).then((budgetClone)=>{
+    bs.initializeBudgetClone( budgetYear,budgetMonth, year, nextMonth).then((budgetClone)=>{
       dispatch(budgetActions.setCloneBudget(budgetClone)) 
     });
   },[budgetYear,budgetMonth]);
