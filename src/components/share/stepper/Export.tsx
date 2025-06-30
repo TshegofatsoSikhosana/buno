@@ -33,7 +33,7 @@ function Export(){
 
     if(downloadLinkRef?.current){
         downloadLinkRef.current.href = url;
-        downloadLinkRef.current.download  = 'data.json';
+        downloadLinkRef.current.download  = `backup_${data.version}.json`;
         downloadLinkRef.current.click();
     }
 
