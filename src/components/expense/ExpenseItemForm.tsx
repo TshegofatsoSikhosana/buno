@@ -66,10 +66,12 @@ function ExpenseItemForm(props: ExpenseItemFormProps){
 
     function validInputs(){
         if(selectedItem){
+            console.log(selectedItem);
+            
             if(Number(selectedItem.actualAmount) >= 0 &&
                  Number(selectedItem.expectedAmount) >= 0 &&
                  selectedItem.description &&
-                 Number(selectedItem.category) !== -1){
+                 Number(selectedItem.category) >= 0){
                     setHasErrors(false)
                     return;
             }

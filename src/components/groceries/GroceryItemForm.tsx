@@ -32,8 +32,6 @@ function GroceryItemForm(props: GroceryItemFormProps){
 
     function updateItem(e:any,target: string){
         const value = e.target.value
-        console.log('Updating,', value);
-        
         const item = {...selectedItem}
         //@ts-ignore
         item[target] = value;
