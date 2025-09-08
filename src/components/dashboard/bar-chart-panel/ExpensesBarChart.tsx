@@ -10,6 +10,8 @@ import { useAppDispatch } from '@/store/hooks';
 import Image from 'next/image';
 import closeSvg from '../../../assets/close.svg'
 import DatePicker from './DatePicker';
+import LineBarPanel from '../LineBarPanel';
+import ExpenseLineBarPanel from '../line-chart-panel/ExpenseLineBarPanel';
 
 const ExpsenseBarChart = () => {
     const [expenses,setExpenses] = useState<ExpenseItem[]>([]);
@@ -17,7 +19,7 @@ const ExpsenseBarChart = () => {
     const month = useSelector(budgetSelectors.getCurrentMonth);
     const [filterType,setFilterType] = useState<ExpenseCategory | undefined>();
     const [filteredExpenses, setFilteredExpenses] = useState<ExpenseItem[]>()
-    const [openForm,setOpenForm] = useState(false);
+    const [isTotalsView,setIsTotalsView] = useState(false);
     const dispatch = useAppDispatch();
 
     useEffect(()=>{
@@ -56,11 +58,18 @@ const ExpsenseBarChart = () => {
       }
     }
   
+    
 
     return (
       <>
           <div>
               <div className="inline  w-4/12 p-2">
+                  <button
+                    className="p-2 mb-2 mr-2 btn-add"
+                    style={{borderRadius: '8px', border:'2px solid rgb(70, 70, 80,180)'}}
+                    onClick={(e)=> setIsTotalsView(true)}>
+                       Show Totals
+                </button>
                 <select className="text-white p-2"
                         style={{borderRadius: '5px', backgroundColor: 'rgb(70, 70, 80,180)'}}
                         value={filterType}
@@ -76,11 +85,20 @@ const ExpsenseBarChart = () => {
               </div>
           </div>
       {filteredExpenses && 
-        <div className="w-11/12 text-white inline-block">
-          <BarChart labels ={filteredExpenses.map((g)=> g.description)} 
-                data={filteredExpenses.map((g)=> g.actualAmount)}
-                title="Current Budget Expenses"/>
-        </div>
+ 
+          <>
+            {!isTotalsView ? 
+              <div className="w-11/12 text-white inline-block">
+              <BarChart labels ={filteredExpenses.map((g)=> g.description)} 
+                  data={filteredExpenses.map((g)=> g.actualAmount)}
+                  title="Current Budget Expenses"/>
+              </div>
+                : 
+                <div className='text-white inline-block' style={{width: '100%'}}>
+                <ExpenseLineBarPanel filterType={filterType}></ExpenseLineBarPanel>
+                </div>
+            }
+          </>
       }
       </>
     );

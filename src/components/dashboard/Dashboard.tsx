@@ -181,7 +181,7 @@ function Dashboard(){
                   colors={["rgba(30, 148, 222)","#a33dee","#deedee","rgb(65, 194, 123)"]}
                   />            
         </div>
-        <div className=' bg-white text-black p-3 text-left' style={{borderRadius: '10px', fontWeight: 700, marginTop: '69px'}}> <button style={{border: '2px solid white', padding:'2px'}}>Per Category</button>  <button> Budget Overview</button></div  >
+        <div className=' bg-white text-black p-5 text-left' style={{borderRadius: '10px', fontWeight: 700, marginTop: '69px'}}> Per Category Budget Overview</div  >
         <BarChartPanel/>
        
     </div>);
