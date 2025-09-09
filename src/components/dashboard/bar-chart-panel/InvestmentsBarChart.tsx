@@ -6,11 +6,13 @@ import { budgetSelectors } from '@/store';
 import { db } from '@/config/database.config';
 import BarChart from './BarChart';
 import DatePicker from './DatePicker';
+import InvestemetsLineBarPanel from '../line-chart-panel/InvestmentsLineBarPanel';
 
 const InvestmentsBarChart = () => {
     const [investments,setInvestements] = useState<InvestmentItem[]>([]);
     const year= useSelector(budgetSelectors.getCurrentYear);
     const month = useSelector(budgetSelectors.getCurrentMonth);
+    const [isTotalsView,setIsTotalsView] = useState(false);
 
     useEffect(()=>{
         getGroceries();
@@ -38,15 +40,29 @@ const InvestmentsBarChart = () => {
                     <option value={ExpenseCategory.PERSONAL}>Personal</option>
                 </select> 
               </div> */}
+              <div className="inline  w-4/12 p-2">
+                  <button
+                    className="p-2 mb-2 mr-2 btn-add"
+                    style={{borderRadius: '8px', border:'2px solid rgb(70, 70, 80,180)'}}
+                    onClick={(e)=> setIsTotalsView(true)}>
+                        Show Totals
+                </button>
+              </div>
               <div className="inline w-4/12 p-2">
                 {/* <DatePicker/> */}
               </div>
           </div>
         {investments && 
+        <> 
+            {!isTotalsView ? 
             <BarChart
               labels ={investments.map((g)=> g.description)}
               data={investments.map((g)=> g.actualAmount)}
               title="Current Budget Investments"/>
+              : <div className='text-white inline-block' style={{width: '100%'}}>
+                <InvestemetsLineBarPanel/>
+                </div>
+            }</>
         }
       </>
     );
