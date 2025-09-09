@@ -59,15 +59,15 @@ function Dashboard(){
             }
         });
         db.expenses.toArray()
-        .then(inv=>{
+        .then(expenses=>{
           const monthSet = new Set<string>();
-          inv.forEach((e)=>{
+          expenses.forEach((e)=>{
             if(months[Number(e.month)-1]){
               monthSet.add(months[Number(e.month)-1]+ " " + e.year)
             }
           })
           const monthsLabels = Array.from(monthSet)
-          const total = inv.map((e)=> e.actualAmount).reduce((p,c)=> Number(p) + Number(c));
+          const total = expenses.filter(exp=> exp.description?.toLowerCase() !== "groceries").map((e)=> e.actualAmount).reduce((p,c)=> Number(p) + Number(c));
             const avg = total/monthsLabels.length;
             setAvgExpenses(Math.round(avg))
         })
