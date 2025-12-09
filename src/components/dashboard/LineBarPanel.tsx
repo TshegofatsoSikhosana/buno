@@ -32,13 +32,14 @@ function LineBarPanel(){
       .toArray()
       .then((ex)=> {
           const monthSet = new Set<string>();
-          ex.forEach((e)=>{
+          const items = getItemsInOrder(ex);
+          items.forEach((e)=>{
             if(months[Number(e.month)-1]){
               monthSet.add(months[Number(e.month)-1]+ " " + e.year)
             }
           })
           const monthsLabels = Array.from(monthSet)
-          setGroceries({ labels: monthsLabels, data: getTotals(monthsLabels, ex)})
+          setGroceries({ labels: monthsLabels, data: getTotals(monthsLabels, items)})
       });
     }
 
@@ -47,12 +48,13 @@ function LineBarPanel(){
       .toArray()
       .then((ex)=> {
           const monthSet = new Set<string>();
-          ex.forEach((e)=>{
+          const items = getItemsInOrder(ex);
+          items.forEach((e)=>{
               monthSet.add(months[Number(e.month)-1]+ " " + e.year)
               e.actualAmount = Number(e.actualAmount)
           })
           const monthsLabels = Array.from(monthSet)
-          setExpsense({ labels: monthsLabels, data: getTotals(monthsLabels, ex.filter((e)=> e.description.toLowerCase() !== "groceries"))})
+          setExpsense({ labels: monthsLabels, data: getTotals(monthsLabels, items.filter((e)=> e.description.toLowerCase() !== "groceries"))})
       });
     }
 
@@ -61,11 +63,13 @@ function LineBarPanel(){
       .toArray()
       .then((ex)=> {
           const monthSet = new Set<string>();
-          ex.forEach((e)=>{
+          const items = getItemsInOrder(ex);
+          items.forEach((e)=>{
               monthSet.add(months[Number(e.month)-1]+ " " + e.year)
+              e.actualAmount = Number(e.actualAmount)
           })
           const monthsLabels = Array.from(monthSet)
-          setInvestments({ labels: monthsLabels, data: getTotals(monthsLabels, ex)})
+          setInvestments({ labels: monthsLabels, data: getTotals(monthsLabels, items)})
       });
     }
 
@@ -90,6 +94,14 @@ function LineBarPanel(){
       getExpenses()
       getInvestments()
       },[])
+
+    function getItemsInOrder(items:any[]) {
+      return items.sort((a,b)=> {
+            const dateA = new Date(`${a.year}-${a.month}-01`);
+            const dateB = new Date(`${b.year}-${b.month}-01`);
+            return dateA.getTime() - dateB.getTime();
+          });
+    }
 
     return (
         <div className="w-11/12 text-white inline-block">
