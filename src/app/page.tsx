@@ -23,6 +23,7 @@ import Dashboard from '@/components/dashboard/Dashboard';
 import { Tab, isTabActive } from '@/model/shared';
 import ShareModal from '@/components/share/ShareModal';
 import Link from 'next/link';
+import CarLoan from '@/components/car-loan/CarLoan';
 
 
 export default function Home() {
@@ -52,6 +53,8 @@ export default function Home() {
         return <Groceries />
       case Tab.DASHBOARD:
         return <Dashboard />
+      case Tab.CAR_LOAN:
+        return <CarLoan />
       default:
         return <Expenses setTotalExpenses={setTotalExpenses} />
     }
@@ -211,6 +214,13 @@ export default function Home() {
             onClick={(e)=> setActive(Tab.INCOME)}
            >
               Income
+          </div>
+          <div 
+           className={`inline-block p-4 ${isTabActive(Tab.CAR_LOAN, active)}`}
+           onClick={(e)=> setActive(Tab.CAR_LOAN)}
+           > 
+            {/* <div className='inline-block p-1'><Icon svgPath={reportSvg} onClick={() => {}}/> </div>  */}
+            <div className='inline-block'>Car Loan</div>
           </div>
           <div 
            className={`inline-block p-4 ${isTabActive(Tab.DASHBOARD, active)}`}
