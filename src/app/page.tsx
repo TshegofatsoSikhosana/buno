@@ -22,8 +22,7 @@ import { useSelector } from 'react-redux';
 import Dashboard from '@/components/dashboard/Dashboard';
 import { Tab, isTabActive } from '@/model/shared';
 import ShareModal from '@/components/share/ShareModal';
-import Link from 'next/link';
-import CarLoan from '@/components/car-loan/CarLoan';
+
 
 
 export default function Home() {
