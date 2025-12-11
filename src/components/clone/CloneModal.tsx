@@ -39,10 +39,18 @@ function CloneModal(props:SimpleDialogProps){
   ]
 
   useEffect(()=>{
-    const nextMonth = budgetMonth+1;
-    bs.initializeBudgetClone( budgetYear,budgetMonth, year, nextMonth).then((budgetClone)=>{
-      dispatch(budgetActions.setCloneBudget(budgetClone)) 
-    });
+    if(budgetMonth === 12){
+        const nextMonth = 1;
+        bs.initializeBudgetClone( budgetYear,budgetMonth, year+1, nextMonth).then((budgetClone)=>{
+        dispatch(budgetActions.setCloneBudget(budgetClone)) 
+      });
+    } else{
+      const nextMonth = budgetMonth+1;
+      bs.initializeBudgetClone( budgetYear,budgetMonth, year, nextMonth).then((budgetClone)=>{
+        dispatch(budgetActions.setCloneBudget(budgetClone)) 
+      });
+    }
+  
   },[budgetYear,budgetMonth]);
 
  useEffect(()=>{

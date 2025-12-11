@@ -3,7 +3,8 @@ export enum Tab{
     INVESTMENTS,
     INCOME,
     GROCERIES,
-    DASHBOARD
+    DASHBOARD,
+    CAR_LOAN
 }
 
 export function isTabActive(type: Tab,active: Tab){

@@ -15,7 +15,34 @@ export interface GroceryItem{
 export enum Store{
     PNP,
     CHECKERS,
-    FOODLOVERS
+    FOODLOVERS,
+    CLICKS,
+    WOOLWORTHS,
+    DISCHEM,
+    OTHER
+}
+
+export interface CarLoanPayment{
+    dateCreated?: string,
+    expectedAmount: number,
+    amount: number,
+    month?: string,
+    year?: number,
+}
+
+export interface CarInsurancePayment{
+    description: string,
+    dateCreated?: string,
+    expectedAmount: number,
+    amount: number,
+    month?: string,
+    year?: number,
+}
+
+
+export interface CarLoanItem{
+    totalValue: number,
+    description: string,
 }
 
 export enum ExpenseCategory{
