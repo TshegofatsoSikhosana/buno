@@ -113,8 +113,16 @@ export default function Home() {
   }
 
   function updateMonth(month:number){
+    console.log('monthh',month);
+    
     if(month > 0 && month <= 12){
-      dispatch(budgetActions.setCurrentMonth(month))
+        dispatch(budgetActions.setCurrentMonth(month))
+    }else if(month === 0){
+        dispatch(budgetActions.setCurrentYear(year-1));
+        dispatch(budgetActions.setCurrentMonth(12));
+    }else if(month === 13){
+       dispatch(budgetActions.setCurrentYear(year+1));
+        dispatch(budgetActions.setCurrentMonth(1));
     }
   }
 
