@@ -17,6 +17,7 @@ import BarChartPanel from './bar-chart-panel/BarChartPanel';
 import LineBarPanel from './LineBarPanel';
 import DoughnutChart from './doughnuts/DoughnutChart';
 import { months } from '@/util/utils';
+import DatePicker from './bar-chart-panel/DatePicker';
   ChartJS.register(
     CategoryScale,
     LinearScale,
@@ -181,7 +182,12 @@ function Dashboard(){
                   colors={["rgba(30, 148, 222)","#a33dee","#deedee","rgb(65, 194, 123)"]}
                   />            
         </div>
-        <div className=' bg-white text-black p-3 text-left' style={{borderRadius: '10px', fontWeight: 700, marginTop: '69px'}}> <button style={{border: '2px solid white', padding:'2px'}}>Per Category</button>  <button> Budget Overview</button></div  >
+        <div className=' w-100 bg-white text-black p-5 text-left' style={{borderRadius: '10px', fontWeight: 700, marginTop: '69px'}}> 
+          <div  className='inline-block w-6/12' >Per Category Budget Overview</div>
+          <div  className='inline-block w-6/12' style={{borderRadius: '10px', border:'3px solid rgba(30, 148, 222)'}}>
+            <div className='w-100 btn-add'><DatePicker/></div>
+          </div>
+          </div  >
         <BarChartPanel/>
        
     </div>);
