@@ -10,7 +10,7 @@ import {
     LineElement
   } from 'chart.js';
 import { db } from '@/config/database.config';
-import { months } from '@/util/utils';
+import { getItemsInOrder, months } from '@/util/utils';
 import { Line } from 'react-chartjs-2';
 ChartJS.register(
     CategoryScale,
@@ -94,14 +94,6 @@ function LineBarPanel(){
       getExpenses()
       getInvestments()
       },[])
-
-    function getItemsInOrder(items:any[]) {
-      return items.sort((a,b)=> {
-            const dateA = new Date(`${a.year}-${a.month}-01`);
-            const dateB = new Date(`${b.year}-${b.month}-01`);
-            return dateA.getTime() - dateB.getTime();
-          });
-    }
 
     return (
         <div className="w-11/12 text-white inline-block">

@@ -66,6 +66,15 @@ export function getProjectedTotal(items: any[]){
 }
 
 
+export function getItemsInOrder(items:any[]) {
+    return items.sort((a,b)=> {
+        const dateA = new Date(`${a.year}-${a.month}-01`);
+        const dateB = new Date(`${b.year}-${b.month}-01`);
+        return dateA.getTime() - dateB.getTime();
+        });
+}
+
+
 export function filterItems(filterType: FilterType,data:any[]){
     if(filterType === FilterType.STILL_NEED_TO_PAY){
         return stillNeedToPay(data);

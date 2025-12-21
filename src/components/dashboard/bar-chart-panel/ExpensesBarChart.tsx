@@ -9,7 +9,6 @@ import { months } from '@/util/utils';
 import { useAppDispatch } from '@/store/hooks';
 import Image from 'next/image';
 import closeSvg from '../../../assets/close.svg'
-import DatePicker from './DatePicker';
 import LineBarPanel from '../LineBarPanel';
 import ExpenseLineBarPanel from '../line-chart-panel/ExpenseLineBarPanel';
 
@@ -31,7 +30,7 @@ const ExpsenseBarChart = () => {
         setFilteredExpenses(expenses.filter((e)=> e.category === filterType));
       }else{
         // if()
-        console.log('filter:',filterType);
+        console.log('filter:',expenses);
         
         setFilteredExpenses(expenses)
       }
@@ -67,10 +66,10 @@ const ExpsenseBarChart = () => {
                   <button
                     className="p-2 mb-2 mr-2 btn-add"
                     style={{borderRadius: '8px', border:'2px solid rgb(70, 70, 80,180)'}}
-                    onClick={(e)=> setIsTotalsView(true)}>
-                       Show Totals
+                    onClick={(e)=> setIsTotalsView(!isTotalsView)}>
+                       {isTotalsView ? "Show Current Budget" : "Show Totals"}
                 </button>
-                <select className="text-white p-2"
+                {!isTotalsView && <select className="text-white p-2"
                         style={{borderRadius: '5px', backgroundColor: 'rgb(70, 70, 80,180)'}}
                         value={filterType}
                         onChange={(e)=> setFilterType(Number(e.target.value))}>
@@ -78,10 +77,9 @@ const ExpsenseBarChart = () => {
                     <option value={ExpenseCategory.EXCEPTION}>Exception</option>
                     <option value={ExpenseCategory.LIVING}>Living</option>
                     <option value={ExpenseCategory.PERSONAL}>Personal</option>
-                </select> 
+                </select> }
               </div>
               <div className="inline w-4/12 p-2">
-                {/* <DatePicker/> */}
               </div>
           </div>
       {filteredExpenses && 

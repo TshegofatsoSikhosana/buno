@@ -28,14 +28,14 @@ function DatePicker() {
         <>
             {!openForm ? 
             <button 
-                className="p-4 btn-add"
+                className="p-4 "
                 onClick={() => setOpenForm(!openForm)}
                 style={{borderRadius: '8px'}}>
                 <h5 className="">
                     {year} {months[month-1]} Budget 
                 </h5>
             </button>: <></>}
-            <div className="inline-block w-5/12 p-2">
+            <div className="inline-block w-100 p-2">
                 {openForm ? 
                     <>
                     <div className="p-2 ">
