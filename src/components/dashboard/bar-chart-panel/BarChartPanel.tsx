@@ -10,11 +10,7 @@ import InvestmentsDoughnut from '../doughnuts/InvestmentsDoughnut';
 import { useAppDispatch } from '@/store/hooks';
 import { useSelector } from 'react-redux';
 import { budgetActions, budgetSelectors } from '@/store';
-import Image from 'next/image';
-import closeSvg from '../../../assets/close.svg'
-import settingsSvg from '../../../assets/settings.svg'
-import { months } from '@/util/utils';
-import Icon from '@/components/shared/Icon';
+import IncomesBarChart from './IncomesBarChart';
 
 
 function BarChartPanel(){
@@ -31,6 +27,8 @@ function BarChartPanel(){
             return <InvestmentsBarChart/>
           case Tab.GROCERIES:
             return <GroceriesBarChart />
+          case Tab.INCOME:
+            return <IncomesBarChart />
           default:
             return <ExpsenseBarChart />
         }
@@ -78,6 +76,12 @@ function BarChartPanel(){
             onClick={(e)=> setActive(Tab.INVESTMENTS)}
            >
               Investments
+          </div>
+           <div 
+            className={`inline-block p-4 ${isTabActive(Tab.INCOME, active)}`}
+            onClick={(e)=> setActive(Tab.INCOME)}
+           >
+              Incomes
           </div>
         </div>
         <div className="w-9/12 text-white inline-block h-100">
