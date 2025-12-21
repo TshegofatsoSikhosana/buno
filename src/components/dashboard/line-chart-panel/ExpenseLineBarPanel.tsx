@@ -35,16 +35,19 @@ function ExpenseLineBarPanel(props: ExpenseLineBarPanelProps) {
   const { filterType } = props;
   const [monthsLabels, setMonthsLabels] = useState<string[]>([]);
   const [datasets, setDataSets] = useState<any[]>([]);
+  const itemLabels = [
+    "Living Expenses",
+    "Personal Expenses",
+    "Exception Expenses",
+  ];
+  const [avgPersonalExpenses, setAvgPersonalExpenses] = useState<number>(0);
+  const [avgLivingExpenses, setAvgLivingExpenses] = useState<number>(0);
+  const [avgExceptions, setAvgExceptions] = useState<number>(0);
 
   function getExpenses() {
     db.expenses.toArray().then((ex) => {
       const monthSet = new Set<string>();
       const items = getItemsInOrder(ex);
-      const itemLabels = new Array<string>();
-
-      itemLabels.push("Living Expenses");
-      itemLabels.push("Personal Expenses");
-      itemLabels.push("Exception Expenses");
       let filteredExpenses: ExpenseItem[] = [];
 
       items.forEach((e) => {
@@ -76,13 +79,22 @@ function ExpenseLineBarPanel(props: ExpenseLineBarPanelProps) {
             totals.push(0);
           }
         });
-        console.log(" Totals", totals);
+        
 
         const ep = {
           data: [...totals],
           borderColor: color,
           label: itemLabels[item],
         };
+        console.log(" Totals",  totals.reduce((a, b) => a + b) );
+        const avg = totals.reduce((a, b) => a + b) / monthL.length;
+        if (item === 0) {
+          setAvgLivingExpenses(Math.round(avg));
+        } else if (item === 1) {
+          setAvgPersonalExpenses(Math.round(avg));
+        } else {
+          setAvgExceptions(Math.round(avg));
+        }
         allItems.push(ep);
       });
       // console.log("Expesees", allItems);
@@ -98,6 +110,56 @@ function ExpenseLineBarPanel(props: ExpenseLineBarPanelProps) {
 
   return (
     <div className="text-white inline-block" style={{ width: "100%" }}>
+      <>
+        <div className="w-100 p-5">
+          <div
+            className="inline-block w-3/12"
+            style={{ padding: "3rem", borderRadius: "10px" }}
+          >
+            <h1>Total Category Averages:</h1>
+            <div> </div>
+          </div>
+          <div
+            className="inline-block mr-5 w-2/12"
+            style={{
+              border: "2px solid rgba(222,222,222,0.5)",
+              padding: "1rem",
+              borderRadius: "10px",
+            }}
+          >
+            <h1>Living Expenses</h1>
+            <div>R{avgLivingExpenses}</div>
+          </div>
+          <div
+            className="inline-block mr-5 w-2/12"
+            style={{
+              border: "2px solid rgba(222,222,222,0.5)",
+              padding: "1rem",
+              borderRadius: "10px",
+            }}
+          >
+            <h1>Personal Expenses</h1>
+            <div>R{avgPersonalExpenses}</div>
+          </div>
+
+          <div
+            className="inline-block mr-5  w-2/12"
+            style={{
+              border: "2px solid rgba(222,222,222,0.5)",
+              padding: "1rem",
+              borderRadius: "10px",
+            }}
+          >
+            <div>Exceptions</div>
+            <div>R{avgExceptions}</div>
+          </div>
+
+          {/* <div  className='inline-block mr-5 w-2/12' style={{border:'2px solid rgb(30,150,222,0.5)', padding:'1rem',borderRadius:'10px' }}>
+              <div>Income</div>
+              <div>R{avgIncomes}</div>
+            </div> */}
+        </div>
+      </>
       {datasets.length && monthsLabels && (
         <Line
           data={{
