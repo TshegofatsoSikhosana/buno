@@ -12,6 +12,7 @@ import {
 import { db } from "@/config/database.config";
 import { getItemsInOrder, graphColors, months } from "@/util/utils";
 import { Line } from "react-chartjs-2";
+import { InvestmentItem } from "@/model/models";
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -32,7 +33,7 @@ function InvestemetsLineBarPanel() {
       const items = getItemsInOrder(ex);
 
       const itemLabels = new Set<string>();
-      let filteredExpenses = [];
+      let filteredExpenses: InvestmentItem[] = [];
 
       items.forEach((e) => {
         monthSet.add(months[Number(e.month) - 1] + " " + e.year);

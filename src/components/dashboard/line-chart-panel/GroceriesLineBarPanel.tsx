@@ -12,7 +12,7 @@ import {
 import { db } from "@/config/database.config";
 import { graphColors, months } from "@/util/utils";
 import { Line } from "react-chartjs-2";
-import { Store } from "@/model/models";
+import { GroceryItem, Store } from "@/model/models";
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -46,7 +46,7 @@ function GroceriesLineBarPanel(props: ExpenseLineBarPanelProps) {
     db.groceries.toArray().then((ex) => {
       const monthSet = new Set<string>();
       const itemLabels = new Set<string>();
-      let filteredExpenses = [];
+      let filteredExpenses: GroceryItem[] = [];
 
       if (filterType || filterType === 0) {
         const expenses = ex.filter((ex) => ex.store === filterType);

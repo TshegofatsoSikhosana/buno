@@ -17,7 +17,7 @@ import {
   months,
 } from "@/util/utils";
 import { Line } from "react-chartjs-2";
-import { ExpenseCategory } from "@/model/models";
+import { ExpenseCategory, ExpenseItem } from "@/model/models";
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -45,7 +45,7 @@ function ExpenseLineBarPanel(props: ExpenseLineBarPanelProps) {
       itemLabels.push("Living Expenses");
       itemLabels.push("Personal Expenses");
       itemLabels.push("Exception Expenses");
-      let filteredExpenses = [];
+      let filteredExpenses: ExpenseItem[] = [];
 
       items.forEach((e) => {
         monthSet.add(months[Number(e.month) - 1] + " " + e.year);
