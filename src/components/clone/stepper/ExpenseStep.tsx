@@ -1,4 +1,4 @@
-import RowActions from "@/components/RowActions";
+import RowActions from "@/components/shared/RowActions";
 import { ExpenseItem } from "@/model/models";
 import { ExpenseService } from "@/service/ExpenseService";
 import { getProjectedTotal, months } from "@/util/utils";

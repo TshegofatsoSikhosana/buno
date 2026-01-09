@@ -14,10 +14,10 @@ import {
     LineElement
   } from 'chart.js';
 import BarChartPanel from './bar-chart-panel/BarChartPanel';
-import LineBarPanel from './LineBarPanel';
 import DoughnutChart from './doughnuts/DoughnutChart';
 import { months } from '@/util/utils';
 import DatePicker from './bar-chart-panel/DatePicker';
+import LineBarPanel from './line-chart-panel/LineChartPanel';
   ChartJS.register(
     CategoryScale,
     LinearScale,

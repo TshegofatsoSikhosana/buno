@@ -4,13 +4,13 @@ import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { budgetActions, budgetSelectors } from '@/store';
 import { db } from '@/config/database.config';
-import BarChart from './BarChart';
+import BarChart from '../../shared/charts/BarChart';
 import { months } from '@/util/utils';
 import { useAppDispatch } from '@/store/hooks';
 import Image from 'next/image';
 import closeSvg from '../../../assets/close.svg'
-import LineBarPanel from '../LineBarPanel';
-import ExpenseLineBarPanel from '../line-chart-panel/ExpenseLineBarPanel';
+import LineBarPanel from '../../shared/charts/LineBarPanel';
+import ExpenseLineBarPanel from './ExpenseLineBarPanel';
 
 const ExpsenseBarChart = () => {
     const [expenses,setExpenses] = useState<ExpenseItem[]>([]);

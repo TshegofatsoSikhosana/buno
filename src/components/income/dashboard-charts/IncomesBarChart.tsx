@@ -4,8 +4,8 @@ import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { budgetSelectors } from '@/store';
 import { db } from '@/config/database.config';
-import BarChart from './BarChart';
-import IncomesLineBarPanel from '../line-chart-panel/IncomesLineBarPanel';
+import BarChart from '../../shared/charts/BarChart';
+import IncomesLineBarPanel from './IncomesLineBarPanel';
 
 const IncomesBarChart = () => {
     const [incomes,setIncomes] = useState<IncomeItem[]>([]);

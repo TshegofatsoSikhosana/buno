@@ -1,16 +1,16 @@
 import React, { useState } from 'react';
 
 import { Tab, isTabActive } from '@/model/shared';
-import GroceriesBarChart from './GroceriesBarChart';
-import ExpsenseBarChart from './ExpensesBarChart';
-import InvestmentsBarChart from './InvestmentsBarChart';
+import ExpsenseBarChart from '../../expense/dashboard-charts/ExpensesBarChart';
+import InvestmentsBarChart from '../../investment/dashboard-charts/InvestmentsBarChart';
 import ExpsenseDoughnut from '../doughnuts/ExpensesDoughnut';
 import GroceriesDoughnut from '../doughnuts/GroceriesDoughnut';
 import InvestmentsDoughnut from '../doughnuts/InvestmentsDoughnut';
 import { useAppDispatch } from '@/store/hooks';
 import { useSelector } from 'react-redux';
 import { budgetActions, budgetSelectors } from '@/store';
-import IncomesBarChart from './IncomesBarChart';
+import IncomesBarChart from '../../income/dashboard-charts/IncomesBarChart';
+import GroceriesBarChart from '@/components/groceries/dashboard-charts/GroceriesBarChart';
 
 
 function BarChartPanel(){
