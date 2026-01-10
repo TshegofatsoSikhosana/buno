@@ -1,8 +1,7 @@
 import { GoalItem } from "@/model/models";
 import Image from "next/image";
-import editSvg from "../../assets/edit-green-icon.svg";
+import editSvg from "../../assets/edit-purple-icon.svg";
 import detailsSvg from "../../assets/details-icon.svg";
-import addSvg from "../../assets/add-icon.svg";
 import { useState } from "react";
 import GoalItemDetails from "./modals/GoalItemDetails";
 import GoalItemForm from "./modals/GoalItemEditForm";
