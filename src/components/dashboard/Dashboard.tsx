@@ -187,7 +187,7 @@ function Dashboard(){
           <div  className='inline-block w-6/12' style={{borderRadius: '10px', border:'3px solid rgba(120, 120, 120)', backgroundColor:'rgba(240, 240, 240)'}}>
             <div className='w-100 hover-blue-text'><DatePicker/></div>
           </div>
-          </div  >
+        </div>
         <BarChartPanel/>
        
     </div>);

@@ -138,7 +138,7 @@ function ExpenseLineBarPanel(props: ExpenseLineBarPanelProps) {
               borderRadius: "10px",
             }}
           >
-            <h1>Personal Expenses</h1>
+            <h1>Personal</h1>
             <div>R{avgPersonalExpenses}</div>
           </div>
 

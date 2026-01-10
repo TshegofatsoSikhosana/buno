@@ -18,12 +18,9 @@ const ExpsenseDoughnut = () => {
     },[year,month]);
     
     useEffect(()=>{
-      if(filterType || filterType === 0){
+      if(filterType || filterType === 0){ 
         setFilteredExpenses(expenses.filter((e)=> e.category === filterType));
       }else{
-        // if()
-        console.log('filter:',filterType);
-        
         setFilteredExpenses(expenses)
       }
   },[filterType,expenses]);

@@ -23,7 +23,7 @@ export interface ChartItem{
 
 
 interface DoughnutChartProps{
-    colors: string[];
+    colors?: string[];
     values: number[];
     labels: string[];
     includeLabels?: boolean;

@@ -1,23 +1,19 @@
-import { db } from "@/config/database.config";
-import { GoalItem, IncomeItem } from "@/model/models";
+import { GoalItem } from "@/model/models";
 import { useEffect, useState } from "react";
-import { IncomeService } from "@/service/IncomeService";
-import RowActions from "../shared/RowActions";
-import FilterSelector from "../shared/FilterSelector";
 import { filterItems } from "@/util/utils";
-import Image from "next/image";
-import closeSvg from "../../assets/close.svg";
 import { useSelector } from "react-redux";
 import { budgetSelectors } from "@/store";
 import GoalItemEditForm from "./modals/GoalItemEditForm";
 import { GoalsService } from "@/service/GoalsService";
 import GoalListItem from "./GoalListItem";
-import { get } from "http";
+import GoalsLineBarPanel from "./dashboard-charts/GoalsLineChartPanel";
+import GoalsDoughnut from "./dashboard-charts/GoalsDoughnut";
 
 function Goals() {
   const year = useSelector(budgetSelectors.getCurrentYear);
   const month = useSelector(budgetSelectors.getCurrentMonth);
   const [openForm, setOpenForm] = useState(false);
+  const [showGraphs, setShowGraphs] = useState(false);
 
   const [goals, setGoals] = useState<GoalItem[]>([]);
   const [totalContributionPercentage, setTotalContributionPercentage] = useState<number>(0);
@@ -40,14 +36,14 @@ function Goals() {
 
   async function getGoals() {
     const goals = await goalsService.getGoals(year);
-    
     setGoals([...goals]);
+
     const percentage = goalsService.getTotalContributionPercentage([...goals]);
     setTotalContributionPercentage(percentage);
+
     const contributions = goalsService.getContributionsTotal([...goals]);
     setTotalContributions(contributions);
   }
-
 
   function getTargetTotal() {
     return filteredGoals ? goalsService.getExpectedTotal(filteredGoals) : 0;
@@ -126,7 +122,7 @@ function Goals() {
             />
           )}
         </div>
-        <div className="font-bold mt-2">
+        <div className="font-bold mt-2 inline-block" style={{fontSize: '22px'}}>
             Total Goals: {filteredGoals ? filteredGoals.length : 0}
         </div>
         <div className="w-100 grid-flow-row mt-5 ">
@@ -138,6 +134,17 @@ function Goals() {
                       refresh={getGoals}
                       totalContributions={goalsService.getGoalContributionsTotal(goal)} />
           })}
+        </div>
+        <div className="p-2">
+          <div className=' w-100 text-white text-black p-5 text-left mb-5' style={{borderRadius: '10px', fontWeight: 700, marginTop: '69px', border: '2px solid rgba(222,222,222,0.5)'}}> 
+            <div  className='inline-block w-6/12 ' >Goals Overview</div>
+          </div  >
+          <div className="w-8/12 text-white inline-block p-2 mt-5">
+            <GoalsLineBarPanel/>
+          </div>
+          <div className="w-4/12 inline-block ">
+            <GoalsDoughnut/>
+          </div>
         </div>
       </div>
     </div>

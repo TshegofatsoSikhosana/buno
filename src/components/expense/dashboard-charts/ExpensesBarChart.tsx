@@ -26,8 +26,6 @@ const ExpsenseBarChart = () => {
       if(filterType || filterType === 0){
         setFilteredExpenses(expenses.filter((e)=> e.category === filterType));
       }else{
-        // if()
-        console.log('filter:',expenses);
         
         setFilteredExpenses(expenses)
       }
