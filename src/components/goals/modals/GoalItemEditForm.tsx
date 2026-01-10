@@ -18,7 +18,7 @@ function GoalItemEditForm(props: GoalItemFormProps){
     const [hasErrors, setHasErrors] = useState<boolean>(true);
     const year= useSelector(budgetSelectors.getCurrentYear);
     const month = useSelector(budgetSelectors.getCurrentMonth);
-    const is = new GoalsService();
+    const goalService = new GoalsService();
 
     useEffect(()=>{
         if(props.item){
@@ -54,7 +54,7 @@ function GoalItemEditForm(props: GoalItemFormProps){
             let item = {...selectedItem};
             item.targetYear = year;
             item.dateCreated = Date.now().toString();
-            is.addNew( {...item})
+            goalService.addNew( {...item})
         }
         props.setOpen(false);
         props.refresh();
@@ -62,7 +62,15 @@ function GoalItemEditForm(props: GoalItemFormProps){
 
     function handleEditGoalItem(selectedItem: GoalItem){
         if(selectedItem){
-            is.update( {...selectedItem})
+            goalService.update( {...selectedItem})
+        }
+        props.setOpen(false);
+        props.refresh();
+    }
+
+    function handleDeleteGoalItem(){
+        if(selectedItem && selectedItem.id){
+            goalService.delete(Number(selectedItem.id))
         }
         props.setOpen(false);
         props.refresh();
@@ -107,7 +115,14 @@ function GoalItemEditForm(props: GoalItemFormProps){
                                     disabled={hasErrors}
                                     onClick={handleAddGoalItem}>
                                         {selectedItem && selectedItem.id ? 'Edit'  : 'Add'} Goal
-                                    </button>
+                                </button>
+                                {selectedItem && selectedItem.id && <button 
+                                    className="inline-block bg-blue-500 p-2 w-100 btn-remove-item ml-2"
+                                    style={{borderRadius: '8px'}}
+                                    disabled={hasErrors}
+                                    onClick={handleDeleteGoalItem}>
+                                        Delete
+                                </button>}
                         </div>
                     </div> 
              }

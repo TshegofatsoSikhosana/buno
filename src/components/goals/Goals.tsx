@@ -13,7 +13,6 @@ function Goals() {
   const year = useSelector(budgetSelectors.getCurrentYear);
   const month = useSelector(budgetSelectors.getCurrentMonth);
   const [openForm, setOpenForm] = useState(false);
-  const [showGraphs, setShowGraphs] = useState(false);
 
   const [goals, setGoals] = useState<GoalItem[]>([]);
   const [totalContributionPercentage, setTotalContributionPercentage] = useState<number>(0);
@@ -135,18 +134,19 @@ function Goals() {
                       totalContributions={goalsService.getGoalContributionsTotal(goal)} />
           })}
         </div>
-        <div className="p-2">
-          <div className=' w-100 text-white text-black p-5 text-left mb-5' style={{borderRadius: '10px', fontWeight: 700, marginTop: '69px', border: '2px solid rgba(222,222,222,0.5)'}}> 
-            <div  className='inline-block w-6/12 ' >Goals Overview</div>
-          </div  >
-          <div className="w-8/12 text-white inline-block p-2 mt-5">
-            <GoalsLineBarPanel/>
+        {goals.length && <div className="p-2">
+            <div className=' w-100 text-white text-black p-5 text-left mb-5' style={{borderRadius: '10px', fontWeight: 700, marginTop: '69px', border: '2px solid rgba(222,222,222,0.5)'}}> 
+              <div  className='inline-block w-6/12 ' >Goals Overview</div>
+            </div  >
+            <div className="w-8/12 text-white inline-block p-2 mt-5">
+              <GoalsLineBarPanel goalItems={goals}/>
+            </div>
+            <div className="w-4/12 inline-block ">
+              <GoalsDoughnut goalItems={goals}/>
+            </div>
           </div>
-          <div className="w-4/12 inline-block ">
-            <GoalsDoughnut/>
-          </div>
-        </div>
-      </div>
+        }
+      </div>``
     </div>
   );
 }

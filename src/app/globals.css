@@ -81,12 +81,17 @@ body {
 }
 
 
-.btn-add-item{
+.btn-add-item, .btn-remove-item{
   background-color: rgb(19, 21, 32);
   border: 2px solid grey
 }
+
 .btn-add-item:hover{
   background-color: rgb(19, 88, 51);
+}
+
+.btn-remove-item:hover{
+  background-color: rgb(109, 14, 14);
 }
 
 .row-text-block:hover{

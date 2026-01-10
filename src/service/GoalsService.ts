@@ -113,6 +113,7 @@ export class GoalsService {
   }
 
   delete(id: number) {
+    db.goalEntry.where({goalId: id}).delete();
     db.goals.delete(id);
   }
 

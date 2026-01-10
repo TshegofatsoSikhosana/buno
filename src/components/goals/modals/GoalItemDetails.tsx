@@ -5,9 +5,7 @@ import { useSelector } from "react-redux";
 import FormModal from "../../shared/FormModal";
 import { GoalsService } from "@/service/GoalsService";
 import RowActions from "../../shared/RowActions";
-import { get } from "http";
-import { getMonth, months } from "@/util/utils";
-import GoalItemDoughnutChart from "../GoalItemDoughnutChart";
+import { getMonth } from "@/util/utils";
 
 interface GoalItemDetailsProps {
     open: boolean;

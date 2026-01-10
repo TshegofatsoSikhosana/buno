@@ -4,9 +4,13 @@ import { budgetSelectors } from '@/store';
 import DoughnutChart from '../../dashboard/doughnuts/DoughnutChart';
 import { GoalsService } from '@/service/GoalsService';
 import { getItemsInOrder, graphColors, months } from '@/util/utils';
+import { GoalItem } from '@/model/models';
 
+interface GoalsDoughnutProps {
+  goalItems: GoalItem[];
+}
 
-const GoalsDoughnut = () => {
+const GoalsDoughnut = ({goalItems} : GoalsDoughnutProps) => {
 
     const goalsService = new GoalsService();
     const [goals,setGoals] = useState<any[]>([]);
@@ -18,10 +22,9 @@ const GoalsDoughnut = () => {
     },[year,month]);
     
     async function getGoals(){
-      const goals = await goalsService.getGoals(year);
       let goalEntries: any[] = [];
   
-      goals.forEach((goal) =>{
+      goalItems.forEach((goal) =>{
         if(goal.entries){
           goal.entries.forEach((entry)=>{
               goalEntries.push( {
@@ -59,7 +62,7 @@ const GoalsDoughnut = () => {
         allItems.push(goalData);
       }
      
-      const target = goalsService.getExpectedTotal(goals);
+      const target = goalsService.getExpectedTotal(goalItems);
       const remainder = target - getTotal(allItems);
        allItems.push({
         amount: remainder,

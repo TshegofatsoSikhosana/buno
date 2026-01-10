@@ -11,9 +11,9 @@ import {
   } from 'chart.js';
 import { getItemsInOrder, graphColors, months } from '@/util/utils';
 import { Line } from 'react-chartjs-2';
-import { GoalsService } from '@/service/GoalsService';
 import { useSelector } from 'react-redux';
 import { budgetSelectors } from '@/store';
+import { GoalItem } from '@/model/models';
 ChartJS.register(
     CategoryScale,
     LinearScale,
@@ -24,18 +24,19 @@ ChartJS.register(
     LineElement
   );
 
-function GoalsLineBarPanel(){
+  interface GoalsLineBarPanelProps {
+    goalItems: GoalItem[]
+  }
+function GoalsLineBarPanel({goalItems}: GoalsLineBarPanelProps){
 
-  const goalsService = new GoalsService();
   const year = useSelector(budgetSelectors.getCurrentYear);
   const [monthsLabels, setMonthsLabels] = useState<string[]>([]);
   const [datasets, setDataSets] = useState<any[]>([]);
 
   async function getGoals() {
-    const goals = await goalsService.getGoals(year);
     let goalEntries: any[] = [];
 
-    goals.forEach((goal) =>{
+    goalItems.forEach((goal) =>{
       if(goal.entries){
         goal.entries.forEach((entry)=>{
             goalEntries.push( {
