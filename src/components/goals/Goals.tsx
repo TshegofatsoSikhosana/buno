@@ -121,32 +121,39 @@ function Goals() {
             />
           )}
         </div>
-        <div className="font-bold mt-2 inline-block" style={{fontSize: '22px'}}>
-            Total Goals: {filteredGoals ? filteredGoals.length : 0}
-        </div>
-        <div className="w-100 grid-flow-row mt-5 ">
-          {filteredGoals?.map((goal, index) => {
-            return <GoalListItem 
-                      key={index}
-                      goal={goal}
-                      index={index}
-                      refresh={getGoals}
-                      totalContributions={goalsService.getGoalContributionsTotal(goal)} />
-          })}
-        </div>
-        {goals.length && <div className="p-2">
-            <div className=' w-100 text-white text-black p-5 text-left mb-5' style={{borderRadius: '10px', fontWeight: 700, marginTop: '69px', border: '2px solid rgba(222,222,222,0.5)'}}> 
-              <div  className='inline-block w-6/12 ' >Goals Overview</div>
-            </div  >
-            <div className="w-8/12 text-white inline-block p-2 mt-5">
-              <GoalsLineBarPanel goalItems={goals}/>
+        {filteredGoals?.length ? <>
+            <div className="font-bold mt-2 inline-block" style={{fontSize: '22px'}}>
+                Total Goals: {filteredGoals ? filteredGoals.length : 0}
             </div>
-            <div className="w-4/12 inline-block ">
-              <GoalsDoughnut goalItems={goals}/>
+            <div className="w-100 grid-flow-row mt-5 ">
+              {filteredGoals?.map((goal, index) => {
+                return <GoalListItem 
+                          key={index}
+                          goal={goal}
+                          index={index}
+                          refresh={getGoals}
+                          totalContributions={goalsService.getGoalContributionsTotal(goal)} />
+              })}
             </div>
-          </div>
-        }
-      </div>``
+            {goals.length && <div className="p-2">
+                <div className=' w-100 text-white text-black p-5 text-left mb-5' style={{borderRadius: '10px', fontWeight: 700, marginTop: '69px', border: '2px solid rgba(222,222,222,0.5)'}}> 
+                  <div  className='inline-block w-6/12 ' >Goals Overview</div>
+                </div  >
+                <div className="w-8/12 text-white inline-block p-2 mt-5">
+                  <GoalsLineBarPanel goalItems={goals}/>
+                </div>
+                <div className="w-4/12 inline-block ">
+                  <GoalsDoughnut goalItems={goals}/>
+                </div>
+              </div>
+            }
+          </> : <div className="p-5 text-center w-100 font-bold"
+                      style={{ fontSize: "32px", color: "rgb(30,150,222,255)", padding: "1rem"}}>
+                You have no goals set up yet for {year}. Add new goal to get started!
+                </div>
+          }
+        </div>
+        
     </div>
   );
 }

@@ -3,7 +3,6 @@ import React, { useEffect, useRef, useState } from 'react';
 
 function Export(){
     const [backup, setBackup] = useState<any>();
-
     const downloadLinkRef = useRef<any>(null);
 
     async function getBackups(){
@@ -15,11 +14,11 @@ function Export(){
         investments = investments.sort((a,b) => (a?.year || 0) - (b?.year || 0));
         let groceries = await db.groceries.toArray();
         groceries = groceries.sort((a,b) => (a?.year || 0) - (b?.year || 0));
-
-        const data = { expenses, groceries, investments, incomes}
+        let goals = await db.goals.toArray();
+        let goalEntries = await db.goalEntry.toArray();
+        const data = { expenses, groceries, investments, incomes, goals, goalEntries}
         console.log('Data', data);
         setBackup(data)
-        
     }
 
     useEffect(()=>{
@@ -68,6 +67,17 @@ function Export(){
                         {backup?.incomes?.length} entries 
                     </div>
                  </div>
+                <div 
+                    className='w-100 grid-flow-row row-text-block'
+                    style={{border: '1px solid rgb(70, 70, 80,180)'}}
+                    >
+                        <div className='w-5/12 p-2 inline-block text-start' style={{borderLeft: '2px solid rgb(70, 70, 80,180)'}}>
+                            Groceries 
+                        </div>
+                        <div className='w-3/12 p-2 inline-block text-start'  style={{borderLeft: '2px solid rgb(70, 70, 80,180)'}}>
+                            {backup?.groceries?.length} entries
+                        </div>
+                </div>
                  <div 
                     className='w-100 grid-flow-row row-text-block'
                     style={{border: '1px solid rgb(70, 70, 80,180)'}}
@@ -95,16 +105,27 @@ function Export(){
                     style={{border: '1px solid rgb(70, 70, 80,180)'}}
                     >
                         <div className='w-5/12 p-2 inline-block text-start' style={{borderLeft: '2px solid rgb(70, 70, 80,180)'}}>
-                            Groceries 
+                            Goals 
                         </div>
                         <div className='w-3/12 p-2 inline-block text-start'  style={{borderLeft: '2px solid rgb(70, 70, 80,180)'}}>
-                            {backup?.groceries?.length} entries
+                            {backup?.goals?.length} entries
                         </div>
-                    </div>
-                        <button style={{backgroundColor:'rgba(42,169,42)',borderRadius:'10px'}} className="btn-add p-3 mt-3  w-3/12" onClick={handleDownload}>
-                            <a ref={downloadLinkRef} style={{ display: 'none' }}></a>
-                            Download
-                        </button>
+                </div>
+                <div 
+                    className='w-100 grid-flow-row row-text-block'
+                    style={{border: '1px solid rgb(70, 70, 80,180)'}}
+                    >
+                        <div className='w-5/12 p-2 inline-block text-start' style={{borderLeft: '2px solid rgb(70, 70, 80,180)'}}>
+                            Goal Entries
+                        </div>
+                        <div className='w-3/12 p-2 inline-block text-start'  style={{borderLeft: '2px solid rgb(70, 70, 80,180)'}}>
+                            {backup?.goalEntries?.length} entries
+                        </div>
+                </div>
+                <button style={{backgroundColor:'rgba(42,169,42)',borderRadius:'10px'}} className="btn-add p-3 mt-3  w-3/12" onClick={handleDownload}>
+                    <a ref={downloadLinkRef} style={{ display: 'none' }}></a>
+                    Download
+                </button>
         </div>
     );
 }

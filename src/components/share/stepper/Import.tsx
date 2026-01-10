@@ -1,7 +1,6 @@
-import Image from "next/image";
 import { useState } from "react";
 import { db } from "@/config/database.config";
-import { ExpenseItem, GroceryItem, IncomeItem, InvestmentItem } from "@/model/models";
+import { ExpenseItem, GoalEntry, GoalItem, GroceryItem, IncomeItem, InvestmentItem } from "@/model/models";
 import { useDispatch, useSelector } from "react-redux";
 import { budgetActions, budgetSelectors } from "@/store";
 
@@ -23,9 +22,10 @@ function Import(props: ImportProps) {
         await db.income.bulkPut(data.incomes as IncomeItem[]);
         await db.investments.bulkPut(data.investments as InvestmentItem[]);
         await db.groceries.bulkPut(data.groceries as GroceryItem[]);
-
+        await db.goals.bulkPut(data.goals as GoalItem[]);
+        await db.goalEntry.bulkPut(data.goalEntries as GoalEntry[]);
+        
         setIsImported(true);
-
 
         setTimeout(() => {
             dispatch(budgetActions.setCurrentMonth(0))
@@ -67,33 +67,33 @@ function Import(props: ImportProps) {
                         className='w-100 grid-flow-row row-text-block'
                         style={{border: '1px solid rgb(70, 70, 80,180)'}}
                         >
-                        <div className='w-5/12 p-2 inline-block text-start'>
-                        </div> 
-                        <div className='w-3/12 p-2 inline-block text-start'  style={{borderLeft: '2px solid rgb(70, 70, 80,180)'}}>
-                            Total
-                        </div>
-                    </div>
-                    <div 
-                        className='w-100 grid-flow-row row-text-block'
-                        style={{border: '1px solid rgb(70, 70, 80,180)'}}
-                        >
-                        <div className='w-5/12 p-2 inline-block text-start' style={{borderLeft: '2px solid rgb(70, 70, 80,180)'}}>
-                            Incomes 
+                            <div className='w-5/12 p-2 inline-block text-start'>
                             </div> 
-                        <div className='w-3/12 p-2 inline-block text-start'  style={{borderLeft: '2px solid rgb(70, 70, 80,180)'}}>
-                            {data?.incomes?.length} entries 
-                        </div>
+                            <div className='w-3/12 p-2 inline-block text-start'  style={{borderLeft: '2px solid rgb(70, 70, 80,180)'}}>
+                                Total
+                            </div>
                     </div>
                     <div 
                         className='w-100 grid-flow-row row-text-block'
                         style={{border: '1px solid rgb(70, 70, 80,180)'}}
                         >
-                        <div className='w-5/12 p-2 inline-block text-start' style={{borderLeft: '2px solid rgb(70, 70, 80,180)'}}>
-                            Investments
+                            <div className='w-5/12 p-2 inline-block text-start' style={{borderLeft: '2px solid rgb(70, 70, 80,180)'}}>
+                                Incomes 
+                                </div> 
+                            <div className='w-3/12 p-2 inline-block text-start'  style={{borderLeft: '2px solid rgb(70, 70, 80,180)'}}>
+                                {data?.incomes?.length} entries 
                             </div>
-                        <div className='w-3/12 p-2 inline-block text-start'  style={{borderLeft: '2px solid rgb(70, 70, 80,180)'}}>
-                            {data?.investments?.length} entries
-                        </div>
+                    </div>
+                    <div 
+                        className='w-100 grid-flow-row row-text-block'
+                        style={{border: '1px solid rgb(70, 70, 80,180)'}}
+                        >
+                            <div className='w-5/12 p-2 inline-block text-start' style={{borderLeft: '2px solid rgb(70, 70, 80,180)'}}>
+                                Investments
+                                </div>
+                            <div className='w-3/12 p-2 inline-block text-start'  style={{borderLeft: '2px solid rgb(70, 70, 80,180)'}}>
+                                {data?.investments?.length} entries
+                            </div>
                     </div>
                     <div 
                         className='w-100 grid-flow-row row-text-block'
@@ -107,15 +107,37 @@ function Import(props: ImportProps) {
                             </div>
                     </div>
                     <div 
-                    className='w-100 grid-flow-row row-text-block'
-                    style={{border: '1px solid rgb(70, 70, 80,180)'}}
-                    >
-                        <div className='w-5/12 p-2 inline-block text-start' style={{borderLeft: '2px solid rgb(70, 70, 80,180)'}}>
-                            Groceries 
-                        </div>
-                        <div className='w-3/12 p-2 inline-block text-start'  style={{borderLeft: '2px solid rgb(70, 70, 80,180)'}}>
-                            {data?.groceries?.length} entries
-                        </div>
+                        className='w-100 grid-flow-row row-text-block'
+                        style={{border: '1px solid rgb(70, 70, 80,180)'}}
+                        >
+                            <div className='w-5/12 p-2 inline-block text-start' style={{borderLeft: '2px solid rgb(70, 70, 80,180)'}}>
+                                Groceries 
+                            </div>
+                            <div className='w-3/12 p-2 inline-block text-start'  style={{borderLeft: '2px solid rgb(70, 70, 80,180)'}}>
+                                {data?.groceries?.length} entries
+                            </div>
+                    </div>
+                    <div 
+                        className='w-100 grid-flow-row row-text-block'
+                        style={{border: '1px solid rgb(70, 70, 80,180)'}}
+                        >
+                            <div className='w-5/12 p-2 inline-block text-start' style={{borderLeft: '2px solid rgb(70, 70, 80,180)'}}>
+                                Goals 
+                            </div>
+                            <div className='w-3/12 p-2 inline-block text-start'  style={{borderLeft: '2px solid rgb(70, 70, 80,180)'}}>
+                                {data?.goals?.length} entries
+                            </div>
+                    </div>
+                    <div 
+                        className='w-100 grid-flow-row row-text-block'
+                        style={{border: '1px solid rgb(70, 70, 80,180)'}}
+                        >
+                            <div className='w-5/12 p-2 inline-block text-start' style={{borderLeft: '2px solid rgb(70, 70, 80,180)'}}>
+                                Goal Entries 
+                            </div>
+                            <div className='w-3/12 p-2 inline-block text-start'  style={{borderLeft: '2px solid rgb(70, 70, 80,180)'}}>
+                                {data?.goalEntries?.length} entries
+                            </div>
                     </div>
                     </>}
                 <div className="p-2">
