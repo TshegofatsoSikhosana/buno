@@ -5,7 +5,7 @@ import { useSelector } from "react-redux";
 import FormModal from "../../shared/FormModal";
 import { GoalsService } from "@/service/GoalsService";
 import RowActions from "../../shared/RowActions";
-import { getMonth } from "@/util/utils";
+import { getMonth, months } from "@/util/utils";
 
 interface GoalItemDetailsProps {
     open: boolean;
@@ -94,7 +94,8 @@ function GoalItemDetails(props: GoalItemDetailsProps){
             item.year = year;
             item.goalId = selectedGoal?.id as number;
             item.dateCreated = Date.now().toString();
-            goalService.addNewEntry({...item})
+            goalService.addNewEntry({...item});
+            setSelectedItem(null);
         }
     }
 
@@ -215,7 +216,15 @@ function GoalItemDetails(props: GoalItemDetailsProps){
                                         </div>
                                         <div className="inline-block mr-2">
                                             <div> Month</div>
-                                            <input type="number" className="text-black" value={selectedItem?.month}  onChange={(e)=> updateItem(e,'month')}/>
+                                             <select className="text-black p-2"
+                                                    style={{borderRadius: '5px', backgroundColor: 'white'}}
+                                                    value={selectedItem?.month}
+                                                    onChange={(e)=> updateItem(e,'month')}>
+                                                <option value={-1}>-Select-</option>
+                                                {months.map((month, index)=>{
+                                                    return <option key={index} value={index+1}>{month}</option>
+                                                })}
+                                            </select>
                                         </div>
                                         </div>
                                         <div className="p-2">
