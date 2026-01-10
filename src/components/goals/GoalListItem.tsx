@@ -2,30 +2,32 @@ import { GoalItem } from "@/model/models";
 import Image from "next/image";
 import editSvg from "../../assets/edit-green-icon.svg";
 import detailsSvg from "../../assets/details-icon.svg";
+import addSvg from "../../assets/add-icon.svg";
 import { useState } from "react";
 import GoalItemDetails from "./GoalItemDetails";
+import GoalItemForm from "./GoalItemEditForm";
 
 interface GoalListItemProps {
   goal: GoalItem;
   index: number;
   totalContributions: number;
+  refresh: () => void;
 }
 
-function GoalListItem({ goal, index, totalContributions }: GoalListItemProps) {
+function GoalListItem({ goal, index, totalContributions, refresh }: GoalListItemProps) {
 
-    const [openForm, setOpenForm] = useState(false);
+    const [openEditForm, setOpenEditForm] = useState(false);
+    const [openDetails, setOpenDetails] = useState(false);
     
-
-
-
     function close(v: boolean) {
-        setOpenForm(v);
+        setOpenEditForm(v);
+        setOpenDetails(v);
     }
 
     return (
     <>
         <div
-        className="inline-block mr-5 w-3/12 mt-2"
+        className="inline-block mr-5 w-3/12 mb-3"
         style={{
             border: "2px solid rgba(222,222,222,0.5)",
             background: "rgba(255, 255, 255, 0.75)",
@@ -35,37 +37,54 @@ function GoalListItem({ goal, index, totalContributions }: GoalListItemProps) {
         }}
         key={index}
         >
-        <div className="w-7/12 inline-block">
+        <div className="w-8/12 inline-block">
             <div className="font-bold">{goal.name}</div>
             <div>Target: R{goal.targetAmount}</div>
             <div>Contributions: R{totalContributions}</div>
         </div>
-        <div className="w-3/12 inline-block text-end p-2" style={{color:'green'}}>
-            <button onClick={(e) => setOpenForm(true)} className="mr-2">
+        <div className="w-4/12 inline-block text-end p-2" style={{color:'green'}}>
+            <button onClick={(e) => setOpenDetails(true)} className="mr-2">
+                <Image
+                    alt="add"
+                    src={addSvg}
+                    height={25}
+                    width={25}
+                    className="btn-edit"
+                    />
+            </button>
+             <button onClick={(e) => setOpenDetails(true)} className="mr-2">
                 <Image
                     alt="details"
                     src={detailsSvg}
-                    height={32}
-                    width={32}
-                    className=" btn-edit"
+                    height={27}
+                    width={27}
+                    className="btn-edit"
                     />
             </button>
-            <button onClick={(e) => setOpenForm(true)}>
+            <button onClick={(e) => setOpenEditForm(true)}>
                 <Image
                     alt="edit"
                     src={editSvg}
-                    height={30}
-                    width={30}
-                    className=" btn-edit"
+                    height={25}
+                    width={25}
+                    className="btn-edit"
                     />
             </button>
         </div>
         </div>
-        {openForm && (
-            <GoalItemDetails
-                open={openForm}
+        {openEditForm && (
+            <GoalItemForm
+                open={openEditForm}
                 setOpen={close}
-                refresh={() => {}}
+                refresh={refresh}
+                item={goal}
+            />
+            )}
+        {openDetails && (
+            <GoalItemDetails
+                open={openDetails}
+                setOpen={close}
+                refresh={refresh}
                 item={goal}
             />
             )}

@@ -9,9 +9,10 @@ import Image from "next/image";
 import closeSvg from "../../assets/close.svg";
 import { useSelector } from "react-redux";
 import { budgetSelectors } from "@/store";
-import GoalItemForm from "./GoalItemForm";
+import GoalItemEditForm from "./GoalItemEditForm";
 import { GoalsService } from "@/service/GoalsService";
 import GoalListItem from "./GoalListItem";
+import { get } from "http";
 
 function Goals() {
   const year = useSelector(budgetSelectors.getCurrentYear);
@@ -19,8 +20,8 @@ function Goals() {
   const [openForm, setOpenForm] = useState(false);
 
   const [goals, setGoals] = useState<GoalItem[]>([]);
-  const [totalContributionPercentage, setTotalContributionPercentage] =
-    useState<number>(0);
+  const [totalContributionPercentage, setTotalContributionPercentage] = useState<number>(0);
+  const [totalContributions, setTotalContributions] = useState<number>(0);
   const [selectedItem, setSelectedItem] = useState<number>(-1);
   const [filterType, setFilterType] = useState<number>(-1);
   const [filteredGoals, setFilteredGoals] = useState<GoalItem[]>();
@@ -37,20 +38,18 @@ function Goals() {
     getGoals();
   }, [month, year]);
 
-  function getGoals() {
-    db.goals.where({targetYear: year})
-    .toArray().then((ex) => {
-      setGoals([...ex]);
-      const percentage = goalsService.getTotalContributionPercentage([...ex]);
-      setTotalContributionPercentage(percentage);
-    });
+  async function getGoals() {
+    const goals = await goalsService.getGoals(year);
+    
+    setGoals([...goals]);
+    const percentage = goalsService.getTotalContributionPercentage([...goals]);
+    setTotalContributionPercentage(percentage);
+    const contributions = goalsService.getContributionsTotal([...goals]);
+    setTotalContributions(contributions);
   }
 
-  function getActualTotal() {
-    return filteredGoals ? goalsService.getActualTotal(filteredGoals) : 0;
-  }
 
-  function getExpectedTotal() {
+  function getTargetTotal() {
     return filteredGoals ? goalsService.getExpectedTotal(filteredGoals) : 0;
   }
 
@@ -78,31 +77,33 @@ function Goals() {
             className="w-4/12 inline-block font-bold"
             style={{ fontSize: "32px" }}
           >
-            {" "}
-            Your {year} Saving Goals 🎯{" "}
+            Your {year} Saving Goals 🎯
           </div>
-          <div className="w-6/12 inline-block  font-bold goal-progrees-bar-container">
-            <div
-              className="inline-block mr-5 goal-progress"
-              style={{
-                border: "2px solid rgba(0, 128, 0, 0.75)",
-                backgroundColor: "rgba(0, 128, 0, 0.75)",
-                color: "white",
-                width: `${totalContributionPercentage}%`,
-              }}
-            >
-              <div className="pl-2">{totalContributionPercentage}%</div>
+          <div className="w-6/12 inline-block ">
+            <div className="w-100 font-bold goal-progress-bar-container">
+              <div
+                className="inline-block mr-5 goal-progress"
+                style={{
+                  border: "2px solid rgba(0, 128, 0, 0.75)",
+                  backgroundColor: "rgba(0, 128, 0, 0.75)",
+                  color: "white",
+                  width: `${totalContributionPercentage}%`,
+                }}
+              >
+                <div className="pl-2">{totalContributionPercentage}%</div>
             </div>
+          </div>
+            
           </div>
         </div>
         <div className="p-2 mt-2">
           <div className="inline-block mr-5 w-2/12 total-card">
             <h1>Total Target</h1>
-            <div>R{getExpectedTotal()}</div>
+            <div>R{getTargetTotal()}</div>
           </div>
           <div className="inline-block mr-5 w-2/12 total-card">
             <h1>Total Contributions</h1>
-            <div>R{getActualTotal()}</div>
+            <div>R{totalContributions}</div>
           </div>
         </div>
         <div className="p-2 mt-2">
@@ -113,7 +114,7 @@ function Goals() {
             Add New Goal
           </button>
           {openForm && (
-            <GoalItemForm
+            <GoalItemEditForm
               open={openForm}
               setOpen={close}
               refresh={getGoals}
@@ -130,22 +131,12 @@ function Goals() {
         </div>
         <div className="w-100 grid-flow-row mt-5 ">
           {filteredGoals?.map((goal, index) => {
-            // return <div className='w-11/12 grid-flow-row row-text-block'
-            //             style={{border: '1px solid rgb(70, 70, 80,180)'}}
-            //             key={index}
-            //             onClick={(e)=> setSelectedItem(index+1)}
-            //             onMouseLeave={(e)=> setSelectedItem(-1)}>
-            //             <div className='w-1/12 inline-block text-center' >
-            //             {Number(selectedItem) - 1 === index ?
-            //                 (<RowActions deleteItem={deleteItem} setOpenForm={setOpenForm} index={index}/>)
-            //                 : <></>
-            //             }
-            //             </div>
-            //             <div className='w-5/12 p-2 inline-block' style={{borderLeft: '2px solid rgb(70, 70, 80,180)'}}>{income.name}</div>
-            //             <div className='w-3/12 p-2 inline-block text-start' style={{borderLeft: '2px solid rgb(70, 70, 80,180)'}}> R{income.targetAmount}</div>
-            //             <div className='w-3/12 p-2 inline-block text-start' style={{borderLeft: '2px solid rgb(70, 70, 80,180)'}}> R{income.targetYear}</div>
-            //     </div>
-            return <GoalListItem goal={goal} index={index} totalContributions={goalsService.getEntriesTotalByGoalId(goal.id)} />
+            return <GoalListItem 
+                      key={index}
+                      goal={goal}
+                      index={index}
+                      refresh={getGoals}
+                      totalContributions={goalsService.getGoalContributionsTotal(goal)} />
           })}
         </div>
       </div>

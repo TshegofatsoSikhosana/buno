@@ -12,7 +12,7 @@ interface GoalItemFormProps {
     refresh: ()=> void;
 }
  
-function GoalItemForm(props: GoalItemFormProps){
+function GoalItemEditForm(props: GoalItemFormProps){
 
     const [selectedItem, setSelectedItem] = useState<GoalItem | null>(null);
     const [hasErrors, setHasErrors] = useState<boolean>(true);
@@ -115,4 +115,4 @@ function GoalItemForm(props: GoalItemFormProps){
         </>);
 }
  
-export default GoalItemForm;
+export default GoalItemEditForm;
