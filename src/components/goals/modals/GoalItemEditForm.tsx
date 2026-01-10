@@ -2,7 +2,7 @@ import {  GoalItem} from "@/model/models";
 import { budgetSelectors } from "@/store";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import FormModal from "../shared/FormModal";
+import FormModal from "../../shared/FormModal";
 import { GoalsService } from "@/service/GoalsService";
 
 interface GoalItemFormProps {

@@ -9,7 +9,7 @@ import Image from "next/image";
 import closeSvg from "../../assets/close.svg";
 import { useSelector } from "react-redux";
 import { budgetSelectors } from "@/store";
-import GoalItemEditForm from "./GoalItemEditForm";
+import GoalItemEditForm from "./modals/GoalItemEditForm";
 import { GoalsService } from "@/service/GoalsService";
 import GoalListItem from "./GoalListItem";
 import { get } from "http";

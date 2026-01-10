@@ -4,8 +4,8 @@ import editSvg from "../../assets/edit-green-icon.svg";
 import detailsSvg from "../../assets/details-icon.svg";
 import addSvg from "../../assets/add-icon.svg";
 import { useState } from "react";
-import GoalItemDetails from "./GoalItemDetails";
-import GoalItemForm from "./GoalItemEditForm";
+import GoalItemDetails from "./modals/GoalItemDetails";
+import GoalItemForm from "./modals/GoalItemEditForm";
 
 interface GoalListItemProps {
   goal: GoalItem;
@@ -43,21 +43,12 @@ function GoalListItem({ goal, index, totalContributions, refresh }: GoalListItem
             <div>Contributions: R{totalContributions}</div>
         </div>
         <div className="w-4/12 inline-block text-end p-2" style={{color:'green'}}>
-            <button onClick={(e) => setOpenDetails(true)} className="mr-2">
-                <Image
-                    alt="add"
-                    src={addSvg}
-                    height={25}
-                    width={25}
-                    className="btn-edit"
-                    />
-            </button>
              <button onClick={(e) => setOpenDetails(true)} className="mr-2">
                 <Image
                     alt="details"
                     src={detailsSvg}
-                    height={27}
-                    width={27}
+                    height={30}
+                    width={30}
                     className="btn-edit"
                     />
             </button>
@@ -65,8 +56,8 @@ function GoalListItem({ goal, index, totalContributions, refresh }: GoalListItem
                 <Image
                     alt="edit"
                     src={editSvg}
-                    height={25}
-                    width={25}
+                    height={30}
+                    width={30}
                     className="btn-edit"
                     />
             </button>

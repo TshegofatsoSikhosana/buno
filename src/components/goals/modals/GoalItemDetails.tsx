@@ -2,10 +2,12 @@ import {  GoalEntry, GoalItem} from "@/model/models";
 import { budgetSelectors } from "@/store";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import FormModal from "../shared/FormModal";
+import FormModal from "../../shared/FormModal";
 import { GoalsService } from "@/service/GoalsService";
-import RowActions from "../shared/RowActions";
+import RowActions from "../../shared/RowActions";
 import { get } from "http";
+import { months } from "@/util/utils";
+import GoalItemDoughnutChart from "../GoalItemDoughnutChart";
 
 interface GoalItemDetailsProps {
     open: boolean;
@@ -21,6 +23,7 @@ function GoalItemDetails(props: GoalItemDetailsProps){
     const [selectedEntry, setSelectedEntry] = useState<number>(-1);
     const [goalEntries, setGoalEntries] = useState<GoalEntry[]>([]);
     const [entriesTotal, setEntriesTotal] = useState<number>(0);
+    const [percentageComplete, setPercentageComplete] = useState<number>(0);
     const [openForm,setOpenForm] = useState(false);
     const [hasErrors, setHasErrors] = useState<boolean>(true);
     const year = useSelector(budgetSelectors.getCurrentYear);
@@ -42,11 +45,14 @@ function GoalItemDetails(props: GoalItemDetailsProps){
 
     function getGoalEntries(){
         if(props.item && props.item.id){
-        goalService.getEntriesByGoalId(props.item.id as number).toArray().then((entries)=>{
-                setGoalEntries(entries as GoalEntry[]);
-                const total = goalService.getGoalEntriesTotal(entries as GoalEntry[]);
-                setEntriesTotal(total);
-            });
+            const target = props.item.targetAmount ? Number(props.item.targetAmount) : 0;
+            goalService.getEntriesByGoalId(props.item.id as number).toArray().then((entries)=>{
+                    setGoalEntries(entries as GoalEntry[]);
+                    const total = goalService.getGoalEntriesTotal(entries as GoalEntry[]);
+                    setEntriesTotal(total);
+                    const percentage = target > 0 ? Number((total / target) * 100).toFixed(2) : 0;
+                    setPercentageComplete(Number(percentage));
+                });
         }
     }
 
@@ -120,6 +126,10 @@ function GoalItemDetails(props: GoalItemDetailsProps){
         setHasErrors(true);
     }
 
+    function getMonth(monthNumber: any){
+        return months[monthNumber - 1];
+    }
+
     return (<>
             <FormModal
                 open={props.open}
@@ -128,11 +138,34 @@ function GoalItemDetails(props: GoalItemDetailsProps){
                 form={
                     <div className="p-2 w-100 ">
                         <div className="p-2">
-                            <div className='w-11/12 grid-flow-row font-bold'> 
-                                <div className='w-6/12 p-2 inline-block' >
+                            <div className='w-100 grid-flow-row font-bold'> 
+                                <div className='w-4/12 p-2 inline-block' >
                                     <h1 style={{fontSize:'32px', color:'white'}}>🎯 {selectedGoal?.name}</h1>
                                 </div>
-                                <div className="w-100">
+                                <div className="inline-block mr-5 w-2/12 total-card">
+                                        <h1>Target</h1>
+                                        <div>R{selectedGoal?.targetAmount}</div>
+                                </div>
+                                 <div className="inline-block mr-5 w-2/12 total-card">
+                                        <h1>Contributed</h1>
+                                        <div>R{entriesTotal}</div>
+                                </div>
+                                 <div className="w-3/12 inline-block m">
+                                        <div className="w-100 font-bold goal-progress-bar-container">
+                                            <div
+                                                className="inline-block mr-5 goal-progress"
+                                                style={{
+                                                border: "2px solid rgba(0, 128, 0, 0.75)",
+                                                backgroundColor: "rgba(0, 128, 0, 0.75)",
+                                                color: "white",
+                                                width: `${percentageComplete}%`,
+                                                }}
+                                            >
+                                                <div className="pl-2">{percentageComplete}%</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                <div className="w-100 mt-5 mb-2">
                                     {!openForm && <button
                                         className="p-2 mb-2 btn-add"
                                         onClick={(e) => setOpenForm(true)}
@@ -144,45 +177,37 @@ function GoalItemDetails(props: GoalItemDetailsProps){
                             </div>
                             {!openForm ?
                             <>
-                            <div className='w-11/12 grid-flow-row font-bold' > 
-                                <div className='w-6/12 p-2 inline-block' >
-                                </div>
-                                <div className='w-3/12 p-2 inline-block text-center' style={{border: '1px solid rgb(70, 70, 80,180)'}} >
-                                        Target
-                                    </div>
-                                    <div className='w-3/12 p-2 inline-block text-center' style={{border: '1px solid rgb(70, 70, 80,180)'}} >
-                                        Actual
-                                </div>
-                            </div>
-                            <div className='w-11/12 grid-flow-row '>
-                                <div className='w-6/12 text-start grid-flow-row inline-block'> 
-                                    {/* <FilterSelector filterType={filterType} setFilterType={setFilterType}/> */}
-                                </div>
-                                <div className='w-3/12 p-2 inline-block text-start font-bold' style={{border: '1px solid rgb(70, 70, 80,180)', color:'rgb(30,150,222,255)'}} >
-                                    R{selectedGoal?.targetAmount}
-                                </div>
-                                <div className='w-3/12 p-2 inline-block text-start font-bold' style={{border: '1px solid rgb(70, 70, 80,180)', color:'rgb(30,150,222,255)'}} >
-                                    R{entriesTotal}
-                                </div>
-                            </div>
-                             <div className='w-100 grid-flow-row mt-5 ' >
-                                {goalEntries.map((entry, index)=>{
-                                    return <div className='w-11/12 grid-flow-row row-text-block'
-                                                style={{border: '1px solid rgb(70, 70, 80,180)'}}
-                                                key={index}
-                                                onClick={(e)=> setSelectedEntry(index+1)}
-                                                onMouseLeave={(e)=> setSelectedEntry(-1)}>
-                                                <div className='w-1/12 inline-block text-center' > 
-                                                {Number(selectedEntry) - 1 === index ? 
-                                                    (<RowActions deleteItem={deleteItem} setOpenForm={setOpenForm} index={index}/>)
-                                                    : <></>
-                                                }
-                                                </div>
-                                                <div className='w-5/12 p-2 inline-block' style={{borderLeft: '2px solid rgb(70, 70, 80,180)'}}>{entry.id}</div>
-                                                <div className='w-3/12 p-2 inline-block text-start' style={{borderLeft: '2px solid rgb(70, 70, 80,180)'}}> R{entry.amount}</div>
-                                                <div className='w-3/12 p-2 inline-block text-start' style={{borderLeft: '2px solid rgb(70, 70, 80,180)'}}> {entry.month}</div>
+                            <div className='w-100 grid-flow-row' >
+                                <div className="w-10/12 inline-block">
+                                    <div className='w-10/12 grid-flow-row inline-block' style={{border: '1px solid rgb(70, 70, 80,180)'}}>
+                                        <div className='w-2/12 p-2 inline-block text-center' > </div>
+                                        <div className='w-4/12 p-2 inline-block text-start font-bold' style={{borderLeft: '2px solid rgb(70, 70, 80,180)', color:'rgb(30,150,222,255)'}} >
+                                            Month
                                         </div>
-                                })}
+                                        <div className='w-3/12 p-2 inline-block text-start font-bold' style={{borderLeft: '2px solid rgb(70, 70, 80,180)', color:'rgb(30,150,222,255)'}} >
+                                            Amount
+                                        </div>
+                                    </div>
+                                   
+                                    {goalEntries.map((entry, index)=>{
+                                        return <div className='w-10/12 grid-flow-row row-text-block'
+                                                    style={{border: '1px solid rgb(70, 70, 80,180)'}}
+                                                    key={index}
+                                                    onClick={(e)=> setSelectedEntry(index+1)}
+                                                    onMouseLeave={(e)=> setSelectedEntry(-1)}>
+                                                    <div className='w-2/12 inline-block text-center' > 
+                                                    {Number(selectedEntry) - 1 === index ? 
+                                                        (<RowActions deleteItem={deleteItem} setOpenForm={setOpenForm} index={index}/>)
+                                                        : <></>
+                                                    }
+                                                    </div>
+                                                    {/* <div className='w-2/12 p-2 inline-block' style={{borderLeft: '2px solid rgb(70, 70, 80,180)'}}>{entry.id}</div> */}
+                                                    <div className='w-4/12 p-2 inline-block text-start' style={{borderLeft: '2px solid rgb(70, 70, 80,180)'}}> {getMonth(entry.month)}</div>
+                                                    <div className='w-3/12 p-2 inline-block text-start' style={{borderLeft: '2px solid rgb(70, 70, 80,180)'}}> R{entry.amount}</div>
+                                            </div>
+                                    })}
+                                </div>
+                                
                             </div>
                             </>
                             :

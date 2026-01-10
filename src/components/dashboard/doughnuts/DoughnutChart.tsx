@@ -26,7 +26,8 @@ interface DoughnutChartProps{
     colors: string[];
     values: number[];
     labels: string[];
-    includeLabels?: boolean
+    includeLabels?: boolean;
+    title?: string;
  }
 function DoughnutChart(data : DoughnutChartProps){
 
@@ -43,7 +44,7 @@ function DoughnutChart(data : DoughnutChartProps){
                     color:"white",
                     plugins:{
                         legend: { display: data.includeLabels || false},
-                        title: { text: 'Current Month', display: true, color: 'white'}
+                        title: { text: `${data.title ? data.title :  'Current Month'}`, display: true, color: 'white'}
                     }
                 }}/>
             }
