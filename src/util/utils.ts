@@ -116,6 +116,9 @@ export function prepareCloneItems(data:any[], month:number,year:number){
 
 export const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November" , "December"]
 
+export function getMonth(monthNumber: any){
+    return months[monthNumber - 1];
+}
 
 export const graphColors = [
     "rgba(30, 148, 222)",

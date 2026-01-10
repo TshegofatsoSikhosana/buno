@@ -116,6 +116,10 @@ export class GoalsService {
     db.goals.delete(id);
   }
 
+  deleteEntry(id: number) {
+    db.goalEntry.delete(id);
+  }
+
   initializeWithTemplate() {
     const incomes: GoalItem[] = [
       {

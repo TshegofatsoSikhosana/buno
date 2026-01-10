@@ -6,7 +6,7 @@ import FormModal from "../../shared/FormModal";
 import { GoalsService } from "@/service/GoalsService";
 import RowActions from "../../shared/RowActions";
 import { get } from "http";
-import { months } from "@/util/utils";
+import { getMonth, months } from "@/util/utils";
 import GoalItemDoughnutChart from "../GoalItemDoughnutChart";
 
 interface GoalItemDetailsProps {
@@ -18,16 +18,19 @@ interface GoalItemDetailsProps {
  
 function GoalItemDetails(props: GoalItemDetailsProps){
 
+    const year = useSelector(budgetSelectors.getCurrentYear);
+    const goalService = new GoalsService();
+
     const [selectedGoal, setSelectedGoal] = useState<GoalItem | null>(null);
     const [selectedItem, setSelectedItem] = useState<GoalEntry | null>(null);
-    const [selectedEntry, setSelectedEntry] = useState<number>(-1);
+    const [selectedEntryIndex, setSelectedEntryIndex] = useState<number>(-1);
+
     const [goalEntries, setGoalEntries] = useState<GoalEntry[]>([]);
     const [entriesTotal, setEntriesTotal] = useState<number>(0);
     const [percentageComplete, setPercentageComplete] = useState<number>(0);
+
     const [openForm,setOpenForm] = useState(false);
     const [hasErrors, setHasErrors] = useState<boolean>(true);
-    const year = useSelector(budgetSelectors.getCurrentYear);
-    const goalService = new GoalsService();
 
     useEffect(()=>{
         if(props.item){
@@ -43,6 +46,15 @@ function GoalItemDetails(props: GoalItemDetailsProps){
         validInputs();
     }, [selectedItem]);
 
+    useEffect(()=>{
+        const item =  goalEntries[selectedEntryIndex - 1];
+        if(item){
+            setSelectedItem({...item});
+        }else{
+            setSelectedItem(null);
+        }
+    },[selectedEntryIndex]);
+
     function getGoalEntries(){
         if(props.item && props.item.id){
             const target = props.item.targetAmount ? Number(props.item.targetAmount) : 0;
@@ -54,11 +66,6 @@ function GoalItemDetails(props: GoalItemDetailsProps){
                     setPercentageComplete(Number(percentage));
                 });
         }
-    }
-
-    function getEntriesTotal(){
-        const total =selectedGoal ? goalService.getGoalContributionsTotal(selectedGoal) : 0;
-        setEntriesTotal(total);
     }
 
     function updateItem(e:any,target: string){
@@ -75,7 +82,7 @@ function GoalItemDetails(props: GoalItemDetailsProps){
         }else{
             const item = {...selectedItem}            
             if(item){
-                saveGoalEntry({...item as GoalEntry})
+                handleSaveGoalEntry({...item as GoalEntry})
             }
         }
         getGoalEntries();
@@ -83,37 +90,28 @@ function GoalItemDetails(props: GoalItemDetailsProps){
         props.refresh();
     }
 
-    function saveGoalEntry(selectedItem: GoalEntry){
+    function handleSaveGoalEntry(selectedItem: GoalEntry){
         if(selectedItem){
-
             let item = {...selectedItem};
             item.year = year;
             item.goalId = selectedGoal?.id as number;
             item.dateCreated = Date.now().toString();
-            console.log("Saving...", item);
-
             goalService.addNewEntry({...item})
         }
-        // props.setOpen(false);
-
     }
 
     function handleEditGoalEntry(selectedItem: GoalEntry){
         if(selectedItem){
             goalService.updateEntry( {...selectedItem})
         }
-        props.setOpen(false);
-        props.refresh();
     }
 
     function deleteItem(index: number){
-        // if(filteredIncomes && Number(selectedItem) >= 0 ){
-        //     console.log('deleting', filteredIncomes[index])
-        //     goalService.delete(Number(filteredIncomes[index].id))
-        //     // getIncomes();
-        // }
+        if(goalEntries && Number(selectedEntryIndex) >= 0 ){
+            goalService.deleteEntry(Number(goalEntries[index].id))
+            getGoalEntries(); 
+        }
     }
-
 
     function validInputs(){
         if(selectedItem){
@@ -124,10 +122,6 @@ function GoalItemDetails(props: GoalItemDetailsProps){
             }
         }
         setHasErrors(true);
-    }
-
-    function getMonth(monthNumber: any){
-        return months[monthNumber - 1];
     }
 
     return (<>
@@ -193,10 +187,10 @@ function GoalItemDetails(props: GoalItemDetailsProps){
                                         return <div className='w-10/12 grid-flow-row row-text-block'
                                                     style={{border: '1px solid rgb(70, 70, 80,180)'}}
                                                     key={index}
-                                                    onClick={(e)=> setSelectedEntry(index+1)}
-                                                    onMouseLeave={(e)=> setSelectedEntry(-1)}>
+                                                    onClick={(e)=> setSelectedEntryIndex(index+1)}
+                                                    onMouseLeave={(e)=> setSelectedEntryIndex(-1)}>
                                                     <div className='w-2/12 inline-block text-center' > 
-                                                    {Number(selectedEntry) - 1 === index ? 
+                                                    {Number(selectedEntryIndex) - 1 === index ? 
                                                         (<RowActions deleteItem={deleteItem} setOpenForm={setOpenForm} index={index}/>)
                                                         : <></>
                                                     }
@@ -232,7 +226,7 @@ function GoalItemDetails(props: GoalItemDetailsProps){
                                                 style={{borderRadius: '8px'}}
                                                 disabled={hasErrors}
                                                 onClick={handleAddGoalEntry}>
-                                                    {selectedItem && selectedItem.id ? 'Edit'  : 'Add'} Goal
+                                                    {selectedItem && selectedItem.id ? 'Edit'  : 'Add'} Entry
                                                 </button>
                                     </div>
                                 </div> 
