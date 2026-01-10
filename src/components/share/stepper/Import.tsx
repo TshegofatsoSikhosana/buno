@@ -18,7 +18,7 @@ function Import(props: ImportProps) {
     const [data, setData] = useState<any>(undefined);
 
     async function handleOnImport(){
-        data.expense && await db.expenses.bulkPut(data.expenses as ExpenseItem[]);
+        data.expenses && await db.expenses.bulkPut(data.expenses as ExpenseItem[]);
         data.incomes && await db.income.bulkPut(data.incomes as IncomeItem[]);
         data.investments &&await db.investments.bulkPut(data.investments as InvestmentItem[]);
         data.groceries && await db.groceries.bulkPut(data.groceries as GroceryItem[]);
