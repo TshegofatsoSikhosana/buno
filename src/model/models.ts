@@ -86,6 +86,26 @@ export interface IncomeItem{
     dateCreated: string
 }
 
+export interface GoalItem{
+    id?: number;
+    name: string;
+    targetAmount: number;
+    targetYear: number;
+    dateCreated: string;
+    entries?: GoalEntry[];
+}
+
+
+export interface GoalEntry{
+    id?: number;
+    goalId: number;
+    amount: number;
+    month?: string;
+    year?: number;
+    dateCreated: string;
+}
+
+
 export interface CloneBudget{
     year: number;
     month: number;

@@ -31,7 +31,6 @@ const InvestmentsBarChart = () => {
               <div className="inline  w-4/12 p-2">
                   <button
                     className="p-2 mb-2 mr-2 btn-add"
-                    style={{borderRadius: '8px', border:'2px solid rgb(70, 70, 80,180)'}}
                     onClick={(e)=> setIsTotalsView(!isTotalsView)}>
                        { isTotalsView ? "Show Current budget" : "Show Totals"}
                 </button>

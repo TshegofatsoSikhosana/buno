@@ -73,7 +73,6 @@ function Investments(props: InvestmentProps){
     return <div className="dashboard-container">
                 <button 
                     className="p-2 mb-2 btn-add"
-                    style={{borderRadius: '8px', border:'2px solid rgb(70, 70, 80,180)'}}
                     onClick={(e)=> setOpenForm(true)}>
                         Add Investment
                 </button>

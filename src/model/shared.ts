@@ -4,6 +4,7 @@ export enum Tab{
     INCOME,
     GROCERIES,
     DASHBOARD,
+    GOALS,
     CAR_LOAN
 }
 

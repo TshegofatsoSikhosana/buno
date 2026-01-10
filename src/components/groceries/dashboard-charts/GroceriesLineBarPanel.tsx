@@ -23,10 +23,10 @@ ChartJS.register(
   LineElement
 );
 
-interface ExpenseLineBarPanelProps {
+interface GroceriesLineBarPanelProps {
   filterType?: Store;
 }
-function GroceriesLineBarPanel(props: ExpenseLineBarPanelProps) {
+function GroceriesLineBarPanel(props: GroceriesLineBarPanelProps) {
   const { filterType } = props;
   const [monthsLabels, setMonthsLabels] = useState<string[]>([]);
   const [datasets, setDataSets] = useState<any[]>([]);
