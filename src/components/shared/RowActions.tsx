@@ -1,7 +1,7 @@
 import Image from "next/image";
 
-import editSvg from '../assets/edit-icon.svg'
-import deleteSvg from '../assets/garbage-icon.svg'
+import editSvg from '../../assets/edit-icon.svg'
+import deleteSvg from '../../assets/garbage-icon.svg'
 
 
 interface RowActionsProps {

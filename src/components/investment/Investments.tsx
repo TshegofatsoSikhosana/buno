@@ -3,8 +3,8 @@ import {  InvestmentItem } from "@/model/models";
 import InvestmentItemForm from "./InvestmentItemForm";
 import { useEffect, useState } from "react";
 import { InvestmentService } from "@/service/InvestmentService";
-import RowActions from "../RowActions";
-import FilterSelector from "../FilterSelector";
+import RowActions from "../shared/RowActions";
+import FilterSelector from "../shared/FilterSelector";
 import { filterItems } from "@/util/utils";
 import Image from "next/image";
 import closeSvg from '../../assets/close.svg';
@@ -73,7 +73,6 @@ function Investments(props: InvestmentProps){
     return <div className="dashboard-container">
                 <button 
                     className="p-2 mb-2 btn-add"
-                    style={{borderRadius: '8px', border:'2px solid rgb(70, 70, 80,180)'}}
                     onClick={(e)=> setOpenForm(true)}>
                         Add Investment
                 </button>

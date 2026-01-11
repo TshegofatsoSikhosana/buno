@@ -12,6 +12,7 @@ import cloneSvg from '../assets/clone.svg'
 import { DatePicker } from 'react-responsive-datepicker';
 import 'react-responsive-datepicker/dist/index.css'
 import closeSvg from '../assets/close.svg'
+// import reportSvg from "../assets/report.svg";
 import { db } from '@/config/database.config';
 import { getExpectedTotal, getRemainingTotal, months } from '../util/utils';
 import CloneModal from '@/components/clone/CloneModal';
@@ -22,6 +23,7 @@ import { useSelector } from 'react-redux';
 import Dashboard from '@/components/dashboard/Dashboard';
 import { Tab, isTabActive } from '@/model/shared';
 import ShareModal from '@/components/share/ShareModal';
+import Goals from '@/components/goals/Goals';
 
 
 
@@ -52,6 +54,8 @@ export default function Home() {
         return <Groceries />
       case Tab.DASHBOARD:
         return <Dashboard />
+      case Tab.GOALS:
+        return <Goals />
       // case Tab.CAR_LOAN:
       //   return <CarLoan />
       default:
@@ -199,35 +203,41 @@ export default function Home() {
         </div>
         <div className='w-100'>
           <div 
-           className={`inline-block p-4 ${isTabActive(Tab.GROCERIES, active)}`}
+           className={`tab-option inline-block p-4 ${isTabActive(Tab.GROCERIES, active)}`}
            onClick={(e)=> setActive(Tab.GROCERIES)}
            > 
               Groceries
           </div>
           <div 
-           className={`inline-block p-4 ${isTabActive(Tab.EXPENSES, active)}`}
+           className={`tab-option inline-block p-4 ${isTabActive(Tab.EXPENSES, active)}`}
            onClick={(e)=> setActive(Tab.EXPENSES)}
            > 
               Expenses
           </div>
           <div 
-            className={`inline-block p-4 ${isTabActive(Tab.INVESTMENTS, active)}`}
+            className={`tab-option inline-block p-4 ${isTabActive(Tab.INVESTMENTS, active)}`}
             onClick={(e)=> setActive(Tab.INVESTMENTS)}
            >
               Investments
           </div>
           <div 
-            className={`inline-block p-4 ${isTabActive(Tab.INCOME, active)}`}
+            className={`tab-option inline-block p-4 ${isTabActive(Tab.INCOME, active)}`}
             onClick={(e)=> setActive(Tab.INCOME)}
            >
               Income
           </div>
           <div 
-           className={`inline-block p-4 ${isTabActive(Tab.DASHBOARD, active)}`}
+           className={`tab-option inline-block p-4 ${isTabActive(Tab.DASHBOARD, active)}`}
            onClick={(e)=> setActive(Tab.DASHBOARD)}
            > 
             {/* <div className='inline-block p-1'><Icon svgPath={reportSvg} onClick={() => {}}/> </div>  */}
             <div className='inline-block'> Budget-Dashboard</div>
+          </div>
+          <div 
+           className={`tab-option inline-block p-4 ${isTabActive(Tab.GOALS, active)}`}
+           onClick={(e)=> setActive(Tab.GOALS)}
+           > 
+            <div className='inline-block'> Goals 🎯</div>
           </div>
           {/* <Link href={"/luno"}
             className={`inline-block p-4 ${isTabActive(Tab.INCOME, active)}`}

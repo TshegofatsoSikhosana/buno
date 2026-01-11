@@ -35,8 +35,24 @@ body {
   border: 2px solid white;
 }
 
+
+.tab-option:hover{
+  cursor: pointer;
+}
+
+.btn-add{
+  border-radius: 8px;
+  border: 2px solid rgb(70, 70, 80,180);
+}
+
 .btn-add:hover{
   background-color: rgba(30, 148, 222, 0.671);
+  cursor: pointer;
+}
+
+.hover-blue-text:hover{
+  background-color: rgba(120, 120, 120, 0.671);
+  color: rgb(0, 16, 82);
   cursor: pointer;
 }
 
@@ -65,12 +81,17 @@ body {
 }
 
 
-.btn-add-item{
+.btn-add-item, .btn-remove-item{
   background-color: rgb(19, 21, 32);
   border: 2px solid grey
 }
+
 .btn-add-item:hover{
   background-color: rgb(19, 88, 51);
+}
+
+.btn-remove-item:hover{
+  background-color: rgb(109, 14, 14);
 }
 
 .row-text-block:hover{
@@ -170,13 +191,12 @@ body {
   justify-content: center;
   align-items: center;
   background-color: rgba(0, 0, 0, 0.9);
-  color:white
-
+  color:white;
 }
 
 .modal {
   background-color: #fff;
-  padding: 20px;
+  padding: 1%;
   border-radius: 5px;
   box-shadow: 0 10px 20px rgba(241, 241, 247, 0.25);
   width: 60%;
@@ -196,4 +216,20 @@ body {
   backdrop-filter: blur(5px); 
   pointer-events: none; 
   /* z-index: -1000; */
+}
+
+.goal-progress-bar-container{
+  border: 3px solid rgba(222,222,222,0.5);
+  border-radius: 10px;
+}
+
+.goal-progrees{
+  border-top-right-radius:5px;
+  border-bottom-left-radius:5px;
+}
+
+.total-card{
+  border: 2px solid rgba(222,222,222,0.5); 
+  padding:1rem;
+  border-radius: 10px 
 }

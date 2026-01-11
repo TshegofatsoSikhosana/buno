@@ -4,8 +4,9 @@ import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { budgetSelectors } from '@/store';
 import { db } from '@/config/database.config';
-import BarChart from './BarChart';
-import GroceriesLineBarPanel from '../line-chart-panel/GroceriesLineBarPanel';
+import BarChart from '../../shared/charts/BarChart';
+import GroceriesLineBarPanel from './GroceriesLineBarPanel';
+
 
 const GroceriesBarChart = () => {
     const [groceries,setGroceries] = useState<GroceryItem[]>([]);

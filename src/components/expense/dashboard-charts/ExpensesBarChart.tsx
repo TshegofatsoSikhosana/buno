@@ -4,13 +4,10 @@ import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { budgetActions, budgetSelectors } from '@/store';
 import { db } from '@/config/database.config';
-import BarChart from './BarChart';
+import BarChart from '../../shared/charts/BarChart';
 import { months } from '@/util/utils';
 import { useAppDispatch } from '@/store/hooks';
-import Image from 'next/image';
-import closeSvg from '../../../assets/close.svg'
-import LineBarPanel from '../LineBarPanel';
-import ExpenseLineBarPanel from '../line-chart-panel/ExpenseLineBarPanel';
+import ExpenseLineBarPanel from './ExpenseLineBarPanel';
 
 const ExpsenseBarChart = () => {
     const [expenses,setExpenses] = useState<ExpenseItem[]>([]);
@@ -29,8 +26,6 @@ const ExpsenseBarChart = () => {
       if(filterType || filterType === 0){
         setFilteredExpenses(expenses.filter((e)=> e.category === filterType));
       }else{
-        // if()
-        console.log('filter:',expenses);
         
         setFilteredExpenses(expenses)
       }
@@ -65,7 +60,6 @@ const ExpsenseBarChart = () => {
               <div className="inline  w-4/12 p-2">
                   <button
                     className="p-2 mb-2 mr-2 btn-add"
-                    style={{borderRadius: '8px', border:'2px solid rgb(70, 70, 80,180)'}}
                     onClick={(e)=> setIsTotalsView(!isTotalsView)}>
                        {isTotalsView ? "Show Current Budget" : "Show Totals"}
                 </button>

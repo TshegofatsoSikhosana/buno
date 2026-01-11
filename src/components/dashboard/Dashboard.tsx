@@ -14,10 +14,10 @@ import {
     LineElement
   } from 'chart.js';
 import BarChartPanel from './bar-chart-panel/BarChartPanel';
-import LineBarPanel from './LineBarPanel';
 import DoughnutChart from './doughnuts/DoughnutChart';
 import { months } from '@/util/utils';
 import DatePicker from './bar-chart-panel/DatePicker';
+import LineBarPanel from './line-chart-panel/LineChartPanel';
   ChartJS.register(
     CategoryScale,
     LinearScale,
@@ -166,10 +166,10 @@ function Dashboard(){
             <div>R{avgInvestments}</div>
           </div>
 
-          {/* <div  className='inline-block mr-5 w-2/12' style={{border:'2px solid rgb(30,150,222,0.5)', padding:'1rem',borderRadius:'10px' }}>
+          <div  className='inline-block mr-5 w-2/12' style={{border:'2px solid rgba(222,222,222,0.5)', padding:'1rem',borderRadius:'10px' }}>
             <div>Income</div>
             <div>R{avgIncomes}</div>
-          </div> */}
+          </div>
         </div>
         {/* <h1 className='w-100 bg-white text-black p-3 text-center mt-4' style={{borderRadius: '10px', fontWeight: 700}}>Per Budget Month View</h1> */}
         <div className="w-8/12 text-white inline-block">
@@ -184,10 +184,10 @@ function Dashboard(){
         </div>
         <div className=' w-100 bg-white text-black p-5 text-left' style={{borderRadius: '10px', fontWeight: 700, marginTop: '69px'}}> 
           <div  className='inline-block w-6/12' >Per Category Budget Overview</div>
-          <div  className='inline-block w-6/12' style={{borderRadius: '10px', border:'3px solid rgba(30, 148, 222)'}}>
-            <div className='w-100 btn-add'><DatePicker/></div>
+          <div  className='inline-block w-6/12' style={{borderRadius: '10px', border:'3px solid rgba(120, 120, 120)', backgroundColor:'rgba(240, 240, 240)'}}>
+            <div className='w-100 hover-blue-text'><DatePicker/></div>
           </div>
-          </div  >
+        </div>
         <BarChartPanel/>
        
     </div>);

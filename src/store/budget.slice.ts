@@ -37,6 +37,8 @@ const budgetSlice = createSlice({
         setCurrentMonth: (state: BudgetState, action: PayloadAction<number>) => {
             state.currentMonth = action.payload;
         },
+
+        //Budget Cloning
         setCloneBudget: (state: BudgetState, action: PayloadAction<CloneBudget>) => {
             state.budget = action.payload;
         },
