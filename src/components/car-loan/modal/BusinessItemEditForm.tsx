@@ -1,29 +1,30 @@
-import {  GoalItem} from "@/model/models";
 import { budgetSelectors } from "@/store";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import FormModal from "../../shared/FormModal";
 import { GoalsService } from "@/service/GoalsService";
+import { BusinessService } from "@/service/BusinessService";
+import { BusinessItem } from "@/model/models";
 
-interface GoalItemFormProps {
+interface BusinessItemFormProps {
     open: boolean;
     setOpen: (b:boolean)=> void;
-    item?: GoalItem;
+    item?: BusinessItem;
     refresh: ()=> void;
 }
  
-function GoalItemEditForm(props: GoalItemFormProps){
+function BusinessItemEditForm(props: BusinessItemFormProps){
 
-    const [selectedItem, setSelectedItem] = useState<GoalItem | null>(null);
+    const [selectedItem, setSelectedItem] = useState<BusinessItem | null>(null);
     const [hasErrors, setHasErrors] = useState<boolean>(true);
     const year= useSelector(budgetSelectors.getCurrentYear);
     const month = useSelector(budgetSelectors.getCurrentMonth);
-    const goalService = new GoalsService();
+    const businessService = new BusinessService();
 
     useEffect(()=>{
         if(props.item){
             setSelectedItem(props.item);
-        }   
+        }
     },[props.item]);
 
     useEffect(()=>{
@@ -35,42 +36,42 @@ function GoalItemEditForm(props: GoalItemFormProps){
         const item = {...selectedItem}
         //@ts-ignore
         item[target] = value;
-        setSelectedItem(item as GoalItem)
+        setSelectedItem(item as BusinessItem)
     }
 
-    function handleAddGoalItem(e:any){
+    function handleAddBusinessItem(e:any){
         if(selectedItem && selectedItem.id){
-           handleEditGoalItem( {...selectedItem as GoalItem})
+           handleEditBusinessItem( {...selectedItem as BusinessItem})
         }else{
             const item = {...selectedItem}
             if(item){
-                saveGoalItem({...item as GoalItem})
+                saveBusinessItem({...item as BusinessItem})
             }
         }
     }
 
-    function saveGoalItem(selectedItem: GoalItem){
+    function saveBusinessItem(selectedItem: BusinessItem){
         if(selectedItem){
             let item = {...selectedItem};
-            item.targetYear = year;
+            // item.targetYear = year;
             item.dateCreated = Date.now().toString();
-            goalService.addNew( {...item})
+            businessService.addNew( {...item})
         }
         props.setOpen(false);
         props.refresh();
     }
 
-    function handleEditGoalItem(selectedItem: GoalItem){
+    function handleEditBusinessItem(selectedItem: BusinessItem){
         if(selectedItem){
-            goalService.update( {...selectedItem})
+            businessService.update( {...selectedItem})
         }
         props.setOpen(false);
         props.refresh();
     }
 
-    function handleDeleteGoalItem(){
+    function handleDeleteBusinessItem(){
         if(selectedItem && selectedItem.id){
-            goalService.delete(Number(selectedItem.id))
+            businessService.delete(Number(selectedItem.id))
         }
         props.setOpen(false);
         props.refresh();
@@ -78,9 +79,7 @@ function GoalItemEditForm(props: GoalItemFormProps){
 
     function validInputs(){
         if(selectedItem){
-            if(Number(selectedItem.targetAmount) >= 0 &&
-                 Number(selectedItem.targetYear) >= 0 &&
-                 selectedItem.name){
+            if(selectedItem.name){
                     setHasErrors(false)
                     return;
             }
@@ -96,31 +95,31 @@ function GoalItemEditForm(props: GoalItemFormProps){
                     <div className="p-2">
                         <div className="p-2">
                             <div className="inline-block mr-2 ">
-                                <div> Goal Name</div>
+                                <div> Business Name</div>
                                 <input type="text" className="text-black" value={selectedItem?.name} onChange={(e)=> updateItem(e,'name')}/>
                             </div>
-                            <div className="inline-block mr-2">
+                            {/* <div className="inline-block mr-2">
                                 <div> Target Amount</div>
                                 <input type="number" className="text-black" value={selectedItem?.targetAmount}  onChange={(e)=> updateItem(e,'targetAmount')}/>
                             </div>
                             <div className="inline-block mr-2">
                                 <div> Target Year</div>
                                 <input type="number" className="text-black" value={selectedItem?.targetYear}  onChange={(e)=> updateItem(e,'targetYear')}/>
-                            </div>
+                            </div> */}
                             </div>
                             <div className="p-2">
                                 <button 
                                     className="inline-block bg-blue-500 p-2 w-100 btn-add-item"
                                     style={{borderRadius: '8px'}}
                                     disabled={hasErrors}
-                                    onClick={handleAddGoalItem}>
-                                        {selectedItem && selectedItem.id ? 'Edit'  : 'Add'} Goal
+                                    onClick={handleAddBusinessItem}>
+                                        {selectedItem && selectedItem.id ? 'Edit'  : 'Add'} Business
                                 </button>
                                 {selectedItem && selectedItem.id && <button 
                                     className="inline-block bg-blue-500 p-2 w-100 btn-remove-item ml-2"
                                     style={{borderRadius: '8px'}}
                                     disabled={hasErrors}
-                                    onClick={handleDeleteGoalItem}>
+                                    onClick={handleDeleteBusinessItem}>
                                         Delete
                                 </button>}
                         </div>
@@ -130,4 +129,4 @@ function GoalItemEditForm(props: GoalItemFormProps){
         </>);
 }
  
-export default GoalItemEditForm;
+export default BusinessItemEditForm;

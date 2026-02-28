@@ -7,7 +7,6 @@ import Investments from '@/components/investment/Investments';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import calendarSettingsSvg from '../assets/calendar-settings.svg'
-import settingsSvg from '../assets/settings.svg'
 import shareSvg from '../assets/share.svg'
 import cloneSvg from '../assets/clone.svg'
 import { DatePicker } from 'react-responsive-datepicker';
@@ -25,7 +24,7 @@ import Dashboard from '@/components/dashboard/Dashboard';
 import { Tab, isTabActive } from '@/model/shared';
 import ShareModal from '@/components/share/ShareModal';
 import Goals from '@/components/goals/Goals';
-// import CarLoan from '@/components/car-loan/CarLoan';
+import CarLoan from '@/components/car-loan/CarLoan';
 
 
 
@@ -58,8 +57,8 @@ export default function Home() {
         return <Dashboard />
       case Tab.GOALS:
         return <Goals />
-      // case Tab.CAR_LOAN:
-      //   return <CarLoan setTotalExpenses={setTotalExpenses} />
+      case Tab.CAR_LOAN:
+        return <CarLoan setTotalExpenses={setTotalExpenses} />
       default:
         return <Expenses setTotalExpenses={setTotalExpenses} />
     }
@@ -139,7 +138,7 @@ export default function Home() {
         <h2 className='font-bold text-stone-100 text-end inline-block w-9/12' style={{fontSize: '36px'}}>
           {year} {months[month-1]} Budget 
         <button className="inline-block" >
-          <Icon svgPath={settingsSvg} onClick={() => setOpenForm(!openForm)}/>    
+          <Icon svgPath={calendarSettingsSvg} onClick={() => setOpenForm(!openForm)}/>    
         </button>
         <button  className="inline-block">
           <Icon svgPath={cloneSvg} onClick={() => setOpenCloneModal(true)}/>      
@@ -241,12 +240,12 @@ export default function Home() {
            > 
             <div className='inline-block'> Goals 🎯</div>
           </div>
-          {/* <div 
+          <div 
             className={`tab-option inline-block p-4 ${isTabActive(Tab.CAR_LOAN, active)}`}
             onClick={(e)=> setActive(Tab.CAR_LOAN)}
            >
               Car Loan
-          </div> */}
+          </div>
           {/* <Link href={"/luno"}
             className={`inline-block p-4 ${isTabActive(Tab.INCOME, active)}`}
             

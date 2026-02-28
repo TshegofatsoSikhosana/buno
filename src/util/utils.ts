@@ -43,6 +43,17 @@ export function getActualTotal(items: any[]){
     return amt
 }
 
+export function getAmountTotal(items: any[]){
+    let amt:number = 0;
+    if(items){
+        for (let index = 0; index < items.length; index++) {
+            const e = items[index];
+            amt += Number(e.amount);
+        }
+    }
+    return amt
+}
+
 export function getExpectedTotal(items: any[]){
     let amt:number = 0;
     if(items){

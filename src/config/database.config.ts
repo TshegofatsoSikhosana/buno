@@ -1,4 +1,4 @@
-import { ExpenseItem, GoalEntry, GoalItem, GroceryItem, IncomeItem, InvestmentItem } from '@/model/models';
+import { BusinessExpectedItem, BusinessItem, BusinessPaymentItem, ExpenseItem, GoalEntry, GoalItem, GroceryItem, IncomeItem, InvestmentItem } from '@/model/models';
 import Dexie, { Table } from 'dexie';
 // table inteface
 export interface Student {
@@ -14,16 +14,22 @@ export class DB extends Dexie {
   groceries!: Table<GroceryItem>;
   goals!: Table<GoalItem>;
   goalEntry!: Table<GoalEntry>;
+  businesses!: Table<BusinessItem>;
+  businessExpectedEntry!: Table<BusinessExpectedItem>;
+  businessPaymentEntry!: Table<BusinessPaymentItem>;
 
   constructor() {
     super('buno-db');
-    this.version(2).stores({
+    this.version(4).stores({
       expenses: '++id, description, expectedAmount,  actualAmount, category, month, dateCreated, year' , 
       groceries: '++id, description, expectedAmount,  actualAmount, discountAmount,store, month, dateCreated, year' , 
       investments: '++id, description, expectedAmount,  actualAmount, bank, month, dateCreated, year'  ,
       income: '++id, description, expectedAmount,  actualAmount, bank, month, dateCreated, year',
       goals: '++id, name, targetAmount,  dateCreated, targetYear',
-      goalEntry: '++id, goalId, amount, month, dateCreated, year'
+      goalEntry: '++id, goalId, amount, month, dateCreated, year',
+      businesses: '++id, name, dateCreated',
+      businessExpectedEntry: '++id, businessId, amount, dateCreated, month, year',
+      businessPaymentEntry: '++id, businessExpectedId, amount, dateCreated, month, year'
     });
   }
 }
