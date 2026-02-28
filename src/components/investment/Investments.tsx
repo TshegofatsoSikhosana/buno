@@ -5,11 +5,12 @@ import { useEffect, useState } from "react";
 import { InvestmentService } from "@/service/InvestmentService";
 import RowActions from "../shared/RowActions";
 import FilterSelector from "../shared/FilterSelector";
-import { filterItems } from "@/util/utils";
+import { filterItems, getPercentageSpent } from "@/util/utils";
 import Image from "next/image";
 import closeSvg from '../../assets/close.svg';
 import { useSelector } from "react-redux";
 import { budgetSelectors } from "@/store";
+import ProgressBar from "../shared/ProgressBar";
 
 interface InvestmentProps {
     setTotalInvestments: (v:number)=> void;
@@ -24,13 +25,15 @@ function Investments(props: InvestmentProps){
     const [selectedItem,setSelectedItem] = useState<number>(-1);
     const [filterType,setFilterType] = useState<number>(-1);
     const [filteredInvestments, setFilteredInvestments] = useState<InvestmentItem[]>()
+    const [percentageComplete, setPercentageComplete] = useState<number>(0);
 
     const is = new InvestmentService();
 
     useEffect(()=>{
         if(investments){
             const g = filterItems(filterType,investments)
-            setFilteredInvestments([...g])
+            setFilteredInvestments([...g]);
+            setPercentageComplete(getPercentageSpent(investments));
         }
     },[filterType, investments]);
 
@@ -71,11 +74,21 @@ function Investments(props: InvestmentProps){
     }
 
     return <div className="dashboard-container">
-                <button 
-                    className="p-2 mb-2 btn-add"
-                    onClick={(e)=> setOpenForm(true)}>
-                        Add Investment
-                </button>
+                <div className='w-11/12 grid-flow-row font-bold'> 
+                    <div className='w-6/12 p-2 inline-block' >
+                        <button
+                            className="p-2 mb-2 btn-add"
+                            onClick={(e)=> setOpenForm(true)}>
+                                Add Investment
+                        </button>
+                    </div>
+                    <div className='w-3/12 p-2 inline-block text-right' >
+                     Saved so far:
+                    </div>
+                    <div className='w-3/12 p-2 inline-block' >
+                        <ProgressBar percentageComplete={percentageComplete} />
+                    </div>
+                </div>
                 { openForm && (
                         <InvestmentItemForm
                             open={openForm}

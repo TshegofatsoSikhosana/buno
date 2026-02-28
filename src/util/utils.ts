@@ -54,6 +54,15 @@ export function getExpectedTotal(items: any[]){
     return amt
 }
 
+export function getPercentageSpent(items: any[]){
+    const expected = getExpectedTotal(items);
+    const actual = getActualTotal(items);
+    if(expected > 0){
+        return Number((actual / expected * 100).toFixed(2));
+    }
+    return 0;
+}
+
 export function getProjectedTotal(items: any[]){
     let expected: number= 0;
     if(items){

@@ -25,7 +25,7 @@ function Income(props: IncomeProps){
     const [selectedItem,setSelectedItem] = useState<number>(-1);
     const [filterType,setFilterType] = useState<number>(-1);
     const [filteredIncomes, setFilteredGroceries] = useState<IncomeItem[]>()
-
+    
     const is = new IncomeService();
 
     useEffect(()=>{

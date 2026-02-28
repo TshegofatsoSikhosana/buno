@@ -7,9 +7,11 @@ import closeSvg from '../../assets/close.svg'
 import Image from "next/image";
 import RowActions from "../shared/RowActions";
 import FilterSelector from "../shared/FilterSelector";
-import { filterItems } from "@/util/utils";
+import { filterItems, getActualTotal, getExpectedTotal, getPercentageSpent } from "@/util/utils";
 import { useSelector } from "react-redux";
 import { budgetSelectors } from "@/store";
+import ProgressBar from "../shared/ProgressBar";
+import { get } from "http";
 
 interface ExpensesProps {
     setTotalExpenses: (v:number)=> void;
@@ -25,15 +27,19 @@ function Expenses(props: ExpensesProps){
     const [selectedItem,setSelectedItem] = useState<number>(-1);
     const [filterType,setFilterType] = useState<number>(-1);
     const [selectedExpenseCategory,setSelectExpenseCatergory] = useState<ExpenseCategory | undefined>()
-    const [filteredExpenses, setFilteredExpenses] = useState<ExpenseItem[]>()
+    const [filteredExpenses, setFilteredExpenses] = useState<ExpenseItem[]>();
+    const [percentageComplete, setPercentageComplete] = useState<number>(0);
     const es = new ExpenseService();
 
 
     useEffect(()=>{
         if(expenses){
                 const e = filterItems(filterType, expenses);
-                setFilteredExpenses([...e])
-        }
+                setFilteredExpenses([...e]);
+                props.setTotalExpenses(es.getRemainingExpenses(expenses));
+                setPercentageComplete(getPercentageSpent(expenses));
+       
+            }
     },[filterType, expenses]);
 
     useEffect(()=>{
@@ -50,11 +56,11 @@ function Expenses(props: ExpensesProps){
         });
     }
 
-    function getActualTotal(type: ExpenseCategory){
+    function getActualFilteredTotal(type: ExpenseCategory){
         return filteredExpenses ? es.getActualTotal(type,filteredExpenses) : 0
     }
     
-    function getExpectedTotal(type: ExpenseCategory){
+    function getExpectedFilteredTotal(type: ExpenseCategory){
         return filteredExpenses ? es.getExpectedTotal(type,filteredExpenses) : 0
     }
 
@@ -89,11 +95,21 @@ function Expenses(props: ExpensesProps){
     }
 
     return <div className="dashboard-container">
-                <button
-                    className="p-2 mb-2 btn-add"
-                    onClick={(e)=> setOpenForm(true)}>
-                        Add Expense
-                </button>
+                <div className='w-11/12 grid-flow-row font-bold'> 
+                    <div className='w-6/12 p-2 inline-block' >
+                        <button
+                            className="p-2 mb-2 btn-add"
+                            onClick={(e)=> setOpenForm(true)}>
+                                Add Expense
+                        </button>
+                    </div>
+                    <div className='w-3/12 p-2 inline-block text-right' >
+                     Spent so far:
+                    </div>
+                    <div className='w-3/12 p-2 inline-block' >
+                        <ProgressBar percentageComplete={percentageComplete} />
+                    </div>
+                </div>
             
                 { openForm &&
                     <ExpenseItemForm 
@@ -119,19 +135,19 @@ function Expenses(props: ExpensesProps){
                         <FilterSelector filterType={filterType} setFilterType={setFilterType}/>
                     </div>
                     <div className='w-3/12 p-2 inline-block text-start font-bold' style={{border: '1px solid rgb(70, 70, 80,180)',color:'rgb(30,150,222,255)'}} >
-                        R{getExpectedTotal(ExpenseCategory.LIVING) + getExpectedTotal(ExpenseCategory.PERSONAL) + getExpectedTotal(ExpenseCategory.EXCEPTION)}
+                        R{getExpectedFilteredTotal(ExpenseCategory.LIVING) + getExpectedFilteredTotal(ExpenseCategory.PERSONAL) + getExpectedFilteredTotal(ExpenseCategory.EXCEPTION)}
                     </div>
                     <div className='w-3/12 p-2 inline-block text-start font-bold' style={{border: '1px solid rgb(70, 70, 80,180)',color:'rgb(30,150,222,255)'}} >
-                        R{getActualTotal(ExpenseCategory.LIVING) + getActualTotal(ExpenseCategory.PERSONAL) + getActualTotal(ExpenseCategory.EXCEPTION)}
+                        R{getActualFilteredTotal(ExpenseCategory.LIVING) + getActualFilteredTotal(ExpenseCategory.PERSONAL) + getActualFilteredTotal(ExpenseCategory.EXCEPTION)}
                     </div>
                 </div>
                 <div className='w-11/12 grid-flow-row  mt-5'  style={{border: '1px solid rgb(70, 70, 80,180)'}}>
                     <div className='w-6/12 p-2 inline-block font-bold' >Living Expenses</div>
                     <div className='w-3/12 p-2 inline-block text-start' style={{borderLeft: '2px solid rgb(70, 70, 80,180)',color:'rgb(30,150,222,255)'}} >
-                        R{getExpectedTotal(ExpenseCategory.LIVING)}
+                        R{getExpectedFilteredTotal(ExpenseCategory.LIVING)}
                     </div>
                     <div className='w-3/12 p-2 inline-block text-start' style={{borderLeft: '2px solid rgb(70, 70, 80,180)',color:'rgb(30,150,222,255)'}} >
-                        R{getActualTotal(ExpenseCategory.LIVING)}
+                        R{getActualFilteredTotal(ExpenseCategory.LIVING)}
                     </div>
                 </div>
                 {filteredExpenses?.filter((e)=> e.category === ExpenseCategory.LIVING).map((expense, index)=>{
@@ -162,10 +178,10 @@ function Expenses(props: ExpensesProps){
                  <div className='w-11/12 grid-flow-row  mt-5' style={{border: '1px solid rgb(70, 70, 80,180)'}}>
                     <div className='w-6/12 p-2 inline-block font-bold' >Exception Expenses</div>
                     <div className='w-3/12 p-2 inline-block text-start' style={{borderLeft: '2px solid rgb(70, 70, 80,180)',color:'rgb(30,150,222,255)'}} >
-                        R{getExpectedTotal(ExpenseCategory.EXCEPTION)}
+                        R{getExpectedFilteredTotal(ExpenseCategory.EXCEPTION)}
                     </div>
                     <div className='w-3/12 p-2 inline-block text-start' style={{borderLeft: '2px solid rgb(70, 70, 80,180)',color:'rgb(30,150,222,255)'}} >
-                        R{getActualTotal(ExpenseCategory.EXCEPTION)}
+                        R{getActualFilteredTotal(ExpenseCategory.EXCEPTION)}
                     </div>
                 </div>
                 {filteredExpenses?.filter((e)=> e.category === ExpenseCategory.EXCEPTION).map((expense, index)=>{
@@ -188,10 +204,10 @@ function Expenses(props: ExpensesProps){
                 <div className='w-11/12 grid-flow-row  mt-5' style={{border: '1px solid rgb(70, 70, 80,180)'}}>
                     <div className='w-6/12 p-2 inline-block font-bold' >Personal Expenses</div>
                     <div className='w-3/12 p-2 inline-block text-start' style={{borderLeft: '2px solid rgb(70, 70, 80,180)',color:'rgb(30,150,222,255)'}} >
-                        R{getExpectedTotal(ExpenseCategory.PERSONAL)}
+                        R{getExpectedFilteredTotal(ExpenseCategory.PERSONAL)}
                     </div>
                     <div className='w-3/12 p-2 inline-block text-start' style={{borderLeft: '2px solid rgb(70, 70, 80,180)',color:'rgb(30,150,222,255)'}} >
-                        R{getActualTotal(ExpenseCategory.PERSONAL)}
+                        R{getActualFilteredTotal(ExpenseCategory.PERSONAL)}
                     </div>
                 </div>
                 {filteredExpenses?.filter((e)=> e.category === ExpenseCategory.PERSONAL).map((expense, index)=>{

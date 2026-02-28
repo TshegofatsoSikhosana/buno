@@ -5,6 +5,7 @@ import detailsSvg from "../../assets/details-icon.svg";
 import { useState } from "react";
 import GoalItemDetails from "./modals/GoalItemDetails";
 import GoalItemForm from "./modals/GoalItemEditForm";
+import ProgressBar from "../shared/ProgressBar";
 
 interface GoalListItemProps {
   goal: GoalItem;
@@ -23,6 +24,11 @@ function GoalListItem({ goal, index, totalContributions, refresh }: GoalListItem
         setOpenDetails(v);
     }
 
+    function getPercentageComplete(){ 
+        return goal.targetAmount > 0 ? Number((totalContributions / goal.targetAmount) * 100).toFixed(2) : 0;
+    }
+    
+
     return (
     <>
         <div
@@ -36,32 +42,36 @@ function GoalListItem({ goal, index, totalContributions, refresh }: GoalListItem
         }}
         key={index}
         >
-        <div className="w-8/12 inline-block">
-            <div className="font-bold">{goal.name}</div>
-            <div>Target: R{goal.targetAmount}</div>
-            <div>Contributions: R{totalContributions}</div>
+            <div className="w-8/12 inline-block">
+                <div className="font-bold">{goal.name}</div>
+                <div>Target: R{goal.targetAmount}</div>
+                <div>Contributions: R{totalContributions}</div>
+            </div>
+            <div className="w-4/12 inline-block text-end p-2" style={{color:'green'}}>
+                <button onClick={(e) => setOpenDetails(true)} className="mr-2">
+                    <Image
+                        alt="details"
+                        src={detailsSvg}
+                        height={30}
+                        width={30}
+                        className="btn-edit"
+                        />
+                </button>
+                <button onClick={(e) => setOpenEditForm(true)}>
+                    <Image
+                        alt="edit"
+                        src={editSvg}
+                        height={30}
+                        width={30}
+                        className="btn-edit"
+                        />
+                </button>
+            </div>
+            <div className='w-100 grid-flow-row font-bold'> 
+                <ProgressBar percentageComplete={getPercentageComplete()} textColor="white" borderColor="rgb(30,125,180,255)" />
+            </div>
         </div>
-        <div className="w-4/12 inline-block text-end p-2" style={{color:'green'}}>
-             <button onClick={(e) => setOpenDetails(true)} className="mr-2">
-                <Image
-                    alt="details"
-                    src={detailsSvg}
-                    height={30}
-                    width={30}
-                    className="btn-edit"
-                    />
-            </button>
-            <button onClick={(e) => setOpenEditForm(true)}>
-                <Image
-                    alt="edit"
-                    src={editSvg}
-                    height={30}
-                    width={30}
-                    className="btn-edit"
-                    />
-            </button>
-        </div>
-        </div>
+       
         {openEditForm && (
             <GoalItemForm
                 open={openEditForm}

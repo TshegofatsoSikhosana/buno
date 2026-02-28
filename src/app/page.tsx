@@ -6,6 +6,7 @@ import Income from '@/components/income/Income';
 import Investments from '@/components/investment/Investments';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
+import calendarSettingsSvg from '../assets/calendar-settings.svg'
 import settingsSvg from '../assets/settings.svg'
 import shareSvg from '../assets/share.svg'
 import cloneSvg from '../assets/clone.svg'
@@ -24,6 +25,7 @@ import Dashboard from '@/components/dashboard/Dashboard';
 import { Tab, isTabActive } from '@/model/shared';
 import ShareModal from '@/components/share/ShareModal';
 import Goals from '@/components/goals/Goals';
+import CarLoan from '@/components/car-loan/CarLoan';
 
 
 
@@ -56,8 +58,8 @@ export default function Home() {
         return <Dashboard />
       case Tab.GOALS:
         return <Goals />
-      // case Tab.CAR_LOAN:
-      //   return <CarLoan />
+      case Tab.CAR_LOAN:
+        return <CarLoan setTotalExpenses={setTotalExpenses} />
       default:
         return <Expenses setTotalExpenses={setTotalExpenses} />
     }
@@ -238,6 +240,12 @@ export default function Home() {
            onClick={(e)=> setActive(Tab.GOALS)}
            > 
             <div className='inline-block'> Goals 🎯</div>
+          </div>
+          <div 
+            className={`tab-option inline-block p-4 ${isTabActive(Tab.CAR_LOAN, active)}`}
+            onClick={(e)=> setActive(Tab.CAR_LOAN)}
+           >
+              Car Loan
           </div>
           {/* <Link href={"/luno"}
             className={`inline-block p-4 ${isTabActive(Tab.INCOME, active)}`}

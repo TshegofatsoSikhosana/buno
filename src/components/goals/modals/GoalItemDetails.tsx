@@ -6,6 +6,7 @@ import FormModal from "../../shared/FormModal";
 import { GoalsService } from "@/service/GoalsService";
 import RowActions from "../../shared/RowActions";
 import { getMonth, months } from "@/util/utils";
+import ProgressBar from "@/components/shared/ProgressBar";
 
 interface GoalItemDetailsProps {
     open: boolean;
@@ -143,21 +144,9 @@ function GoalItemDetails(props: GoalItemDetailsProps){
                                         <h1>Contributed</h1>
                                         <div>R{entriesTotal}</div>
                                 </div>
-                                 <div className="w-3/12 inline-block m">
-                                        <div className="w-100 font-bold goal-progress-bar-container">
-                                            <div
-                                                className="inline-block mr-5 goal-progress"
-                                                style={{
-                                                border: "2px solid rgba(0, 128, 0, 0.75)",
-                                                backgroundColor: "rgba(0, 128, 0, 0.75)",
-                                                color: "white",
-                                                width: `${percentageComplete}%`,
-                                                }}
-                                            >
-                                                <div className="pl-2">{percentageComplete}%</div>
-                                            </div>
-                                        </div>
-                                    </div>
+                                <div className="w-3/12 inline-block m">
+                                    <ProgressBar percentageComplete={percentageComplete}/>
+                                </div>
                                 <div className="w-100 mt-5 mb-2">
                                     {!openForm && <button
                                         className="p-2 mb-2 btn-add"
