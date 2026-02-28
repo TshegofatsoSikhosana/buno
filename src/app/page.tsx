@@ -58,8 +58,8 @@ export default function Home() {
         return <Dashboard />
       case Tab.GOALS:
         return <Goals />
-      case Tab.CAR_LOAN:
-        return <CarLoan setTotalExpenses={setTotalExpenses} />
+      // case Tab.CAR_LOAN:
+      //   return <CarLoan setTotalExpenses={setTotalExpenses} />
       default:
         return <Expenses setTotalExpenses={setTotalExpenses} />
     }
