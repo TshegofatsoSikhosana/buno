@@ -38,3 +38,5 @@ next-env.d.ts
 
 #To ignore luno code
 **/luno/
+
+**/rag/**

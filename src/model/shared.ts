@@ -5,7 +5,10 @@ export enum Tab{
     GROCERIES,
     DASHBOARD,
     GOALS,
-    CAR_LOAN
+    CAR_LOAN,
+    BUSINESS_ENTRIES,
+    BUSINESS_DASHBOARD,
+    BUSINESS_EXPENSE
 }
 
 export function isTabActive(type: Tab,active: Tab){

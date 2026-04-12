@@ -116,6 +116,10 @@ export function filterItems(filterType: FilterType,data:any[]){
     }
 }
 
+export function filterByMonthAndYear(items: any[], year: number, month:number){
+    return items.filter((item)=> item.year === year && item.month === month);
+}
+
 export enum FilterType{
     STILL_NEED_TO_PAY,
     UNEXPECTED,

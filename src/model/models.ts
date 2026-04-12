@@ -22,34 +22,34 @@ export enum Store{
     OTHER
 }
 
-export interface BusinessPaymentItem{
+export interface BusinessExpenseItem{
     id?: number
     dateCreated?: string,
     description: string,
     expectedAmount: number,
     amount: number,
-    businessExpectedId: number,
-    month?: string,
+    businessId: number,
+    month?: number,
     year?: number,
 }
 
-export interface BusinessExpectedItem{
+export interface BusinessIncomeItem{
     id?: number
-    description: string,
     dateCreated?: string,
+    description: string,
+    expectedAmount: number,
     amount: number,
     businessId: number,
-    month?: string,
+    month?: number,
     year?: number,
-    payments?: BusinessPaymentItem[];
 }
-
 
 export interface BusinessItem{
     id?: number;
     name: string;
     dateCreated: string;
-    expectedItems?: BusinessExpectedItem[];
+    expenseItems?: BusinessExpenseItem[];
+    incomeItems?: BusinessIncomeItem[];
 }
 
 export enum ExpenseCategory{

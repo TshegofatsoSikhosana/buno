@@ -1,5 +1,5 @@
 import { db } from "@/config/database.config";
-import { BusinessExpectedItem, BusinessItem, BusinessPaymentItem, GoalEntry, GoalItem } from "@/model/models";
+import { BusinessItem, BusinessIncomeItem, GoalEntry, GoalItem, BusinessExpenseItem } from "@/model/models";
 import { getRemainingTotal } from "@/util/utils";
 import { get } from "http";
 
@@ -27,26 +27,26 @@ export class BusinessService {
   //   return amt;
   // }
 
-  getEntriesTotal(entries: BusinessExpectedItem[]) {
+  getEntriesTotal(entries: BusinessItem[]) {
     let amt: number = 0;
 
     for (let j = 0; j < entries.length; j++) {
       const entry = entries[j];
-      if(entry && entry.amount){
-        amt += Number(entry.amount);
-      }
+      // if(entry && entry.amount){
+      //   amt += Number(entry.amount);
+      // }
     }
     return amt;
   }
 
-  getPaymentEntriesTotal(entries: BusinessExpectedItem[]) {
+  getPaymentEntriesTotal(entries: BusinessItem[]) {
     let amt: number = 0;
 
     for (let j = 0; j < entries.length; j++) {
       const entry = entries[j];
-      if(entry && entry.payments){
-        for (let i = 0; i < entry.payments?.length; i++) {
-          const payment = entry.payments[i];
+      if(entry && entry.incomeItems){
+        for (let i = 0; i < entry.incomeItems?.length; i++) {
+          const payment = entry.incomeItems[i];
           amt += Number(payment.amount);
         }
       }
@@ -64,76 +64,47 @@ export class BusinessService {
     return amt;
   }
 
-  getTotalContributionPercentage(goals: GoalItem[]) {
-    if (!goals || goals.length === 0) {
-      return 0;
-    }
-
-    const expectedTotal = this.getExpectedTotal(goals);
-    const actualTotal = this.getContributionsTotal(goals);
-
-    if (expectedTotal === 0 || actualTotal === 0) {
-      return 0;
-    }
-    const percentage = (actualTotal / expectedTotal) * 100;
-    return  Number(percentage.toFixed(2));
-  }
-
    async getBusinesses(){
     const businesses =  await db.businesses.toArray();
     for (let index = 0; index < businesses.length; index++) {
       const business = businesses[index];
-      const expectedEntries = await this.getExpectedEntriesByBusinessId(business.id as number).toArray();
-      business.expectedItems = expectedEntries;
+      const expenses = await this.getExpenseEntriesByBusinessId(business.id as number).toArray();
+      const incomes = await this.getIncomeEntriesByBusinessId(business.id as number).toArray();
+      business.expenseItems = expenses;
+      business.incomeItems = incomes;
     }
     return businesses;
   }
 
   async getBusinessEntries(id: number){
-    const expectedEntries = await this.getExpectedEntriesByBusinessId(id).toArray();
+    const expectedEntries = await this.getBusinesses()
     for (let index = 0; index < expectedEntries.length; index++) {
       const expectedEntry = expectedEntries[index];
-      const paymentEntries = await this.getPaymentEntriesByBusinessExpectedId(expectedEntry.id as number).toArray();
-      expectedEntry.payments = paymentEntries;
+      const paymentEntries = await this.getIncomeEntriesByBusinessId(expectedEntry.id as number).toArray();
+      // expectedEntry.payments = paymentEntries;
     }
     return expectedEntries;
   }
 
-  getExpectedEntriesByBusinessId(goalId: number) {
-    return db.businessExpectedEntry.where({businessId : goalId} );
+  getIncomeEntriesByBusinessId(businessId: number) {
+    return db.businessIncomeEntry.where({businessId : businessId} );
   }
 
-  getPaymentEntriesByBusinessExpectedId(goalId: number) {
-    return db.businessPaymentEntry.where({businessExpectedId : goalId} );
+  getExpenseEntriesByBusinessId(businessId: number) {
+    return db.businessExpenseEntry.where({businessId : businessId} );
   }
 
-  getEntriesTotalByGoalId(goalId?: number) {
-    
-    if(!goalId){
-        return 0;
-    }
-    
-    let total = 0
-    
-    this.getEntriesByGoalId(goalId).toArray().then((entries) => {
-        entries.forEach((entry)=>{
-            total += Number(entry.amount);
-        })
-    })
-
-    return total;
-  }
 
   addNew(goal: BusinessItem) {
     db.businesses.add(goal);
   }
 
-  addNewExpectedEntry(entry: BusinessExpectedItem) {
-    db.businessExpectedEntry.add(entry);
+  addNewPaymentEntry(entry: BusinessIncomeItem) {
+    db.businessIncomeEntry.add(entry);
   }
 
-  addNewPaymentEntry(entry: BusinessPaymentItem) {
-    db.businessPaymentEntry.add(entry);
+   addNewExpenseEntry(entry: BusinessExpenseItem) {
+    db.businessExpenseEntry.add(entry);
   }
 
 
@@ -146,8 +117,12 @@ export class BusinessService {
   }
 
 
-  updatePaymentEntry(entry: BusinessPaymentItem) {
-    db.businessPaymentEntry.put({ ...entry });
+  updatePaymentEntry(entry: BusinessIncomeItem) {
+    db.businessIncomeEntry.put({ ...entry });
+  }
+
+  updateExpenseEntry(entry: BusinessExpenseItem) {
+    db.businessExpenseEntry.put({ ...entry });
   }
 
   delete(id: number) {

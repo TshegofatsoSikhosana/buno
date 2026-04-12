@@ -21,92 +21,97 @@ body {
   background-color: rgb(18, 21, 33);
   font-size: 21px;
 }
-.dashboard-container{
-  color:white !important;
+
+.dashboard-container {
+  color: white !important;
   background-color: rgb(22, 26, 43);
   border-radius: 13px;
   padding: 1%;
 }
-.active-section{
-  border-bottom: 2px solid rgb(65, 194, 123) ;
+
+.active-section {
+  border-bottom: 2px solid rgb(65, 194, 123);
 }
 
-.table-row{
+.table-row {
   border: 2px solid white;
 }
 
 
-.tab-option:hover{
+.tab-option:hover {
   cursor: pointer;
 }
 
-.btn-add{
+.btn-add {
   border-radius: 8px;
-  border: 2px solid rgb(70, 70, 80,180);
+  border: 2px solid rgb(70, 70, 80, 180);
 }
 
-.btn-add:hover{
+.btn-add:hover {
   background-color: rgba(30, 148, 222, 0.671);
   cursor: pointer;
 }
 
-.hover-blue-text:hover{
+.hover-blue-text:hover {
   background-color: rgba(120, 120, 120, 0.671);
   color: rgb(0, 16, 82);
   cursor: pointer;
 }
 
-.btn-close:hover{
+.btn-close:hover {
   color: rgba(222, 30, 40, 0.671);
   cursor: pointer;
 }
 
 
-.btn-minus, .btn-plus{
+.btn-minus,
+.btn-plus {
   border-radius: 10px;
   text-align: center;
-  width:30px;
+  width: 30px;
 }
 
-.btn-minus:hover, .btn-plus:hover{
+.btn-minus:hover,
+.btn-plus:hover {
   cursor: pointer;
 }
 
-.btn-minus{
+.btn-minus {
   background-color: rgba(30, 148, 222, 0.671);
 }
 
-.btn-plus{
+.btn-plus {
   background-color: green;
 }
 
 
-.btn-add-item, .btn-remove-item{
+.btn-add-item,
+.btn-remove-item {
   background-color: rgb(19, 21, 32);
   border: 2px solid grey
 }
 
-.btn-add-item:hover{
+.btn-add-item:hover {
   background-color: rgb(19, 88, 51);
 }
 
-.btn-remove-item:hover{
+.btn-remove-item:hover {
   background-color: rgb(109, 14, 14);
 }
 
-.row-text-block:hover{
+.row-text-block:hover {
   background-color: rgb(19, 88, 51);
   margin-bottom: 7px;
 }
 
-.row-text-block > span:hover{
+.row-text-block>span:hover {
   text-decoration: underline;
 }
 
 .calendar {
   width: 321px;
   margin: 0 auto;
-  border: 1px solid  rgb(30,150,222,80);
+  border: 1px solid rgb(30, 150, 222, 80);
   border-radius: 10px;
   font-family: sans-serif;
 }
@@ -186,12 +191,12 @@ body {
   left: 0;
   width: 100vw;
   height: 100vh;
-  margin:auto;
+  margin: auto;
   display: flex;
   justify-content: center;
   align-items: center;
   background-color: rgba(0, 0, 0, 0.9);
-  color:white;
+  color: white;
 }
 
 .modal {
@@ -200,9 +205,9 @@ body {
   border-radius: 5px;
   box-shadow: 0 10px 20px rgba(241, 241, 247, 0.25);
   width: 60%;
-  max-height:80%;
+  max-height: 80%;
   background-color: rgb(0, 43, 70);
-  color:white;
+  color: white;
   overflow-y: scroll;
 }
 
@@ -212,24 +217,24 @@ body {
   left: 0;
   width: 100vw;
   height: 100vh;
-  background-color: rgba(0, 0, 0, 0.7); 
-  backdrop-filter: blur(5px); 
-  pointer-events: none; 
+  background-color: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(5px);
+  pointer-events: none;
   /* z-index: -1000; */
 }
 
-.goal-progress-bar-container{
-  border: 3px solid rgba(222,222,222,0.5);
+.goal-progress-bar-container {
+  border: 3px solid rgba(222, 222, 222, 0.5);
   border-radius: 10px;
 }
 
-.goal-progrees{
-  border-top-right-radius:5px;
-  border-bottom-left-radius:5px;
+.goal-progrees {
+  border-top-right-radius: 5px;
+  border-bottom-left-radius: 5px;
 }
 
-.total-card{
-  border: 2px solid rgba(222,222,222,0.5); 
-  padding:1rem;
-  border-radius: 10px 
+.total-card {
+  border: 2px solid rgba(222, 222, 222, 0.5);
+  padding: 1rem;
+  border-radius: 10px
 }
