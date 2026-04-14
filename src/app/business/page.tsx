@@ -77,7 +77,7 @@ function Page() {
     return (
         <main className=" p-24 w-100">
             <div className='w-11/12'>
-                <h1 className="inline-block w-11/12 mb-3">Welcome back</h1>
+                <h1 className="w-100 mb-3">Welcome back</h1>
                 <div className="p-2 inline-block w-8/12" style={{backgroundColor: 'rgba(26, 32, 61, 1)', borderTopLeftRadius: '10px',  borderTopRightRadius: '10px'}}>
                     {businesses.map((business, index) => {
                         return <div key={index}
@@ -91,7 +91,7 @@ function Page() {
                 <div className="inline-block w-4/12">
                     <div className="w-100"><AddBusinessForm refresh={getBusinesses} /></div>
                 </div>
-                <div className="dashboard-container">
+                <div className="dashboard-container" style={{width:'100%'}}>
                     <div className="w-100 p-5">
                         <div className='content border-white w-100 h-100 p-4'>
                             <div className="p-2 w-100 ">

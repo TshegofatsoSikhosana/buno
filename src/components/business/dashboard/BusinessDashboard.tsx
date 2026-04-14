@@ -18,8 +18,9 @@ import BusinessBarChart from './BusinessBarChart';
 import DatePicker from '@/components/dashboard/bar-chart-panel/DatePicker';
 import DoughnutChart from '@/components/dashboard/doughnuts/DoughnutChart';
 import LineBarPanel from '@/components/dashboard/line-chart-panel/LineChartPanel';
-import GroceriesBarChart from './GroceriesBarChart';
+import BusinessIncomeBarChart from './BusinessIncomeBarChart';
 import { BusinessItem } from '@/model/models';
+import BusinessExpenseBarChart from './BusinessExpenseBarChart';
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -38,30 +39,31 @@ function BusinessDashboard({selectedBusiness} : {selectedBusiness : BusinessItem
   const month = useSelector(budgetSelectors.getCurrentMonth);
   const [entriesTotal, setEntriesTotal] = useState<number>(0);
   const [paymentsTotal, setPaymentsTotal] = useState<number>(0);
-  const [currentRemainder, setCurrentRemainder] = useState<number>(0);
+  const [avgIncome, setAvgIncome] = useState<number>(0);
 
 
   useEffect(() => {
 
       if (selectedBusiness) {
-          let totalExpected = 0;
+          let totalExpense = 0;
           selectedBusiness.expenseItems?.map((item) => {
-              totalExpected += Number(item.expectedAmount);
+              totalExpense += Number(item.expectedAmount);
           })
+
           let totalIncome = 0;
           selectedBusiness.incomeItems?.map((item) => {
               totalIncome += Number(item.amount);
           })
-          setEntriesTotal(Math.round(totalExpected));
+          setEntriesTotal(Math.round(totalExpense));
           setPaymentsTotal(Math.round(totalIncome));
+          setAvgIncome(Math.round(totalIncome / (selectedBusiness.incomeItems?.filter((item) => Number(item.amount) !== 0).length || 1)));
 
-          totalExpected = 0;
-          totalIncome = 0;
-          filterByMonthAndYear(selectedBusiness.incomeItems as [], year, month).map((item) => {
-              totalExpected += Number(item.expectedAmount);
-              totalIncome += Number(item.amount);
-          })
-          setCurrentRemainder(Math.round(totalExpected - totalIncome));
+          // totalExpected = 0;
+          // totalIncome = 0;
+          // filterByMonthAndYear(selectedBusiness.incomeItems as [], year, month).map((item) => {
+          //     totalExpected += Number(item.expectedAmount);
+          //     totalIncome += Number(item.amount);
+          // })
       }
   }, [selectedBusiness, year, month]);
 
@@ -72,26 +74,28 @@ function BusinessDashboard({selectedBusiness} : {selectedBusiness : BusinessItem
         <h1>Income Statistics:</h1>
         <div> </div>
       </div>
-      <div className='inline-block mr-5 w-2/12 total-card-blue' >
-         <h1>Current Remainder</h1>
-         <div>R{currentRemainder}</div>
+      <div className='inline-block mr-5 w-2/12 total-card' >
+         <h1>Average Income</h1>
+         <div>R{avgIncome}</div>
       </div>
       <div className='inline-block mr-5 w-2/12 total-card'>
-          <h1>Total Expected</h1>
+          <h1>Total Expense Costs</h1>
           <div>R{entriesTotal}</div>  
       </div>
 
       <div className='inline-block mr-5  w-2/12 total-card'>
-          <h1>Total Received</h1>
+          <h1>Total Received Income</h1>
           <div>R{paymentsTotal}</div>
       </div>
 
-      <div className='inline-block mr-5 w-2/12 total-card'>
+      <div className='inline-block mr-5 w-2/12 total-card-blue'>
           <h1>Total Remainder</h1>
           <div>R{Math.round(entriesTotal - paymentsTotal )}</div>
       </div>
       </div>
-    <GroceriesBarChart />
+    <div className='inline-block w-6/12 p-2'><BusinessExpenseBarChart /></div>
+    <div className='inline-block w-6/12 p-2'><BusinessIncomeBarChart /></div>
+
   </div >);
 }
 

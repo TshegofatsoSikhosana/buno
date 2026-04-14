@@ -4,7 +4,10 @@ import FormModal from "../shared/FormModal";
 import { useState } from "react";
 import { BusinessItem } from "@/model/models";
 import Image from "next/image";
-import closeSvg from '../../assets/close.svg'
+import Icon from "../shared/Icon";
+import shareSvg from '../../assets/share.svg'
+import ShareModal from "../share/ShareModal";
+import BusinessShareModal from "../share/business/BusinessShareModal";
 
 
 
@@ -14,6 +17,7 @@ export default function AddBusinessForm({ refresh }: { refresh: () => void }) {
     const [open, setOpen] = useState(false);
     const [selectedItem, setSelectedItem] = useState<BusinessItem>({ name: '', dateCreated: '' });
     const [hasErrors, setHasErrors] = useState<boolean>(true);
+    const [openShareModal, setOpenShareModal] = useState(false);
 
 
     function updateItem(e: any, target: string) {
@@ -40,7 +44,11 @@ export default function AddBusinessForm({ refresh }: { refresh: () => void }) {
     return <>
         <button className="p-2 mb-2 btn-add ml-6 inline-block" onClick={() => setOpen(true)}>
             Add a business</button>
+        <div className="inline-block p-2 ml-4">
+             Export <Image alt="edit" src={shareSvg} height={50} width={50} className="inline-block p-1 btn-add" onClick={() => setOpenShareModal(true)}/>
+        </div>
         {/* <Image alt="edit" src={closeSvg} height={50} width={50} className="inline-block ml-2 btn-add"/> */}
+        {openShareModal && <BusinessShareModal open={openShareModal} setOpen={setOpenShareModal} />}
 
         <FormModal
             open={open}

@@ -199,7 +199,7 @@ export default function Home() {
         {/* <Calendar/> */}
         {/* </div> */}
       </div>
-      <div className='w-100'>
+      <div className="p-2 inline-block w-8/12" style={{backgroundColor: 'rgba(26, 32, 61, 1)', borderTopLeftRadius: '10px',  borderTopRightRadius: '10px'}}>
         <div
           className={`tab-option inline-block p-4 ${isTabActive(Tab.GROCERIES, active)}`}
           onClick={(e) => setActive(Tab.GROCERIES)}
@@ -244,7 +244,7 @@ export default function Home() {
               Luno Dashboard
           </Link> */}
       </div>
-      <div className='content border-white w-100 h-100 p-4'>
+      <div className='border-white w-100 h-100'>
         {renderContent()}
       </div>
     </main>

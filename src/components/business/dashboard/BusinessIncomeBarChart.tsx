@@ -10,36 +10,27 @@ import { getItemsInOrder, months } from '@/util/utils';
 import HorizontalBarChart from '@/components/shared/charts/HorizontalBarChart';
 
 
-const GroceriesBarChart = () => {
-  const [groceries, setGroceries] = useState<GroceryItem[]>([]);
+function BusinessIncomeBarChart() {
   const year = useSelector(budgetSelectors.getCurrentYear);
   const month = useSelector(budgetSelectors.getCurrentMonth);
   const [isTotalsView, setIsTotalsView] = useState(false);
   const [filterType, setFilterType] = useState<Store | undefined>();
-  const [expense, setExpense] = useState<any>([]);
+  const [incomes, setIncomes] = useState<any>([]);
 
 
   useEffect(() => {
-    getGroceries();
-    getGroceriesTotals();
+    getIncomeTotals();
   }, [year, month]);
 
 
   useEffect(() => {
-    console.log('expenses', expense);
+    console.log('expenses', incomes);
 
-  }, [expense])
-  function getGroceries() {
-    db.groceries.where({ year: year })
-      .and((i) => Number(i.month) == month)
-      .toArray()
-      .then((ex) => {
-        setGroceries(ex.sort((a, b) => b.actualAmount - a.actualAmount));
-      });
-  }
+  }, [incomes])
 
 
-  function getGroceriesTotals() {
+
+  function getIncomeTotals() {
     db.businessIncomeEntry
       .toArray()
       .then((ex) => {
@@ -51,7 +42,7 @@ const GroceriesBarChart = () => {
           }
         })
         const monthsLabels = Array.from(monthSet)
-        setExpense({ labels: monthsLabels, data: getTotals(monthsLabels, items) })
+        setIncomes({ labels: monthsLabels, data: getTotals(monthsLabels, items) })
       });
   }
 
@@ -76,12 +67,12 @@ const GroceriesBarChart = () => {
         <div className="inline w-4/12 p-2">
         </div>
       </div>
-      {expense &&
+      {incomes &&
         <>
           {!isTotalsView ?
             <HorizontalBarChart
-              labels={expense.labels}
-              data={expense.data}
+              labels={incomes.labels}
+              data={incomes.data}
               title="Business Incomes"
               horizontal={false} />
             : <div className='text-white inline-block' style={{ width: '100%' }}>
@@ -93,4 +84,4 @@ const GroceriesBarChart = () => {
   );
 }
 
-export default GroceriesBarChart;
+export default BusinessIncomeBarChart;
