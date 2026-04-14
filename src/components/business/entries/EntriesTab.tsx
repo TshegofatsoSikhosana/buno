@@ -9,6 +9,7 @@ import BusinessExpense from "./BusinessExpense";
 import { useSelector } from "react-redux";
 import { budgetActions, budgetSelectors } from "@/store";
 import { useAppDispatch } from "@/store/hooks";
+import BusinessDashboard from "../dashboard/BusinessDashboard";
 
 
 interface EntriesProps {
@@ -16,7 +17,7 @@ interface EntriesProps {
     refresh: () => void
 }
 
-export default function Entries({ selectedBusiness, refresh }: EntriesProps) {
+export default function EntriesTab({ selectedBusiness, refresh }: EntriesProps) {
 
     const businessService = new BusinessService();
     const year = useSelector(budgetSelectors.getCurrentYear);
@@ -77,7 +78,7 @@ export default function Entries({ selectedBusiness, refresh }: EntriesProps) {
                             borderTop: '2px solid white',
                             color: 'white',
                         }}
-                            className="mt-2 p-2 w-11/12">
+                            className="mt-2 p-2">
                             <button className="inline-block w-2/12" onClick={() => handleEntryChange(-1)} style={{ cursor: 'pointer' }}>{'<'}</button>
                             <div className="inline-block w-8/12 text-center">{getMonth(month)} {year}</div>
                             <button className="inline-block w-2/12" onClick={() => handleEntryChange(1)} style={{ cursor: 'pointer' }}>{'>'}</button>
@@ -99,9 +100,8 @@ export default function Entries({ selectedBusiness, refresh }: EntriesProps) {
                         </div>
 
                         {selectedBusiness && renderContent()}
-                    </div>
-
                 </div>
+            </div>
             </>
             :
             // <BusinessItemEditForm

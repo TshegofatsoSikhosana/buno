@@ -3,6 +3,8 @@ import { BusinessService } from "@/service/BusinessService";
 import FormModal from "../shared/FormModal";
 import { useState } from "react";
 import { BusinessItem } from "@/model/models";
+import Image from "next/image";
+import closeSvg from '../../assets/close.svg'
 
 
 
@@ -36,14 +38,17 @@ export default function AddBusinessForm({ refresh }: { refresh: () => void }) {
 
 
     return <>
-        <button className="inline-block p-2 mb-2 btn-add" onClick={() => setOpen(true)}>Add business</button>
+        <button className="p-2 mb-2 btn-add ml-6 inline-block" onClick={() => setOpen(true)}>
+            Add a business</button>
+        {/* <Image alt="edit" src={closeSvg} height={50} width={50} className="inline-block ml-2 btn-add"/> */}
+
         <FormModal
             open={open}
             onClose={setOpen}
             form={
                 <div className="p-2">
                     <div className="inline-block mr-2 ">
-                        <div> Description</div>
+                        <div> Name:</div>
                         <input type="text" className="text-black" value={selectedItem?.name} onChange={(e) => updateItem(e, 'name')} />
                     </div>
                     <div className="p-2">

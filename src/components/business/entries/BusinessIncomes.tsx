@@ -52,7 +52,7 @@ export default function BusinessIncomes({ business, entryIndex, getBusinessEntri
 
     return <div key={entryIndex}>
 
-        <div className="p-2">
+        <div className="p-2 ">
             <div className="w-100 mt-5 mb-2">
                 <button
                     className="p-2 mb-2 btn-add"

@@ -1,51 +1,44 @@
 'use client';
 import AddBusinessForm from "@/components/business/AddBusinessForm";
-import Entries from "@/components/business/entries/EntriesTab";
+import BusinessDashboard from "@/components/business/dashboard/BusinessDashboard";
+import EntriesTab from "@/components/business/entries/EntriesTab";
 import { BusinessItem } from "@/model/models";
 import { isTabActive, Tab } from "@/model/shared";
 import { BusinessService } from "@/service/BusinessService";
-import { budgetSelectors } from "@/store";
+import { budgetActions, budgetSelectors } from "@/store";
+import { useAppDispatch } from "@/store/hooks";
+import { filterByMonthAndYear, getMonth } from "@/util/utils";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 
 
 function Page() {
 
-    const [uberBusiness, setUberBusinesses] = useState<BusinessItem>();
-
-
     const year = useSelector(budgetSelectors.getCurrentYear);
+    const month = useSelector(budgetSelectors.getCurrentMonth);
     const businessService = new BusinessService();
 
     const [selectedBusiness, setSelectedBusiness] = useState<BusinessItem | null>(null);
+    const [selectedId, setSelectedId] = useState<number>(-1);
     const [businesses, setBusinesses] = useState<BusinessItem[]>([]);
-    const [entriesTotal, setEntriesTotal] = useState<number>(0);
-    const [paymentsTotal, setPaymentsTotal] = useState<number>(0);
     const [active, setActive] = useState<Tab>(Tab.BUSINESS_ENTRIES);
+    const dispatch = useAppDispatch();
 
 
     useEffect(() => {
-        getBusinesses();
-    }, [businesses]);
+        if(selectedId < 0){
+            getBusinesses();
+        }else{
+            setSelectedBusiness(businesses[selectedId]);
+        }
+    }, [businesses, selectedId]);
 
-
-
-    function getBusinessEntries() {
-        // const target = uberBusinesses.targetAmount ? Number(uberBusinesses.targetAmount) : 0;
-        // businessService.getBusinessEntries(1).then((entries) => {
-        //     const total = businessService.getEntriesTotal(entries);
-        //     setEntriesTotal(total);
-        //     const paymentsTotal = businessService.getPaymentEntriesTotal(entries);
-        //     setPaymentsTotal(paymentsTotal);
-        //     // const percentage = props.item && props.item.targetAmount ? Number((total / Number(props.item.targetAmount)) * 100).toFixed(2) : 0;
-        //     // setPercentageComplete(Number(percentage));
-        // });
-    }
 
     function getBusinesses() {
         if (!selectedBusiness) {
             businessService.getBusinesses().then((business) => {
                 setBusinesses(business);
+                setSelectedId(0);
                 setSelectedBusiness(business[0]);
             })
         } else {
@@ -59,29 +52,44 @@ function Page() {
     function renderContent() {
         switch (active) {
             case Tab.BUSINESS_ENTRIES:
-                return <Entries selectedBusiness={selectedBusiness as BusinessItem} refresh={getBusinesses} />
+                return <EntriesTab selectedBusiness={selectedBusiness as BusinessItem} refresh={getBusinesses} />
             default:
-                return <Entries selectedBusiness={selectedBusiness as BusinessItem} refresh={getBusinesses} />
+                return <BusinessDashboard selectedBusiness={selectedBusiness as BusinessItem} />
         }
     }
     function isActive(business: BusinessItem) {
         return business.id === selectedBusiness?.id
     }
 
+    function handleEntryChange(value: number) {
+        const newMonth = month + value;
+        if (newMonth > 0 && newMonth <= 12) {
+            dispatch(budgetActions.setCurrentMonth(newMonth));
+        } else if (newMonth === 0) {
+            dispatch(budgetActions.setCurrentYear(year - 1));
+            dispatch(budgetActions.setCurrentMonth(12));
+        } else if (newMonth === 13) {
+            dispatch(budgetActions.setCurrentYear(year + 1));
+            dispatch(budgetActions.setCurrentMonth(1));
+        }
+    }
+
     return (
         <main className=" p-24 w-100">
             <div className='w-11/12'>
-                <h1 className="inline-block w-3/12">Welcome back</h1>
-                <div className="w-100 p-5">
-                    <div className="inline-block w-2/12"><AddBusinessForm refresh={getBusinessEntries} /></div>
-                    {businesses.map((business) => {
-                        return <div
+                <h1 className="inline-block w-11/12 mb-3">Welcome back</h1>
+                <div className="p-2 inline-block w-8/12" style={{backgroundColor: 'rgba(26, 32, 61, 1)', borderTopLeftRadius: '10px',  borderTopRightRadius: '10px'}}>
+                    {businesses.map((business, index) => {
+                        return <div key={index}
                             className={`tab-option inline-block p-4 ${isActive(business) ? 'active-section' : ''}`}
-                            onClick={(e) => { setSelectedBusiness(business) }}
+                            onClick={(e) => { setSelectedId(index); }}
                         >
                             {business.name}
                         </div>
                     })}
+                </div>
+                <div className="inline-block w-4/12">
+                    <div className="w-100"><AddBusinessForm refresh={getBusinesses} /></div>
                 </div>
                 <div className="dashboard-container">
                     <div className="w-100 p-5">
@@ -89,49 +97,15 @@ function Page() {
                             <div className="p-2 w-100 ">
                                 <div className="p-2">
                                     <div className='w-100 grid-flow-row font-bold'>
-                                        <div className='w-11/12 p-2 inline-block' >
+                                        <div className='w-11/12 p-2 inline-block mb-3' >
                                             <h1 style={{ fontSize: '32px', color: 'white' }}>🎯 {selectedBusiness?.name}</h1>
                                         </div>
-
                                     </div>
-                                    {/* <div className='w-100 w-10/12 '>
-                                        <div
-                                            className={`tab-option inline-block p-4 ${isTabActive(Tab.BUSINESS_DASHBOARD, active)}`}
-                                            onClick={(e) => setActive(Tab.BUSINESS_DASHBOARD)}
-                                        >
-                                            Dashboard
-                                        </div>
-                                        <div
-                                            className={`tab-option inline-block p-4 ${isTabActive(Tab.BUSINESS_ENTRIES, active)}`}
-                                            onClick={(e) => setActive(Tab.BUSINESS_ENTRIES)}
-                                        >
-                                            Entries
-                                        </div>
-                                    </div> */}
-                                    <div className='w-5/12 inline-block '>
-                                        <div className="inline-block mt-5 w-11/12 total-card">
-                                            <h1>Total Expected</h1>
-                                            <div>R{entriesTotal}</div>
-                                        </div>
-                                        <div className="inline-block mt-5 w-11/12 total-card">
-                                            <h1>Total Received</h1>
-                                            <div>R{paymentsTotal}</div>
-                                        </div>
-                                        <div className="inline-block mt-5 w-11/12 total-card">
-                                            <h1>Total Remainder</h1>
-                                            <div>R{entriesTotal - paymentsTotal}</div>
-                                        </div>
-                                        <div className="inline-block mt-5 w-11/12 total-card">
-                                            <h1>Current Remainder</h1>
-                                            <div>R{entriesTotal - paymentsTotal}</div>
-                                        </div>
-                                    </div>
-                                    <div className='p-4 w-7/12 inline-block h-11/12'>
                                         {selectedBusiness && renderContent()}
-                                    </div>
                                     <div className=' w-100 bg-white text-black p-5 text-left' style={{ borderRadius: '10px', fontWeight: 700, marginTop: '69px' }}>
                                         <div className='inline-block w-6/12' >Dashboard Overview</div>
                                     </div>
+                                    <BusinessDashboard selectedBusiness={selectedBusiness as BusinessItem} />
                                 </div>
                             </div>
                         </div>

@@ -238,3 +238,9 @@ body {
   padding: 1rem;
   border-radius: 10px
 }
+
+.total-card-blue {
+  border: 2px solid rgba(30, 148, 222, 0.671);
+  padding: 1rem;
+  border-radius: 10px
+}

@@ -51,7 +51,7 @@ export function getAmountTotal(items: any[]){
             amt += Number(e.amount);
         }
     }
-    return amt
+    return Math.round(amt)
 }
 
 export function getExpectedTotal(items: any[]){
@@ -62,7 +62,7 @@ export function getExpectedTotal(items: any[]){
             amt += Number(e.expectedAmount);
         }
     }
-    return amt
+    return Math.round(amt)
 }
 
 export function getPercentageSpent(items: any[]){

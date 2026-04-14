@@ -237,12 +237,6 @@ export default function Home() {
         >
           <div className='inline-block'> Goals 🎯</div>
         </div>
-        <div
-          className={`tab-option inline-block p-4 ${isTabActive(Tab.CAR_LOAN, active)}`}
-          onClick={(e) => setActive(Tab.CAR_LOAN)}
-        >
-          Car Loan
-        </div>
         {/* <Link href={"/luno"}
             className={`inline-block p-4 ${isTabActive(Tab.INCOME, active)}`}
             
