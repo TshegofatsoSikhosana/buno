@@ -1,5 +1,5 @@
 import { ExpenseItem, GroceryItem, Store } from '@/model/models';
-import React, { useEffect, useState } from 'react';
+import React, { use, useEffect, useState } from 'react';
 
 import { useSelector } from 'react-redux';
 import { budgetSelectors } from '@/store';
@@ -14,11 +14,23 @@ const GroceriesBarChart = () => {
     const month = useSelector(budgetSelectors.getCurrentMonth);
     const [isTotalsView,setIsTotalsView] = useState(false);
     const [filterType,setFilterType] = useState<Store | undefined>();
+    const [allItems,setAllItems] = useState<string[]>([]);
     
 
     useEffect(()=>{
         getGroceries();
     },[year,month]);
+
+    useEffect(()=>{
+      if(allItems.length <= 0){
+               getAllGroceries();
+
+      }
+
+      console.log("all items", allItems);
+      
+
+    },[allItems])
     
       function getGroceries(){
         db.groceries.where({year: year})
@@ -26,6 +38,14 @@ const GroceriesBarChart = () => {
         .toArray()
         .then((ex)=> {
             setGroceries(ex.sort((a,b)=> b.actualAmount - a.actualAmount));
+        });
+      }
+
+      function getAllGroceries(){
+        db.groceries.toArray().then((ex)=> {
+            const descriptions = ex.map(e=>e.description);
+            const uniqueDescriptions = Array.from(new Set(descriptions));
+            setAllItems(uniqueDescriptions);
         });
       }
     return (

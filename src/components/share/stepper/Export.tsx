@@ -1,10 +1,11 @@
 import { db } from '@/config/database.config';
+import { BusinessService } from '@/service/BusinessService';
 import React, { useEffect, useRef, useState } from 'react';
 
 function Export(){
     const [backup, setBackup] = useState<any>();
     const downloadLinkRef = useRef<any>(null);
-
+    const businessService = new BusinessService();
     async function getBackups(){
         let expenses = await  db.expenses.toArray();
         expenses = expenses.sort((a,b) => (a?.year || 0) - (b?.year || 0))
@@ -16,7 +17,9 @@ function Export(){
         groceries = groceries.sort((a,b) => (a?.year || 0) - (b?.year || 0));
         let goals = await db.goals.toArray();
         let goalEntries = await db.goalEntry.toArray();
-        const data = { expenses, groceries, investments, incomes, goals, goalEntries}
+        let businesses = await businessService.getBusinesses();
+
+        const data = { expenses, groceries, investments, incomes, goals, goalEntries, business: businesses}
         console.log('Data', data);
         setBackup(data)
     }
@@ -120,6 +123,17 @@ function Export(){
                         </div>
                         <div className='w-3/12 p-2 inline-block text-start'  style={{borderLeft: '2px solid rgb(70, 70, 80,180)'}}>
                             {backup?.goalEntries?.length} entries
+                        </div>
+                </div>
+                <div 
+                    className='w-100 grid-flow-row row-text-block'
+                    style={{border: '1px solid rgb(70, 70, 80,180)'}}
+                    >
+                        <div className='w-5/12 p-2 inline-block text-start' style={{borderLeft: '2px solid rgb(70, 70, 80,180)'}}>
+                            Business
+                        </div>
+                        <div className='w-3/12 p-2 inline-block text-start'  style={{borderLeft: '2px solid rgb(70, 70, 80,180)'}}>
+                            {backup?.business?.length} entries
                         </div>
                 </div>
                 <button style={{backgroundColor:'rgba(42,169,42)',borderRadius:'10px'}} className="btn-add p-3 mt-3  w-3/12" onClick={handleDownload}>

@@ -18,6 +18,7 @@ import DoughnutChart from './doughnuts/DoughnutChart';
 import { months } from '@/util/utils';
 import DatePicker from './bar-chart-panel/DatePicker';
 import LineBarPanel from './line-chart-panel/LineChartPanel';
+import MonthDashboardView from './month-view/MonthDashboardView';
   ChartJS.register(
     CategoryScale,
     LinearScale,
@@ -188,7 +189,9 @@ function Dashboard(){
             <div className='w-100 hover-blue-text'><DatePicker/></div>
           </div>
         </div>
+        
         <BarChartPanel/>
+        <MonthDashboardView/>
        
     </div>);
 }

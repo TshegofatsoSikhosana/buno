@@ -199,7 +199,7 @@ export default function Home() {
         {/* <Calendar/> */}
         {/* </div> */}
       </div>
-      <div className="p-2 inline-block w-8/12" style={{backgroundColor: 'rgba(26, 32, 61, 1)', borderTopLeftRadius: '10px',  borderTopRightRadius: '10px'}}>
+      <div className="p-2 inline-block w-7/12" style={{backgroundColor: 'rgba(26, 32, 61, 0.7)', borderTopLeftRadius: '10px',  borderTopRightRadius: '10px'}}>
         <div
           className={`tab-option inline-block p-4 ${isTabActive(Tab.GROCERIES, active)}`}
           onClick={(e) => setActive(Tab.GROCERIES)}
