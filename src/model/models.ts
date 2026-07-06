@@ -13,13 +13,15 @@ export interface GroceryItem{
 
 
 export enum Store{
-    PNP,
-    CHECKERS,
-    FOODLOVERS,
-    CLICKS,
-    WOOLWORTHS,
-    DISCHEM,
-    OTHER
+    PNP = "PicknPay",
+    CHECKERS = "Checkers",
+    FOODLOVERS = "FoodLovers",
+    CLICKS = "Clicks",
+    WOOLWORTHS = "Woolworths",
+    DISCHEM = "Dischem",
+    OTHER = "Other",
+    PEP = "PEP",
+    ALL = "All"
 }
 
 export interface BusinessExpenseItem{
@@ -120,4 +122,15 @@ export interface CloneBudget{
     incomes: IncomeItem[];
     investments: InvestmentItem[];
     groceries: GroceryItem[]
+}
+
+export enum GroceryStore{
+    PNP,
+    CHECKERS,
+    FOODLOVERS,
+    CLICKS,
+    WOOLWORTHS,
+    DISCHEM,
+    OTHER,
+    ALL
 }

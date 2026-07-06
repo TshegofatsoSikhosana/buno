@@ -1,5 +1,5 @@
 import { db } from "@/config/database.config";
-import {GroceryItem } from "@/model/models";
+import {GroceryItem, Store } from "@/model/models";
 import { useEffect, useState } from "react";
 import GroceryItemForm from "./GroceryItemForm";
 import { GroceryService } from "@/service/GroceryService";
@@ -58,13 +58,66 @@ function Groceries(props: GroceryProps){
     },[month,year]);
     
 
-    function getGroceries(){
+    async function getGroceries(){
         db.groceries.where({year: year})
         .and((i)=> Number(i.month) == month)
         .toArray()
         .then((ex)=> {
             setGroceries([...ex]);
         });
+
+        // let storeSet = new Set();
+        // const all: GroceryItem[] = []
+        // await db.groceries.toArray().then(groceries =>{
+        //     groceries.forEach((g)=>{    
+        //         g.store && storeSet.add((g.store + "").trim())
+        //         all.push(g)
+        //     })
+            
+        // })
+        // const stores = Array.from(storeSet).sort((a,b)=> (a+"").toLowerCase().localeCompare((b+"").toLowerCase()));
+
+        // console.log('Stores', stores);
+        // console.log('Groceries', all.length);
+
+        // all.forEach((g)=>{
+        //     const store = (g.store + "").toLowerCase().trim();
+        //     if(store === 'checkers'){
+        //         g.store = Store.CHECKERS;
+        //     }
+        //     else if(store === 'picknpay' || store === 'pnp'){
+        //         g.store = Store.PNP;
+        //     }
+        //     else if(store === 'foodlovers' || store === 'food lovers' || store === 'flm' || store === 'fruit and veg'){
+        //         g.store = Store.FOODLOVERS;
+        //     }
+        //     else if(store === 'pep' || store === 'pep home'){
+        //         g.store = Store.PEP;
+        //     }
+        //     else if(store === 'dischem'){ 
+        //         g.store = Store.DISCHEM;
+        //     }
+        //     else if(store === 'woolworths' || store === 'woolies'){
+        //         g.store = Store.WOOLWORTHS;
+        //     }
+        //     else if(store === 'clicks'){
+        //         g.store = Store.CLICKS;
+        //     }
+        //     else if(store === 'all' || store === 'mixed'){
+        //         g.store = Store.ALL;
+        //     }
+        //     else{
+        //         g.store = Store.OTHER;
+        //     }
+        // })
+
+        // storeSet = new Set();
+        // all.forEach((g)=>{    
+        //     g.store && storeSet.add((g.store + "").trim())
+        // })
+        
+        // const stores2 = Array.from(storeSet).sort((a,b)=> (a+"").toLowerCase().localeCompare((b+"").toLowerCase()));
+        // db.groceries.bulkPut(all).then(()=>{})
     }
 
     function close(v:boolean){

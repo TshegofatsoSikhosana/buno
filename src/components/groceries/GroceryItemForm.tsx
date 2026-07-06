@@ -1,4 +1,4 @@
-import { GroceryItem } from "@/model/models";
+import { GroceryItem, Store } from "@/model/models";
 import { useEffect, useState } from "react";
 import FormModal from "../shared/FormModal";
 import { useSelector } from "react-redux";
@@ -84,7 +84,7 @@ function GroceryItemForm(props: GroceryItemFormProps){
     }
 
     return (<>
-            <FormModal
+            {selectedItem && <FormModal
                 open={props.open}
                 onClose={props.setOpen}
                 form={
@@ -120,7 +120,21 @@ function GroceryItemForm(props: GroceryItemFormProps){
                             </div>
                             <div className="inline-block mr-2">
                                 <div> Store</div>
-                                <input type="text" className="text-black" value={selectedItem?.store}  onChange={(e)=> updateItem(e,'store')}/>
+                                <select className="text-black p-2"
+                                        style={{borderRadius: '5px', backgroundColor: 'white'}}
+                                        value={selectedItem.store} 
+                                        onChange={(e)=> updateItem(e,'store')}>
+                                    <option value={Store.CHECKERS}>Checkers</option>
+                                    <option value={Store.PNP}>Pick n Pay</option>
+                                    <option value={Store.FOODLOVERS}>Food Lovers</option>
+                                    <option value={Store.CLICKS}>Clicks</option>
+                                    <option value={Store.WOOLWORTHS}>Woolworths</option>
+                                    <option value={Store.DISCHEM}>Dischem</option>
+                                    <option value={Store.PEP}>PEP</option>
+                                    <option value={Store.OTHER}>Other</option>
+                                    <option value={Store.ALL}>All</option>
+                                </select>
+                                {/* <input type="text" className="text-black" value={selectedItem?.store}  onChange={(e)=> updateItem(e,'store')}/> */}
                             </div>
                             <button 
                                 className="inline-block bg-blue-500 p-2 w-100 btn-add-item mt-2"
@@ -134,7 +148,7 @@ function GroceryItemForm(props: GroceryItemFormProps){
                 }
             />
             
-        </>);
+            }</>);
 }
  
 export default GroceryItemForm;

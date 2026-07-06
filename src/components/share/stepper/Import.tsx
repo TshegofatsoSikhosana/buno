@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { db } from "@/config/database.config";
-import { ExpenseItem, GoalEntry, GoalItem, GroceryItem, IncomeItem, InvestmentItem } from "@/model/models";
+import { BusinessExpenseItem, BusinessIncomeItem, BusinessItem, ExpenseItem, GoalEntry, GoalItem, GroceryItem, IncomeItem, InvestmentItem } from "@/model/models";
 import { useDispatch, useSelector } from "react-redux";
 import { budgetActions, budgetSelectors } from "@/store";
 
@@ -24,7 +24,17 @@ function Import(props: ImportProps) {
         data.groceries && await db.groceries.bulkPut(data.groceries as GroceryItem[]);
         data.goals && await db.goals.bulkPut(data.goals as GoalItem[]);
         data.goalEntries && await db.goalEntry.bulkPut(data.goalEntries as GoalEntry[]);
-        
+        if(data.business){
+            const businesses = [...data.business] as BusinessItem[];
+            businesses.forEach(async (b)=>{
+                // await db.businesses.put(b);
+                await db.businessExpenseEntry.bulkAdd(b.expenseItems as BusinessExpenseItem[]);
+                await db.businessIncomeEntry.bulkAdd(b.incomeItems as BusinessIncomeItem[]);
+                b.expenseItems = [];
+                b.incomeItems = [];
+                await db.businesses.put(b);
+            })
+        }
         setIsImported(true);
 
         setTimeout(() => {
@@ -137,6 +147,17 @@ function Import(props: ImportProps) {
                             </div>
                             <div className='w-3/12 p-2 inline-block text-start'  style={{borderLeft: '2px solid rgb(70, 70, 80,180)'}}>
                                 {data?.goalEntries?.length || 0} entries
+                            </div>
+                    </div>
+                    <div 
+                        className='w-100 grid-flow-row row-text-block'
+                        style={{border: '1px solid rgb(70, 70, 80,180)'}}
+                        >
+                            <div className='w-5/12 p-2 inline-block text-start' style={{borderLeft: '2px solid rgb(70, 70, 80,180)'}}>
+                                Businesses 
+                            </div>
+                            <div className='w-3/12 p-2 inline-block text-start'  style={{borderLeft: '2px solid rgb(70, 70, 80,180)'}}>
+                                {data?.business?.length || 0} entries
                             </div>
                     </div>
                     </>}
