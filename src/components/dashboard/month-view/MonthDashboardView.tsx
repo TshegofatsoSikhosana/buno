@@ -23,6 +23,7 @@ function MonthDashboardView() {
   const [selectedYear, setSelectedYear] = useState<number>();
   const year = useSelector(budgetSelectors.getCurrentYear);
   const [monthTotals, setMonthTotals] = useState<{year: number, month: string, total: number}[]>([]);
+  const [monthTotalsOverview, setMonthTotalsOverview] = useState<{year: number, month: string, total: number}[]>([]);
   function getGroceries() {
     db.groceries.toArray().then((ex) => {
       const monthSet = new Set<string>();
@@ -129,6 +130,14 @@ function MonthDashboardView() {
     }
   }, [groceries, expenses, investments, income]);
 
+  useEffect(() => {
+      console.log('monthTotals', monthTotals);
+
+    if (monthTotals && monthTotals.length > 0) {
+      addOverviewData();
+    }
+  }, [monthTotals]);
+
   function getMonthTotals() {
 
     let totalmonths: {
@@ -143,7 +152,6 @@ function MonthDashboardView() {
         months: months.map((m) => m.toLowerCase() + " " + year),
       };
     });
-    console.log("monthSet", monthSet);
 
     monthSet.forEach((set) => {
       set.months.forEach((m) => {
@@ -180,25 +188,35 @@ function MonthDashboardView() {
         };
         all.push(totalmonths)
       });
+
+      
       setMonthTotals(all);
-     console.log('all', all);
+    //  console.log('all', all);
      
     });
+  }
 
-    // monthSet?.forEach((g, i) => {
+  function addOverviewData() {
+    const all: any = []
+    
+    months.forEach((month) => {
 
-    //     groceries.
-    // expenses?.data.forEach((g, i) => {
-    //   if (expenses.labels[i] === month) {
-    //     return g;
-    //   }
-    // });
-    // investments?.data.forEach((g, i) => {
-    //   if (investments.labels[i] === month) {
-    //     return g;
-    //   }
-    // });
-    return 0;
+          const total = monthTotals.filter(a => a.month.split(" ")[0].toLowerCase().trim() === month.toLowerCase())
+          .map((a)=> a.total)
+                .reduce((p,c)=> Number(p) + Number(c), 0);
+
+            
+                
+
+        const monthTotal = {
+          month: month,
+          year: 0,
+          total: total,
+        };
+        all.push(monthTotal)
+        })
+      
+    setMonthTotalsOverview(all);
   }
 
   return (
@@ -210,6 +228,8 @@ function MonthDashboardView() {
         value={selectedYear}
         onChange={(e) => setSelectedYear(Number(e.target.value))}
       >
+        <option value={0} key={-1}>
+        All years</option>
         {years.map((y, i) => (
           <option value={y} key={i}>
             {y}
@@ -217,7 +237,7 @@ function MonthDashboardView() {
         ))}
       </select>
       </div>
-      {monthTotals.filter((m) => m.year === selectedYear).map((m, i) => (
+      {selectedYear && selectedYear > 0 ? <>{monthTotals.filter((m) => m.year === selectedYear).map((m, i) => (
         <>
           <div
             className="w-2/12 text-center grid-flow-row p-2 font-bold inline-block"
@@ -232,7 +252,24 @@ function MonthDashboardView() {
             <div>R{m.total.toFixed(2)}</div>
           </div>
         </>
+      ))}</> : <>{monthTotalsOverview.map((m, i) => (
+        <>
+          <div
+            key={i}
+            className="w-2/12 text-center grid-flow-row p-2 font-bold inline-block"
+            style={{
+              border: "2px solid rgba(222,222,222,0.5)",
+              padding: "1rem",
+              borderRadius: "10px",
+              backgroundColor: `${m.total > 0 ? 'rgb(19, 88, 51)' : Number(m.total) !== 0 ? 'rgb(109, 14, 14)' : ''}`,
+            }}
+          >
+            <h1>{m.month}</h1>
+            <div>R{m.total.toFixed(2)}</div>
+          </div>
+        </>
       ))}
+      </>}
     </div>
   );
 }
