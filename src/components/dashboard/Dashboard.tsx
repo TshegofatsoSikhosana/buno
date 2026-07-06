@@ -183,6 +183,11 @@ function Dashboard(){
                   colors={["rgba(30, 148, 222)","#a33dee","#deedee","rgb(65, 194, 123)"]}
                   />            
         </div>
+
+         <div className=' w-100 bg-white text-black p-5 text-left' style={{borderRadius: '10px', fontWeight: 700, marginTop: '69px'}}> 
+          <div  className='inline-block w-6/12' >Month Remainder Overview</div>
+        </div>
+        <MonthDashboardView/>
         <div className=' w-100 bg-white text-black p-5 text-left' style={{borderRadius: '10px', fontWeight: 700, marginTop: '69px'}}> 
           <div  className='inline-block w-6/12' >Per Category Budget Overview</div>
           <div  className='inline-block w-6/12' style={{borderRadius: '10px', border:'3px solid rgba(120, 120, 120)', backgroundColor:'rgba(240, 240, 240)'}}>
@@ -191,7 +196,7 @@ function Dashboard(){
         </div>
         
         <BarChartPanel/>
-        <MonthDashboardView/>
+
        
     </div>);
 }
