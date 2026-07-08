@@ -30,6 +30,7 @@ ChartJS.register(
 
 interface ExpenseLineBarPanelProps {
   filterType?: ExpenseCategory;
+  nameFilterType: string;
 }
 function ExpenseLineBarPanel(props: ExpenseLineBarPanelProps) {
   const { filterType } = props;
@@ -42,7 +43,7 @@ function ExpenseLineBarPanel(props: ExpenseLineBarPanelProps) {
   ];
   const [avgPersonalExpenses, setAvgPersonalExpenses] = useState<number>(0);
   const [avgLivingExpenses, setAvgLivingExpenses] = useState<number>(0);
-  const [avgExceptions, setAvgExceptions] = useState<number>(0);
+  const [avgExceptions, setAvgExceptions] = useState<number>(0);  
 
   function getExpenses() {
     db.expenses.toArray().then((ex) => {
@@ -106,14 +107,17 @@ function ExpenseLineBarPanel(props: ExpenseLineBarPanelProps) {
     console.log("Type", filterType);
 
     getExpenses();
+
   }, [filterType]);
 
   return (
-    <div className="text-white inline-block" style={{ width: "100%" }}>
-      <>
+    <div className="text-white  inline-block w-100" style={{ width: "100%" }}>
         <div className="w-100 p-5">
-          <div
+        <div
             className="inline-block w-3/12"
+            ></div>
+          <div
+            className="inline-block w-2/12 "
             style={{ padding: "3rem", borderRadius: "10px" }}
           >
             <h1>Total Category Averages:</h1>
@@ -159,41 +163,45 @@ function ExpenseLineBarPanel(props: ExpenseLineBarPanelProps) {
               <div>R{avgIncomes}</div>
             </div> */}
         </div>
-      </>
-      {datasets.length && monthsLabels && (
-        <Line
-          data={{
-            labels: monthsLabels,
-            datasets: [...datasets],
-          }}
-          options={{
-            layout: { padding: 2 },
-            color: "white",
-            scales: {},
-            elements: {
-              bar: {
-                borderWidth: 2,
+
+      <div className="w-11/12 inline-block">
+      <div className="w-100">
+        {datasets.length && monthsLabels && (
+          <Line
+            data={{
+              labels: monthsLabels,
+              datasets: [...datasets],
+            }}
+            options={{
+              layout: { padding: 2 },
+              color: "white",
+              scales: {},
+              elements: {
+                bar: {
+                  borderWidth: 2,
+                },
               },
-            },
-            responsive: true,
-            plugins: {
-              legend: {
-                position: "right" as const,
-                display: true,
-                labels: {
+              responsive: true,
+              plugins: {
+                legend: {
+                  position: "right" as const,
+                  display: true,
+                  labels: {
+                    color: "white",
+                  },
+                },
+                title: {
+                  display: true,
+                  text: "Past Budget Totals By Category Overview",
                   color: "white",
                 },
               },
-              title: {
-                display: true,
-                text: "Past Budget Totals By Category Overview",
-                color: "white",
-              },
-            },
-          }}
-          style={{ color: "white", width: "100%" }}
-        />
-      )}
+            }}
+            style={{ color: "white", width: "100%" }}
+          />
+        )}
+      </div>
+      </div>
     </div>
   );
 }

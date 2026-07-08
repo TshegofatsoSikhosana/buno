@@ -63,6 +63,29 @@ body {
   cursor: pointer;
 }
 
+.active-tab {
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  color: white;
+  border: 0.2rem solid  rgb(30,150,222,0.5);
+}
+
+.category-tab-option {
+  color: white;
+  background-color: rgba(26, 32, 61, 0.7);
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+}
+
+.category-tab-option:hover {
+  color: white;
+  background-color: rgb(30,150,222,0.5);
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  border-bottom: 0.2rem solid  rgb(30,150,222,0.5);
+  cursor: pointer;
+}
+
 
 .btn-minus,
 .btn-plus {

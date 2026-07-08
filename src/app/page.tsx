@@ -229,7 +229,7 @@ export default function Home() {
           onClick={(e) => setActive(Tab.DASHBOARD)}
         >
           {/* <div className='inline-block p-1'><Icon svgPath={reportSvg} onClick={() => {}}/> </div>  */}
-          <div className='inline-block'> Budget-Dashboard</div>
+          <div className='inline-block'>Overview</div>
         </div>
         <div
           className={`tab-option inline-block p-4 ${isTabActive(Tab.GOALS, active)}`}
