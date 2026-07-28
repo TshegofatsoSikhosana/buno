@@ -84,7 +84,7 @@ function GroceryItemForm(props: GroceryItemFormProps){
     }
 
     return (<>
-            {selectedItem && <FormModal
+            <FormModal
                 open={props.open}
                 onClose={props.setOpen}
                 form={
@@ -122,8 +122,9 @@ function GroceryItemForm(props: GroceryItemFormProps){
                                 <div> Store</div>
                                 <select className="text-black p-2"
                                         style={{borderRadius: '5px', backgroundColor: 'white'}}
-                                        value={selectedItem.store} 
+                                        value={selectedItem?.store} 
                                         onChange={(e)=> updateItem(e,'store')}>
+                                    <option value={''}></option>
                                     <option value={Store.CHECKERS}>Checkers</option>
                                     <option value={Store.PNP}>Pick n Pay</option>
                                     <option value={Store.FOODLOVERS}>Food Lovers</option>
@@ -147,8 +148,7 @@ function GroceryItemForm(props: GroceryItemFormProps){
                     </div> 
                 }
             />
-            
-            }</>);
+            </>);
 }
  
 export default GroceryItemForm;
