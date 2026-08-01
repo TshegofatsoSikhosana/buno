@@ -39,7 +39,7 @@ function LineBarPanel(){
             }
           })
           const monthsLabels = Array.from(monthSet)
-          setGroceries({ labels: monthsLabels, data: getTotals(monthsLabels, items)})
+          setGroceries({ labels: monthsLabels, data: getTotals(monthsLabels, items, true)})
       });
     }
 
@@ -73,13 +73,16 @@ function LineBarPanel(){
       });
     }
 
-    function getTotals(monthsLabels: string[], data: any[],){
+    function getTotals(monthsLabels: string[], data: any[], isGroceries?: boolean){
       const totals = []
       for (let i = 0; i< monthsLabels.length; i++) {
         const item = monthsLabels[i];
 
         const filtered = data.filter((e)=>  months[Number(e.month)-1] + " " + e.year === item)
-          .map((e)=> Number(e.actualAmount));
+          .map((e)=> {
+            if(!isGroceries) return Number(e.actualAmount)
+            return Number(e.actualAmount) - (Number(e.discountAmount) || 0)
+          });
 
         if(filtered){
           const total = filtered.reduce((a,b)=> Number(a)+Number(b))
