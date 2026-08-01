@@ -1,14 +1,14 @@
 'use client'
 
 import { ExpenseCategory, ExpenseItem } from "@/model/models";
-import FilterSelector from "../shared/FilterSelector";
-import ProgressBar from "../shared/ProgressBar";
-import RowActions from "../shared/RowActions";
+import FilterSelector from "../../shared/FilterSelector";
+import ProgressBar from "../../shared/ProgressBar";
+import RowActions from "../../shared/RowActions";
 import { useState } from "react";
-import ExpenseItemForm from "./ExpenseItemForm";
+import ExpenseItemForm from "../ExpenseItemForm";
 import { ExpenseService } from "@/service/ExpenseService";
 
-interface ExpenseTrackerProps {
+interface ExpenseTrackerTabProps {
     expenses: ExpenseItem[];
     filteredExpenses: ExpenseItem[] | undefined;
     percentageComplete: number;
@@ -17,7 +17,7 @@ interface ExpenseTrackerProps {
     setFilterType: (v:number)=> void;
 }
 
-function ExpenseTracker(props: ExpenseTrackerProps) {
+function ExpenseTrackerTab(props: ExpenseTrackerTabProps) {
 
     const es = new ExpenseService();
     const { expenses, filteredExpenses, percentageComplete , getExpenses, filterType, setFilterType} = props;
@@ -201,4 +201,4 @@ function ExpenseTracker(props: ExpenseTrackerProps) {
     </> );
 }
 
-export default ExpenseTracker;
+export default ExpenseTrackerTab;

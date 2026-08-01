@@ -7,12 +7,12 @@ import { db } from '@/config/database.config';
 import BarChart from '../../shared/charts/BarChart';
 import { getItemsInOrder, months } from '@/util/utils';
 import { useAppDispatch } from '@/store/hooks';
-import ExpenseLineBarPanel from './ExpenseLineBarPanel';
+import ExpenseLineBarPanel from '../dashboard-charts/ExpenseLineBarPanel';
 import GoalsDoughnut from '@/components/goals/dashboard-charts/GoalsDoughnut';
 import ExpsenseDoughnut from '@/components/dashboard/doughnuts/ExpensesDoughnut';
-import ExpensesLineChartPanel from './ExpensesLineChartPanel';
+import ExpensesLineChartPanel from '../dashboard-charts/ExpensesLineChartPanel';
 
-const ExpsenseBarChart = () => {
+const ExpensesAnalyticsTab = () => {
     const [expenses,setExpenses] = useState<ExpenseItem[]>([]);
     const year= useSelector(budgetSelectors.getCurrentYear);
     const month = useSelector(budgetSelectors.getCurrentMonth);
@@ -90,7 +90,7 @@ const ExpsenseBarChart = () => {
                         style={{borderRadius: '5px', backgroundColor: 'rgb(70, 70, 80,180)'}}
                         value={filterType}
                         onChange={(e)=> setFilterType(e.target.value.trim())}>
-                    <option value={undefined}>All {expenseItemNames.length || 0} Items</option>
+                    <option value={''}>All {expenseItemNames.length || 0} Items</option>
                     {expenseItemNames?.map((name, i)=>{
                         return <><option value={name} key={i}>{name}</option></>
                     })}
@@ -126,4 +126,4 @@ const ExpsenseBarChart = () => {
     );
 }
 
-export default ExpsenseBarChart;
+export default ExpensesAnalyticsTab;

@@ -5,8 +5,8 @@ import { ExpenseService } from "@/service/ExpenseService";
 import { filterItems,getPercentageSpent } from "@/util/utils";
 import { useSelector } from "react-redux";
 import { budgetSelectors } from "@/store";
-import ExpsenseBarChart from "./dashboard-charts/ExpensesBarChart";
-import ExpenseTracker from "./ExpenseTracker";
+import ExpensesAnalyticsTab from "./tabs/ExpensesAnalyticsTab";
+import ExpenseTrackerTab from "./tabs/ExpenseTrackerTab";
 
 interface ExpensesProps {
     setTotalExpenses: (v:number)=> void;
@@ -52,7 +52,7 @@ function Expenses(props: ExpensesProps){
 
     function dashboardView(){   
         if(analytics){
-            return <div className="w-100"> <ExpsenseBarChart/></div>
+            return <div className="w-100"> <ExpensesAnalyticsTab/></div>
         }
     }
 
@@ -70,7 +70,7 @@ function Expenses(props: ExpensesProps){
             <div style={{background: ' rgb(30,150,222,0.5)', padding: '2px', marginBottom: '1rem'}}></div>
 
             {!analytics ? 
-                <ExpenseTracker 
+                <ExpenseTrackerTab 
                     expenses={expenses} 
                     filteredExpenses={filteredExpenses} 
                     percentageComplete={percentageComplete} 

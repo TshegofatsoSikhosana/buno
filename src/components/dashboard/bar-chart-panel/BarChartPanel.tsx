@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
 import { Tab, isTabActive } from '@/model/shared';
-import ExpsenseBarChart from '../../expense/dashboard-charts/ExpensesBarChart';
+import ExpensesAnalyticsTab from '../../expense/tabs/ExpensesAnalyticsTab';
 import InvestmentsBarChart from '../../investment/dashboard-charts/InvestmentsBarChart';
 import ExpsenseDoughnut from '../doughnuts/ExpensesDoughnut';
 import GroceriesDoughnut from '../doughnuts/GroceriesDoughnut';
@@ -30,7 +30,7 @@ function BarChartPanel(){
           case Tab.INCOME:
             return <IncomesBarChart />
           default:
-            return <ExpsenseBarChart />
+            return <ExpensesAnalyticsTab />
         }
       }
 
