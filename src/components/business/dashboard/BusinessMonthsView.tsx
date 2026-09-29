@@ -1,90 +1,85 @@
 "use client";
-import { db } from "@/config/database.config";
+import { BusinessItem } from "@/model/models";
 import { budgetSelectors } from "@/store";
 import { getItemsInOrder, months } from "@/util/utils";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 
-function BusinessMonthsView() {
+function BusinessMonthsView({selectedBusiness} : {selectedBusiness : BusinessItem}) {
 
   const [years, setYears] = useState<number[]>([]);
   const [selectedYear, setSelectedYear] = useState<number>();
   const year = useSelector(budgetSelectors.getCurrentYear);
-const [incomes, setIncomes] = useState<{
-    labels: string[];
-    data: number[];
-  }>();
-const [expenses, setExpenses] = useState<{
-    labels: string[];
-    data: number[];
-  }>();
+  const [incomes, setIncomes] = useState<{
+      labels: string[];
+      data: number[];
+    }>();
+  const [expenses, setExpenses] = useState<{
+      labels: string[];
+      data: number[];
+    }>();
   
   const [monthTotals, setMonthTotals] = useState<{year: number, month: string, total: number}[]>([]);
   const [monthTotalsOverview, setMonthTotalsOverview] = useState<{year: number, month: string, total: number}[]>([]);
 
 
    function getExpenseTotals() {
-      db.businessExpenseEntry
-        .toArray()
-        .then((ex) => {
-          const monthSet = new Set<string>();
-          const items = getItemsInOrder(ex);
-          items.forEach((e) => {
-            if (months[Number(e.month) - 1]) {
-              monthSet.add(months[Number(e.month) - 1] + " " + e.year)
-            }
-          })
-          
-          const monthsLabels = Array.from(monthSet);
-          const years = new Set<number>(
-            monthsLabels.map((g) => Number(g.split(" ")[1])),
-          );
-          setYears(Array.from(years.values()).sort((a, b) => b - a));
-          setExpenses({ labels: monthsLabels, data: getTotals(monthsLabels, items) })
-        });
-    }
 
-
-      function getIncomeTotals() {
-        db.businessIncomeEntry
-          .toArray()
-          .then((ex) => {
-            const monthSet = new Set<string>();
-            const items = getItemsInOrder(ex);
-            items.forEach((e) => {
-              if (months[Number(e.month) - 1]) {
-                monthSet.add(months[Number(e.month) - 1] + " " + e.year)
-              }
-            })
-            const monthsLabels = Array.from(monthSet)
-            setIncomes({ labels: monthsLabels, data: getTotals(monthsLabels, items) })
-          });
+    const monthSet = new Set<string>();
+    const items = getItemsInOrder(selectedBusiness.expenseItems || []);
+    items.forEach((e) => {
+      if (months[Number(e.month) - 1]) {
+        monthSet.add(months[Number(e.month) - 1] + " " + e.year)
       }
+    })
+    
+    const monthsLabels = Array.from(monthSet);
+    const years = new Set<number>(
+      monthsLabels.map((g) => Number(g.split(" ")[1])),
+    );
+    setYears(Array.from(years.values()).sort((a, b) => b - a));
+    setExpenses({ labels: monthsLabels, data: getTotals(monthsLabels, items) })
+  }
 
 
+  function getIncomeTotals() {
 
-    function getTotals(monthsLabels: string[], data: any[],) {
-      const totals = []
-      for (let i = 0; i < monthsLabels.length; i++) {
-        const item = monthsLabels[i];
-  
-        const filtered = data.filter((e) => months[Number(e.month) - 1] + " " + e.year === item)
-          .map((e) => Number(e.amount));
-  
-        if (filtered) {
-          const total = filtered.reduce((a, b) => Number(a) + Number(b))
-          totals.push(total);
-        }
+    const monthSet = new Set<string>();
+    const items = getItemsInOrder(selectedBusiness.incomeItems || []);
+    items.forEach((e) => {
+      if (months[Number(e.month) - 1]) {
+        monthSet.add(months[Number(e.month) - 1] + " " + e.year)
       }
-      return totals;
+    })
+    const monthsLabels = Array.from(monthSet)
+    setIncomes({ labels: monthsLabels, data: getTotals(monthsLabels, items) })
+  }
+
+
+  function getTotals(monthsLabels: string[], data: any[],) {
+    const totals = []
+    for (let i = 0; i < monthsLabels.length; i++) {
+      const item = monthsLabels[i];
+
+      const filtered = data.filter((e) => months[Number(e.month) - 1] + " " + e.year === item)
+        .map((e) => Number(e.amount));
+
+      if (filtered) {
+        const total = filtered.reduce((a, b) => Number(a) + Number(b))
+        totals.push(total);
+      }
     }
+    return totals;
+  }
 
     
   useEffect(() => {
-    getExpenseTotals();
-    getIncomeTotals();
-    setSelectedYear(year);
-  }, []);
+    if(selectedBusiness){
+      getExpenseTotals();
+      getIncomeTotals();
+      setSelectedYear(year);
+    }
+  }, [selectedBusiness]);
 
   useEffect(() => {
     if (expenses && incomes) {
@@ -93,8 +88,6 @@ const [expenses, setExpenses] = useState<{
   }, [expenses, incomes]);
 
   useEffect(() => {
-      console.log('monthTotals', monthTotals);
-
     if (monthTotals && monthTotals.length > 0) {
       addOverviewData();
     }
@@ -156,10 +149,7 @@ const [expenses, setExpenses] = useState<{
           const total = monthTotals.filter(a => a.month.split(" ")[0].toLowerCase().trim() === month.toLowerCase())
           .map((a)=> a.total)
                 .reduce((p,c)=> Number(p) + Number(c), 0);
-
             
-                
-
         const monthTotal = {
           month: month,
           year: 0,

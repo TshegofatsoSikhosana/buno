@@ -22,6 +22,7 @@ import BusinessIncomeBarChart from './BusinessIncomeBarChart';
 import { BusinessItem } from '@/model/models';
 import BusinessExpenseBarChart from './BusinessExpenseBarChart';
 import BusinessMonthsView from './BusinessMonthsView';
+import BusinessLineBarPanel from './BusinessLineBarPanel';
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -94,13 +95,20 @@ function BusinessDashboard({selectedBusiness} : {selectedBusiness : BusinessItem
           <div>R{Math.round(entriesTotal - paymentsTotal )}</div>
       </div>
       </div>
-    <div className='inline-block w-6/12 p-2'><BusinessExpenseBarChart /></div>
-    <div className='inline-block w-6/12 p-2'><BusinessIncomeBarChart /></div>
 
-    <div className=' w-100 bg-white text-black p-5 text-left' style={{borderRadius: '10px', fontWeight: 700, marginTop: '69px'}}> 
-        <div  className='inline-block w-6/12' >Month Remainder Overview</div>
-    </div>
-    <div><BusinessMonthsView/></div>
+      {selectedBusiness && <>
+        <div className='inline-block w-6/12 p-2'><BusinessExpenseBarChart selectedBusiness={selectedBusiness}/></div>
+        <div className='inline-block w-6/12 p-2'><BusinessIncomeBarChart selectedBusiness={selectedBusiness}/></div>
+
+        <div className=' w-100 bg-white text-black p-5 text-left' style={{borderRadius: '10px', fontWeight: 700, marginTop: '69px'}}> 
+            <div  className='inline-block w-6/12' >Month Remainder Overview</div>
+        </div>
+        <div><BusinessMonthsView selectedBusiness={selectedBusiness}/></div>
+        <div className=' w-100 bg-white text-black p-5 text-left' style={{borderRadius: '10px', fontWeight: 700, marginTop: '69px'}}> 
+            <div  className='inline-block w-6/12' >Income vs Expense Overview</div>
+        </div>
+        <BusinessLineBarPanel selectedBusiness={selectedBusiness} />
+    </>}
   </div >);
 }
 
