@@ -1,0 +1,114 @@
+import { InvestmentItem } from "@/model/models";
+import FilterSelector from "../../shared/FilterSelector";
+import ProgressBar from "../../shared/ProgressBar";
+import RowActions from "../../shared/RowActions";
+import InvestmentItemForm from "../InvestmentItemForm";
+import { useState } from "react";
+import { InvestmentService } from "@/service/InvestmentService";
+
+interface InvestmentTrackerTabProps {
+    investments: InvestmentItem[];
+    filteredInvestments: InvestmentItem[] | undefined;
+    percentageComplete: number;
+    getInvestments: ()=> void;
+    filterType: number;
+    setFilterType: (v:number)=> void;
+}
+
+function InvestmentTrackingTab(props: InvestmentTrackerTabProps){
+
+    const { investments, filteredInvestments, percentageComplete, getInvestments, filterType, setFilterType } = props;
+    const [openForm,setOpenForm] = useState(false);
+    const [selectedItem,setSelectedItem] = useState<number>(-1);
+    const is = new InvestmentService();
+
+
+    function close(v:boolean){
+        setOpenForm(v);
+        setSelectedItem(-1);
+    }
+
+    function getActualTotal(){
+        return filteredInvestments ? is.getActualTotal(filteredInvestments) : 0
+    }
+
+    function getExpectedTotal(){
+        return filteredInvestments ? is.getExpectedTotal(filteredInvestments) : 0
+    }
+
+    function deleteItem(index: number){
+        if(filteredInvestments &&     Number(selectedItem) >= 0 ){
+            console.log('deleting', filteredInvestments[index])
+            is.delete(Number(filteredInvestments[index].id))
+            getInvestments();
+        }
+    }
+    return ( <>
+    <div className='w-11/12 grid-flow-row font-bold'> 
+                    <div className='w-6/12 p-2 inline-block' >
+                        <button
+                            className="p-2 mb-2 btn-add"
+                            onClick={(e)=> setOpenForm(true)}>
+                                Add Investment
+                        </button>
+                    </div>
+                    <div className='w-3/12 p-2 inline-block text-right' >
+                     Saved so far:
+                    </div>
+                    <div className='w-3/12 p-2 inline-block' >
+                        <ProgressBar percentageComplete={percentageComplete} />
+                    </div>
+                </div>
+                { openForm && (
+                        <InvestmentItemForm
+                            open={openForm}
+                            setOpen={close}
+                            refresh={getInvestments}
+                            item={investments && Number(selectedItem) >= 0 ? investments[selectedItem-1] : undefined} />
+                        )
+                }
+                <div className='w-11/12 grid-flow-row font-bold' style={{color:'rgb(30,150,222,255)'}}> 
+                    <div className='w-6/12 p-2 inline-block' ></div>
+                    <div className='w-3/12 p-2 inline-block text-center' style={{border: '1px solid rgb(70, 70, 80,180)'}} >
+                        Expected
+                    </div>
+                    <div className='w-3/12 p-2 inline-block text-center' style={{border: '1px solid rgb(70, 70, 80,180)'}} >
+                        Actual
+                    </div>
+                </div>
+                <div className='w-11/12 grid-flow-row ' >
+                    <div className='w-6/12 text-start grid-flow-row inline-block'> 
+                        <FilterSelector filterType={filterType} setFilterType={setFilterType}/>
+                    </div>
+                    <div className='w-3/12 p-2 inline-block text-start font-bold' style={{border: '1px solid rgb(70, 70, 80,180)', color:'rgb(30,150,222,255)'}} >
+                        R{getExpectedTotal()}
+                    </div>
+                    <div className='w-3/12 p-2 inline-block text-start font-bold' style={{border: '1px solid rgb(70, 70, 80,180)', color:'rgb(30,150,222,255)'}} >
+                        R{getActualTotal()}
+                    </div>
+                </div>
+                <div className='w-100 grid-flow-row mt-5'>
+                    {filteredInvestments?.map((investment, index)=>{
+                        return <div className='w-11/12 grid-flow-row row-text-block'
+                                    style={{border: '1px solid rgb(70, 70, 80,180)'}}
+                                    key={index}
+                                    onClick={(e)=> setSelectedItem(index+1)}
+                                    onMouseLeave={(e)=> setSelectedItem(-1)}>
+                                    <div className='w-1/12 inline-block text-center' > 
+                                        {Number(selectedItem) - 1 === index ? 
+                                            (<RowActions deleteItem={deleteItem} setOpenForm={setOpenForm} index={index}/>)
+                                            : <></>
+                                        }
+                                    </div>
+                                    <div className='w-5/12 p-2 inline-block' style={{borderLeft: '2px solid rgb(70, 70, 80,180)'}}>
+                                        {investment.description}
+                                    </div>
+                                    <div className='w-3/12 p-2 inline-block text-start' style={{borderLeft: '2px solid rgb(70, 70, 80,180)'}}> R{investment.expectedAmount}</div>
+                                    <div className='w-3/12 p-2 inline-block text-start' style={{borderLeft: '2px solid rgb(70, 70, 80,180)'}}> R{investment.actualAmount}</div>
+                            </div>
+                    })}
+                </div>
+            </> );
+}
+
+export default InvestmentTrackingTab;

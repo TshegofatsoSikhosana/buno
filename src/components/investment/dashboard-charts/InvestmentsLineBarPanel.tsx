@@ -22,7 +22,9 @@ ChartJS.register(
   PointElement,
   LineElement
 );
-
+interface InvestmentLineChartPanelProps{
+  filteredInvestemets: InvestmentItem[]
+}
 function InvestemetsLineBarPanel() {
   const [monthsLabels, setMonthsLabels] = useState<string[]>([]);
   const [datasets, setDataSets] = useState<any[]>([]);
