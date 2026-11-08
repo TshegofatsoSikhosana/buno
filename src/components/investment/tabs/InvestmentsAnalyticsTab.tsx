@@ -166,7 +166,7 @@ function InvestmentAnalyticsTab() {
               labels: monthsLabels,
               datasets: [{
                 data: [...datasets],
-                borderColor: '#57a84fff',
+                borderColor: '#24a6f1ff',
                 label: 'Investements'
               }]
             }}
